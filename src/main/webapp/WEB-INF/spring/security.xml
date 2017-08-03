@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                        http://www.springframework.org/schema/security 
+                        http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+    <http use-expressions="true">
+        <intercept-url pattern="/app/error/**" access="permitAll" />
+        <intercept-url pattern="/javax.faces.resource/**" access="permitAll"/>
+        <intercept-url pattern="/resources/**" access="permitAll"/>
+        <intercept-url pattern="/app/common/**" access="hasAnyRole('ROLE_SYSADMIN','ROLE_ASP','ROLE_BP','ROLE_DO','ROLE_RO')" />
+        <intercept-url pattern="/app/extrawork/asp/**" access="hasAnyRole('ROLE_ASP')"/> 
+        <intercept-url pattern="/app/extrawork/bp/**" access="hasAnyRole('ROLE_BP')"/> 
+        <intercept-url pattern="/app/extrawork/do/**" access="hasAnyRole('ROLE_DO','ROLE_SYSADMIN')"/> 
+        <intercept-url pattern="/app/extrawork/ro/**" access="hasAnyRole('ROLE_RO','ROLE_SYSADMIN')"/> 
+        <intercept-url pattern="/app/financial/**" access="hasAnyRole('ROLE_SYSADMIN')" />
+        <intercept-url pattern="/app/systemadmin/**" access="hasAnyRole('ROLE_SYSADMIN')" />
+
+        
+	
+        <access-denied-handler error-page="/app/error/403.xhtml" />
+        
+<!--        <logout logout-success-url="/app/public/login.xhtml" />-->
+        
+        <session-management invalid-session-url="/app/login.xhtml">
+        <concurrency-control max-sessions="50" error-if-maximum-exceeded="true" />
+        </session-management>
+        
+        <csrf disabled="true"/>
+        <!-- Custom login page -->
+        <form-login 
+            login-page="/app/login.xhtml"
+            default-target-url="/app/common/index.xhtml" 
+            authentication-failure-url="/app/error/403.xhtml" 
+            username-parameter="username"
+            password-parameter="password"       
+        />
+        
+        <!-- Custom logout page -->
+        <logout logout-url="/logout"
+                logout-success-url="/app/common/index.xhtml"
+                delete-cookies="JSESSIONID,User,UserID"
+                invalidate-session="true"        
+        />
+    </http>
+    
+    
+    <!-- Use inline authentication provider. -->
+    <authentication-manager>
+	  <authentication-provider>
+		<jdbc-user-service data-source-ref="dataSource"
+		  users-by-username-query="SELECT lower(USER_NAME), USER_PASSWORD, 'true' ENABLED
+                                           FROM users 
+                                           WHERE lower(USER_NAME)=lower(?);"
+		  authorities-by-username-query=
+                                            "SELECT lower(u.USER_NAME), r.role_name 
+                                             FROM users u, users_j_roles r
+                                             WHERE lower(u.USER_NAME) = lower(r.username)
+                                             AND lower(u.USER_NAME)=lower(?);" />
+                                            
+	  </authentication-provider>
+    </authentication-manager>
+    
+</beans:beans>

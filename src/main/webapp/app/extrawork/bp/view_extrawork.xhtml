@@ -1,0 +1,412 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:FT="http://xmlns.jcp.org/jsf/composite/components"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Financial Tool</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+        <h:outputStylesheet name="assets/vendors/bootstrap/dist/css/bootstrap.css"/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+        <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+        <h:outputScript library="js" name="jsfcrud.js" target="head" />
+        <h:outputStylesheet name="css/jsfcrud.css"/>
+        <h:outputStylesheet name="assets/vendors/nprogress/nprogress.css"/>
+        <h:outputStylesheet name="assets/vendors/iCheck/skins/flat/green.css"/>
+        <h:outputStylesheet name="assets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css"/>
+        <h:outputStylesheet name="assets/vendors/jqvmap/dist/jqvmap.min.css"/>
+        <h:outputStylesheet name="assets/vendors/bootstrap-daterangepicker/daterangepicker.css"/>
+        <h:outputStylesheet name="assets/build/css/custom.min.css"/>
+        <style type="text/css">
+            .form-control{
+                font-size: 9px;
+                height: 25px;
+            }
+            label{
+                display: inline;
+            }
+            h2{
+                font-size: 17px;
+            }
+        </style>
+    </h:head>
+    <h:body class="nav-md">
+        <div class="container body">
+            <div class="main_container">
+                <div class="col-md-3 left_col">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title navbar-default" style="border: 0;">
+                            <a href="index.html" class="site_title"><i class="fa fa-certificate"></i> <span>Financial Tool</span></a>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <FT:ProfileInfo username="#{usersController.loggedInUser.userName}" 
+                                        domain="#{usersController.loggedInUserDomains}" 
+                                        region="#{usersController.loggedInUserRegions}"
+                                        company="#{usersController.loggedInUser.company}"/>
+                        
+                        <br></br>
+                        <FT:NavigationMenu/>
+                      </div>
+                </div>
+                <FT:Notifications/>
+            <h:form id="viewEditExtraWorkForm"> 
+            <p:growl id="growl" sticky="false"/>
+            <div class="right_col" role="main">
+
+                <div class="row">
+                <div class="col-md-8 col-sm-8 col-xs-8">
+                <div class="x_panel">
+                <div class="x_title">
+                    <h2>Created/Assigned Extra work</h2>
+                    <div class="clearfix"></div>
+                </div>
+                    <div class="x_content">
+                        <p:dataTable id="extraWorkDataList"
+                                     var="extraWork" 
+                                     value="#{extraWorkController.userItems}"
+                                     style="font-size: 9px;"
+                                     rowKey="#{extraWork.id}"
+                                     selectionMode="single"
+                                     selection="#{extraWorkController.selectedUserItem}"
+                                     paginatorPosition="bottom"
+                                     paginator="true"
+                                     rows="20"
+                                     rowsPerPageTemplate="20,30,40"
+                                     >
+                             
+                            <p:ajax event="rowSelect" update=":viewEditExtraWorkForm:statusPanel, 
+                                                               :viewEditExtraWorkForm:detailsPanel,
+                                                               :viewEditExtraWorkForm:attachmentPanel,
+                                                               :viewEditExtraWorkForm:menuItems,
+                                                               deleteButton" />
+                             
+                            <p:column headerText="Id" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.id}">
+                                <h:outputText value="#{extraWork.id}" />
+                            </p:column>
+
+                            <p:column headerText="Site" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.site}">
+                                <h:outputText value="#{extraWork.site}" />
+                            </p:column>
+
+                            <p:column headerText="ASP" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.asp}">
+                                <h:outputText value="#{extraWork.asp}" />
+                            </p:column>
+
+                            <p:column headerText="Region" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.region}">
+                                <h:outputText value="#{extraWork.region}" />
+                            </p:column>
+
+                            <p:column headerText="Domain" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.domainName}">
+                                <h:outputText value="#{extraWork.domainName}" />
+                            </p:column>
+
+                            <p:column headerText="Sub-domain" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.subDomain}">
+                                <h:outputText value="#{extraWork.subDomain}" />
+                            </p:column>
+                            
+                            <p:column headerText="Date" style="font-size: 9px;">
+                                <h:outputText value="#{extraWork.activityDate}" >
+                                    <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                </h:outputText>
+                            </p:column>
+                            
+                            <p:column headerText="Total Price ASP" style="font-size: 9px;">
+                                <h:outputText value="#{extraWork.totalPriceAsp}">
+                                    <f:convertNumber currencyCode="EGP" type="currency"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Total Price Customer" style="font-size: 9px;">
+                                <h:outputText value="#{extraWork.totalPriceVendor}">
+                                    <f:convertNumber currencyCode="EGP" type="currency"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Creator" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.creator.userName}">
+                                <h:outputText value="#{extraWork.creator.userName}" />
+                            </p:column>
+                            <p:column headerText="Approval" style="font-size: 9px;">
+                                <h:outputText value="#{extraWork.approvalStatus}" />
+                            </p:column>
+                            <p:column headerText="Assignment" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.assignmentGroup}">
+                                <h:outputText value="#{extraWork.assignmentGroup}" />
+                            </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  
+                                             value="#{bundle.Delete}" 
+                                             actionListener="#{extraWorkController.deleteExtaWork}" 
+                                             update=":viewEditExtraWorkForm:growl,
+                                                     :viewEditExtraWorkForm:extraWorkDataList,
+                                                     :viewEditExtraWorkForm:statusPanel, 
+                                                     :viewEditExtraWorkForm:detailsPanel,
+                                                     :viewEditExtraWorkForm:attachmentPanel" 
+                                             disabled="#{extraWorkController.selectedUserItem == null
+                                                         or (extraWorkController.selectedUserItem.creator.userName!=usersController.loggedInUser.userName)}"/>
+                        </f:facet>
+                        </p:dataTable>
+                        <p:contextMenu id="menuItems" for="extraWorkDataList">
+                            <p:menuitem value="Edit" 
+                                        icon="ui-icon-pencil" 
+                                        oncomplete="PF('editDlg').show();"
+                                        update="extraWorkDataList,:editForm" 
+                                        disabled="#{extraWorkController.selectedUserItem==null or (extraWorkController.selectedUserItem.assignmentGroup != 
+                                                         usersController.loggedInUser.userName)}"/>
+                            <p:menuitem value="Approve" 
+                                        icon=" ui-icon-arrowthickstop-1-e" 
+                                        actionListener="#{extraWorkController.validateAndApproveBP}"
+                                        disabled="#{extraWorkController.selectedUserItem==null or (extraWorkController.selectedUserItem.assignmentGroup != 
+                                                         usersController.loggedInUser.userName)}"
+                                        update=":viewEditExtraWorkForm:growl,
+                                                     :viewEditExtraWorkForm:extraWorkDataList,
+                                                     :viewEditExtraWorkForm:statusPanel, 
+                                                     :viewEditExtraWorkForm:detailsPanel,
+                                                     :viewEditExtraWorkForm:attachmentPanel"/>
+                            <p:menuitem value="Reject" 
+                                        icon="ui-icon-arrowthickstop-1-w" 
+                                        disabled="#{extraWorkController.selectedUserItem==null or (extraWorkController.selectedUserItem.assignmentGroup != 
+                                                         usersController.loggedInUser.userName)}"
+                                        oncomplete="PF('rejectDlg').show();"
+                                        update="extraWorkDataList,:rejectForm" />
+                        </p:contextMenu>
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                <h:panelGroup id="statusPanel">
+                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null}">
+                <div class="x_panel">
+                <div class="x_title">
+                    <h2>Status</h2>
+                    <div class="clearfix"></div>
+                </div>
+                    <div class="x_content">
+                        <ul>
+                        <li>
+                             <strong>Business Provider Approval: </strong>
+                             <span class="label #{extraWorkController.selectedUserItem.businessProviderApproval?'label-success':'label-danger'}">
+                                 #{extraWorkController.selectedUserItem.businessProviderApproval?'Approved':'Pending/Rejected'}
+                             </span>
+                         </li>
+                        <li>
+                             <strong>Region Approval: </strong>
+                             <span class="label #{extraWorkController.selectedUserItem.regionApproval?'label-success':'label-danger'}">
+                                 #{extraWorkController.selectedUserItem.regionApproval?'Approved':'Pending/Rejected'}
+                             </span>
+                         </li>
+                         <li>
+                             <strong>Domain Approval: </strong>
+                             <span class="label #{extraWorkController.selectedUserItem.domainOwnerApproval?'label-success':'label-danger'}">
+                                 #{extraWorkController.selectedUserItem.domainOwnerApproval?'Approved':'Pending/Rejected'}
+                             </span>
+                         </li> 
+                         <li>
+                             <strong>Invoice Status: </strong>
+                             <span class="label #{extraWorkController.selectedUserItem.invoiced?'label-success':'label-danger'}">
+                                 #{extraWorkController.selectedUserItem.invoiced?'Invoiced':'Not-Invoiced'}
+                             </span>
+                         </li> 
+                         <li>
+                             <strong>Correlation Status: </strong>
+                             <span class="label #{extraWorkController.selectedUserItem.correlated?'label-success':'label-danger'}">
+                                 #{extraWorkController.selectedUserItem.correlated?'Correlated':'Not-Correlated'}
+                             </span>
+                         </li> 
+                        </ul>
+                    </div>
+                </div>
+                </h:panelGroup>
+                </h:panelGroup>
+                <h:panelGroup id="detailsPanel">
+                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null}">
+                <div class="x_panel">
+                <div class="x_title">
+                    <h2>Details</h2>
+                    <div class="clearfix"></div>
+                </div>
+                    <div class="x_content">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewCode">Code:</label>
+                    <h:outputText id="ewCode" class="form-control" value="#{extraWorkController.selectedUserItem.activityCode}"/>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewQty">Qty:</label>
+                    <h:outputText id="ewQty" 
+                                   class="form-control" 
+                                   value="#{extraWorkController.selectedUserItem.qty}"/>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label" for="ewCodeASPPrice">Unit Price ASP:</label>
+                        <h:outputText id="ewCodeASPPrice" 
+                                   class="form-control" 
+                                   value="#{extraWorkController.selectedUserItem.unitPriceAsp}">
+                            <f:convertNumber currencyCode="EGP" type="currency"/>
+                        </h:outputText>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label" for="ewCodeVendorPrice">Unit Price Customer:</label>
+                        <h:outputText id="ewCodeVendorPrice" 
+                                   class="form-control" 
+                                   value="#{extraWorkController.selectedUserItem.unitPriceVendor}">
+                            <f:convertNumber currencyCode="EGP" type="currency"/>
+                        </h:outputText>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewUM">UM:</label>
+                    <h:outputText id="ewUM" 
+                                   class="form-control" 
+                                   value="#{extraWorkController.selectedUserItem.um}">
+                        <f:convertNumber currencyCode="EGP" type="currency"/>
+                    </h:outputText>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label" for="ewUMPercent">UM%:</label>
+                        <h:outputText id="ewUMPercent" 
+                                   class="form-control" 
+                                   value="#{extraWorkController.selectedUserItem.umPercent}"/>
+                    </div>
+                    </div>
+                    
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                    <label class="control-label" for="ewCodeDescription">Description:</label>
+                    <h:outputText id="ewCodeDescription" class="form-control" 
+                                  value="#{extraWorkController.selectedUserItem.activityDescription}"
+                                  />
+                    </div>
+                    </div>
+   
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                    <label class="control-label" for="ewActivityDetails">Details:</label>
+                    <h:outputText id="ewActivityDetails"
+                                     class="form-control" 
+                                     value="#{extraWorkController.selectedUserItem.activityDetails}"/>
+                    </div>             
+                    </div> 
+                    </div>
+                </div>
+                </h:panelGroup>
+                </h:panelGroup>
+               <h:panelGroup id="attachmentPanel">
+               <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null}">
+                <div class="x_panel">
+                <div class="x_title">
+                    <h2>Attachments</h2>
+                    <div class="clearfix"></div>
+                </div>
+                    <div class="x_content">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+            <p:dataTable    id="extraWorkAttachments"
+                            var="attachment" 
+                            value="#{extraWorkController.selectedUserItem.extraworkAttachmentsCollection}"
+                        rowKey="#{attachment.attachmentId}"
+                        selectionMode="single"
+                        selection="#{extraWorkController.selectedUserItemAttachment}">
+
+                <p:column headerText="Name" style="font-size: 9px;">
+                    <h:outputText value="#{attachment.attachmentName}" />
+                </p:column>
+                <p:column headerText="Uploader" style="font-size: 9px;">
+                    <h:outputText value="#{attachment.uploadedBy.userName}" />
+                </p:column>
+                <p:column headerText="Date" style="font-size: 9px;">
+                    <h:outputText value="#{attachment.uploadedOn}">
+                        <f:convertDateTime pattern="yyy-MM-dd HH:mm:ss"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Download" style="font-size: 9px;">
+                    <h:commandButton value="Download"
+                                     actionListener="#{extraWorkController.downloadAttachment(attachment)}"
+                                     class="btn btn-small btn-success"/>
+                </p:column>
+                
+            </p:dataTable>
+            </div>
+                    </div>
+                </div>
+                </h:panelGroup> 
+                </h:panelGroup> 
+                </div>
+                </div>
+
+          <br />
+          
+          
+            </div>
+            </h:form>
+            
+  
+             <ui:include src="modals/reject.xhtml"/>   
+             <ui:include src="modals/edit.xhtml"/>   
+            <FT:Footer/>
+            </div>
+        </div>
+        
+        
+    <script src="#{resource['assets/vendors/bootstrap/dist/js/bootstrap.min.js']}"></script>
+    <script src="#{resource['assets/vendors/fastclick/lib/fastclick.js']}"></script>
+    <script src="#{resource['assets/vendors/nprogress/nprogress.js']}"></script>
+    <script src="#{resource['assets/vendors/Chart.js/dist/Chart.min.js']}"></script>
+    <script src="#{resource['assets/vendors/gauge.js/dist/gauge.min.js']}"></script>
+    <script src="#{resource['assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js']}"></script>
+    <script src="#{resource['assets/vendors/iCheck/icheck.min.js']}"></script>
+    <script src="#{resource['assets/vendors/skycons/skycons.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.pie.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.time.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.stack.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.resize.js']}"></script>
+    <script src="#{resource['assets/vendors/flot.orderbars/js/jquery.flot.orderBars.js']}"></script>
+    <script src="#{resource['assets/vendors/flot-spline/js/jquery.flot.spline.min.js']}"></script>
+    <script src="#{resource['assets/vendors/flot.curvedlines/curvedLines.js']}"></script>
+    <script src="#{resource['assets/vendors/DateJS/build/date.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/dist/jquery.vmap.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/dist/maps/jquery.vmap.world.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js']}"></script>
+    <script src="#{resource['assets/vendors/moment/min/moment.min.js']}"></script>
+    <script src="#{resource['assets/vendors/bootstrap-daterangepicker/daterangepicker.js']}"></script>
+    <script src="#{resource['assets/build/js/custom.min.js']}"></script>   
+     <script type="text/javascript">
+        //<![CDATA[
+           removeClasses();
+        //]]>
+        function removeClasses(){
+
+             $('#viewEditExtraWorkForm\\:extraWorkDataList\\:0\\:totalPrice_input')
+                    .removeClass();
+             $('#viewEditExtraWorkForm\\:extraWorkDataList\\:0\\:totalPrice')
+                    .removeClass();
+
+        }
+        </script>
+
+    
+    </h:body>
+</html>
+

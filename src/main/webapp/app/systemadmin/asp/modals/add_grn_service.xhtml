@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+  <ui:composition>
+       
+        <p:dialog id="editDlgServiceGrnId" modal="true" widgetVar="editDlgAspServiceGrn" 
+                  closeOnEscape="true" resizable="false" height="200" width="900" appendTo="@(body)" header="Add (ASP - GRN - Service)">
+            <h:form id="addAspServiceGrnForm">
+
+                <h:panelGroup rendered="#{aspServicePoController.selectedUserPo!=null}">
+                     <p>You can create a GRN with a value of 
+                    <strong>
+                    <h:outputText value="#{aspServicePoController.selectedUserPo.grnDeserved}">
+                        <f:convertNumber type="currency" currencyCode="EGP"/>
+                    </h:outputText>
+                    </strong>
+                    </p>
+                    <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group">
+                    <label class="control-label" for="poNumber">PO#:</label>
+                    <h:outputText id="poNumber" class="form-control"  value="#{aspServiceGrnController.selected.poNumber.poNumber}"/>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="ewDate">Date:</label>
+                    <p:calendar id="ewDate" 
+                                value="#{aspServiceGrnController.selected.grnDate}"
+                                required="true"
+                                styleClass="form-control"
+                                requiredMessage="Date can't be empty">
+                    </p:calendar>
+                    </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group">
+                    <label class="control-label" for="grnNumber">GRN#:</label>
+                    <h:inputText id="grnNumber" class="form-control"  value="#{aspServiceGrnController.selected.grnNumber}"/>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="workDoneValue">GRN Value:</label>
+                    <p:inputNumber id="workDoneValue" 
+                                   class="form-control" 
+                                   symbol=" EGP" 
+                                   symbolPosition="s"
+                                   decimalSeparator="." thousandSeparator=","
+                                   value="#{aspServiceGrnController.selected.grnValue}"
+                                   required="true"
+                                   requiredMessage="Service Value can't be empty">
+                        <p:ajax update=":aspPoForm:growl, workDoneValue" listener="#{aspServiceGrnController.validateGrnValue}"/>
+                    </p:inputNumber>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p:commandButton class="btn btn-block btn-success" actionListener="#{aspServiceGrnController.createGrn}" 
+                                     value="Create"
+                                     update=":aspPoForm:tabView:datalistServicePo,
+                                             :aspPoForm:tabView:datalistServicePo:datalistServicePoGrn,
+                                             :aspPoForm:growl" 
+                                     oncomplete="handleSubmit(args, 'editDlgAspServiceGrn');"/>
+
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                     <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="editDlgAspServiceGrn.hide()"/>
+                </div>
+                </div>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+  </ui:composition>
+</html>
+

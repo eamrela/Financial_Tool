@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+            <div class="menu_section">
+                <h3>General</h3>
+                <!--                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-line-chart"></i>Summary<span class="fa fa-line-chart"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{request.contextPath}/app/summary/faulty_rate.xhtml">Faulty Rate Summary</a></li>
+                            <li><a href="{request.contextPath}/app/summary/site_summary.xhtml">Site Summary</a></li>
+                            <li><a href="{request.contextPath}/app/summary/transfer_rate.xhtml">Transfer Rate Summary </a></li>
+                            <li><a href="{request.contextPath}/app/summary/inventory_summary.xhtml">Inventory Summary </a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-cogs"></i>Settings<span class="fa fa-cogs"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{request.contextPath}/app/settings/items.xhtml">Items</a></li>
+                            <li><a href="{request.contextPath}/app/whm/warehouses.xhtml">Warehouses</a></li>
+                            <li><a href="{request.contextPath}/app/settings/users.xhtml">Users</a></li>
+                            <li><a href="{request.contextPath}/app/settings/engineers.xhtml">Engineers</a></li>
+                            <li><a href="{request.contextPath}/app/settings/region.xhtml">Regions</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                
+-->             
+                <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_SYSADMIN'}">
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-table"></i>ASP POs<span class="fa fa-table"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/systemadmin/asp/create/create_asp_po_extrawork.xhtml">Create PO (Extra Work)</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/asp/create/create_asp_po_service.xhtml">Create PO (Service)</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/asp/view/view_asp_po.xhtml">View/Edit POs</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-table"></i>Customer POs<span class="fa fa-table"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/systemadmin/customer/create/create_vf_po_extrawork.xhtml">Create PO (Extra Work)</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/customer/create/create_vf_po_service.xhtml">Create PO (Service)</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/customer/view/view_vf_po.xhtml">View/Edit POs</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-unlink"></i>JV<span class="fa fa-unlink"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/systemadmin/jv/create/create_jv.xhtml">Create JV (COS)</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/jv/view/view_jv.xhtml">View/Edit JV</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-clock-o"></i>Time Reporting<span class="fa fa-clock-o"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/systemadmin/time_reporting/create/create_time_reporting.xhtml">Create TR (COS)</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/time_reporting/view/view_time_reporting.xhtml">View/Edit TR</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                </h:panelGroup>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-archive"></i>Extra Work<span class="fa fa-archive"></span></a>
+                        <ul class="nav child_menu">
+                            <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_ASP'}">
+                            <li><a href="#{request.contextPath}/app/extrawork/asp/create_extrawork.xhtml">Create Extra Work</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/asp/view_extrawork.xhtml">View/Edit Extra Work</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/asp/export.xhtml">Export</a></li>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_BP'}">
+                            <li><a href="#{request.contextPath}/app/extrawork/bp/create_extrawork.xhtml">Create Extra Work</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/bp/view_extrawork.xhtml">View/Edit Extra Work</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/bp/export.xhtml">Export</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/bp/upload.xhtml">Upload</a></li>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_RO'}">
+                            <li><a href="#{request.contextPath}/app/extrawork/ro/create_extrawork.xhtml">Create Extra Work</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/ro/view_extrawork.xhtml">View/Edit Extra Work</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/ro/export.xhtml">Export</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/ro/upload.xhtml">Upload</a></li>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_DO' or usersController.loggedInUserRole=='ROLE_SYSADMIN'}">
+                            <li><a href="#{request.contextPath}/app/extrawork/do/create_extrawork.xhtml">Create Extra Work</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/do/view_extrawork.xhtml">View/Edit Extra Work</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/do/export.xhtml">Export</a></li>
+                            <li><a href="#{request.contextPath}/app/extrawork/do/upload.xhtml">Upload</a></li>
+                            </h:panelGroup>
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+        <div class="sidebar-footer hidden-small">
+<!--            <a data-toggle="tooltip" data-placement="top" title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+            </a>-->
+            <a data-toggle="tooltip" data-placement="top" href="#{request.contextPath}/logout" title="Logout">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </a>
+        </div>
+    </cc:implementation>
+</html>

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+        
+        <p:dialog id="rejectDlgId" modal="true" widgetVar="rejectDlg" closeOnEscape="true" resizable="false" height="160" width="300" appendTo="@(body)" header="Rejection (BP)">
+            <h:form id="rejectForm">
+
+                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (extraWorkController.selectedUserItem.creator.userName == 
+                                                         extraWorkController.selectedUserItem.assignmentGroup)}">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                            <label class="control-label" for="rejectionReason">Rejection Reason:</label>
+                            <h:inputTextarea id="rejectionReason"
+                                             value="#{extraWorkController.rejectionReason}"/>
+                    </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <p:commandButton class="btn btn-block btn-danger" actionListener="#{extraWorkController.rejectExtraWork}" value="Reject"
+                                             update=":viewEditExtraWorkForm:growl,
+                                                     :viewEditExtraWorkForm:extraWorkDataList,
+                                                     :viewEditExtraWorkForm:statusPanel, 
+                                                     :viewEditExtraWorkForm:detailsPanel,
+                                                     :viewEditExtraWorkForm:attachmentPanel" 
+                                             oncomplete="handleSubmit(args, 'rejectDlg');"/>
+                          
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                             <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="rejectDlg.hide()"/>
+                        </div>
+                    </div>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    
+    </ui:composition>
+</html>
+

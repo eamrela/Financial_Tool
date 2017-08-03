@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="username" required="true"/>
+        <cc:attribute name="region" required="true"/>
+        <cc:attribute name="domain" required="true"/>
+        <cc:attribute name="company" required="true"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div class="profile clearfix">
+            <div class="profile_info">
+                <span>Welcome,</span>
+                <h2>#{cc.attrs.username}</h2>
+                <h2>#{cc.attrs.region} - #{cc.attrs.domain}</h2>
+                <h2>#{cc.attrs.company}</h2>
+            </div>
+        </div>
+    </cc:implementation>
+</html>

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+        
+        <p:dialog id="assignmentDlgId" modal="true" widgetVar="assignmentDlg" closeOnEscape="true" resizable="false" height="160" width="300" appendTo="@(body)" header="Assignment (ASP)">
+            <h:form id="assignmentForm">
+
+                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (extraWorkController.selectedUserItem.creator.userName == 
+                                                         extraWorkController.selectedUserItem.assignmentGroup)}">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                            <label class="control-label" for="assignentPerson">Assignment in Region:</label>
+                             <h:selectOneMenu id="assignentPerson"
+                                             value="#{extraWorkController.selectedUserItem.assignmentGroup}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Assignee can't be empty">
+                            <f:selectItem itemLabel="" itemValue="#{null}"/>
+                            <f:selectItems value="#{usersController.getUsersByRegion(extraWorkController.selectedUserItem.region)}" 
+                                        var="userItem"
+                                        itemValue="#{userItem.userName}"
+                                        itemLabel="#{userItem.userName}"/>
+                            </h:selectOneMenu>
+                    </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <p:commandButton class="btn btn-block btn-success" actionListener="#{extraWorkController.updateEdit}" value="Save"
+                                             update=":viewEditExtraWorkForm:extraWorkDataList,:viewEditExtraWorkForm:growl" 
+                                             oncomplete="handleSubmit(args, 'assignmentDlg');"/>
+                          
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                             <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="assignmentDlg.hide()"/>
+                        </div>
+                    </div>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    
+    </ui:composition>
+</html>
+

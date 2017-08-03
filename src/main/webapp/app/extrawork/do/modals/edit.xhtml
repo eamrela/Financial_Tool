@@ -1,0 +1,336 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+       
+        <p:dialog id="editDlgId" modal="true" widgetVar="editDlg" closeOnEscape="true" resizable="false" height="570" width="970" appendTo="@(body)" header="Edit (ASP)">
+            <h:form id="editForm">
+
+                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (extraWorkController.selectedUserItem.creator.userName == 
+                                                         extraWorkController.selectedUserItem.assignmentGroup)}">
+                <div class="row">
+                <div class="col-md-3 col-sm-3 col-xs-3">        
+                <div class="x_panel">
+                <div class="x_title">
+                    <h2>Categorization</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="form-group">
+                    <label class="control-label" for="ewAsp">ASP:</label>
+                    <h:selectOneMenu id="ewAsp"
+                                     value="#{extraWorkController.selectedUserItem.asp}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="ASP can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{subcontractorsController.itemsAvailableSelectOne}" 
+                                               var="aspItem"
+                                               itemValue="#{aspItem.subcontractorName}"
+                                               itemLabel="#{aspItem.subcontractorName}"/>
+                    </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="ewDomain">Domain:</label>
+                    <h:selectOneMenu id="ewDomain"
+                                     value="#{extraWorkController.selectedUserItem.domainName}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Domain can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{usersController.loggedInUser.domainsCollection}" 
+                                               var="domainItem"
+                                               itemValue="#{domainItem.domainName}"
+                                               itemLabel="#{domainItem.domainName}"/>
+                    </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="ewSubDomain">Sub_Domain:</label>
+                    <h:selectOneMenu id="ewSubDomain"
+                                     value="#{extraWorkController.selectedUserItem.subDomain}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="SubDomain can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{subDomainController.itemsAvailableSelectOne}" 
+                                               var="subdomainItem"
+                                               itemValue="#{subdomainItem.subdomainName}"
+                                               itemLabel="#{subdomainItem.subdomainName}"/>
+                    </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="ewDate">Date:</label>
+                    <p:calendar id="ewDate" 
+                                value="#{extraWorkController.selectedUserItem.activityDate}"
+                                required="true"
+                                requiredMessage="Extrawork Date can't be empty">
+                    </p:calendar>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="ewSite">Site:</label>
+                    <p:autoComplete id="ewSite"  
+                                value="#{extraWorkController.selectedUserItem.site}" 
+                                completeMethod="#{networkSitesController.autoCompleteSite}" 
+                                var="siteItem" 
+                                itemLabel="#{siteItem}" 
+                                itemValue="#{siteItem.siteId}" 
+                                forceSelection="true"
+                                required="true"
+                                requiredMessage="Site is required"
+                                maxResults="10">
+                        <p:ajax event="itemSelect" listener="#{extraWorkController.onItemSelectSetSiteEdit}" 
+                                update=":viewEditExtraWorkForm:growl" />
+                    </p:autoComplete>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="ewCustomerOwner">Customer Owner:</label>
+                    <h:selectOneMenu id="ewCustomerOwner"
+                                     value="#{extraWorkController.selectedUserItem.customerOwner}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Owner can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{vodafoneContactController.itemsAvailableSelectOne}" 
+                                               var="ownerItem"
+                                               itemValue="#{ownerItem.contactName}"
+                                               itemLabel="#{ownerItem.contactName}"/>
+                    </h:selectOneMenu>
+                    </div>
+                </div>
+                </div>
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                <div class="x_panel">
+                <div class="x_title">
+                    <h2>Extra Work Details</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+<!--                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                    <label class="control-label" for="ewSearchCode">Search Price List:</label>
+                    <p:autoComplete id="ewSearchCode"  
+                                value="{extraWorkController.selectedActivityCode}" 
+                                completeMethod="{activityCodeController.autoCompleteActivityCode}" 
+                                var="activityCodeItem" 
+                                itemLabel="{activityCodeItem}" 
+                                itemValue="{activityCodeItem}" 
+                                forceSelection="true"
+                                maxResults="10">
+                        <p:ajax event="itemSelect" listener="{extraWorkController.onItemSelectSetActivityCodeEdit}" 
+                                update=":viewEditExtraWorkForm:growl,
+                                   ewCode, ewCodeASPPrice, ewCodeVendorPrice, ewUM, ewUMPercent, ewCodeDescription, ewTotalASPPrice, ewTotalVendorPrice" />
+                    </p:autoComplete>
+                    </div>
+                    </div>-->
+                    <hr></hr>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewCode">Code:</label>
+                    <h:inputText id="ewCode" class="form-control" value="#{extraWorkController.selectedUserItem.activityCode}"/>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewQty">Qty:</label>
+                    <p:inputNumber id="ewQty" 
+                                   decimalSeparator="." thousandSeparator=","
+                                   value="#{extraWorkController.selectedUserItem.qty}"
+                                   required="true"
+                                   requiredMessage="Quantity can't be empty"
+                                   disabled="true">
+                        <p:ajax update="ewUM, ewUMPercent, ewTotalASPPrice, ewTotalVendorPrice" listener="#{extraWorkController.updateValuesEdit()}" />
+                    </p:inputNumber>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewCodeASPPrice">Unit Price ASP:</label>
+                    <p:inputNumber id="ewCodeASPPrice" 
+                                   symbol=" EGP" 
+                                   symbolPosition="s"
+                                   decimalSeparator="." thousandSeparator=","
+                                   value="#{extraWorkController.selectedUserItem.unitPriceAsp}"
+                                   required="true"
+                                   requiredMessage="Unit Price can't be empty"
+                                   disabled="true">
+                        <p:ajax update="ewUM, ewUMPercent, ewTotalASPPrice" listener="#{extraWorkController.updateValuesEdit()}" />
+                    </p:inputNumber>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewCodeVendorPrice">Unit Price Customer:</label>
+                    <p:inputNumber id="ewCodeVendorPrice" 
+                                   symbol=" EGP" 
+                                   symbolPosition="s"
+                                   decimalSeparator="." thousandSeparator=","
+                                   value="#{extraWorkController.selectedUserItem.unitPriceVendor}"
+                                   required="true"
+                                   requiredMessage="Unit Price can't be empty">
+                        <p:ajax update="ewCodeVendorPrice, ewUM, ewUMPercent, ewTotalVendorPrice" listener="#{extraWorkController.updateValuesEdit()}" />
+                    </p:inputNumber>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewUM">UM:</label>
+                    <h:outputText id="ewUM" 
+                                   class="form-control" 
+                                   value="#{extraWorkController.selectedUserItem.um}">
+                        <f:convertNumber currencyCode="EGP" type="currency"/>
+                    </h:outputText>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label" for="ewUMPercent">UM%:</label>
+                        <h:outputText id="ewUMPercent" 
+                                   class="form-control" 
+                                   value="#{extraWorkController.selectedUserItem.umPercent}"/>
+                    </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                    <label class="control-label" for="ewCodeDescription">Description:</label>
+                    <h:inputText id="ewCodeDescription" required="true" requiredMessage="Description can't be empty" class="form-control" 
+                                 value="#{extraWorkController.selectedUserItem.activityDescription}"/>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewTotalASPPrice">Total Price ASP:</label>
+                    <p:inputNumber id="ewTotalASPPrice" 
+                                   symbol=" EGP" 
+                                   symbolPosition="s"
+                                   decimalSeparator="." thousandSeparator=","
+                                   disabled="true"
+                                   value="#{extraWorkController.selectedUserItem.totalPriceAsp}"/>
+                    </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="ewTotalVendorPrice">Total Price Customer:</label>
+                    <p:inputNumber id="ewTotalVendorPrice" 
+                                   symbol=" EGP" 
+                                   symbolPosition="s"
+                                   decimalSeparator="." thousandSeparator=","
+                                   disabled="true"
+                                   value="#{extraWorkController.selectedUserItem.totalPriceVendor}"/>
+                    </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                    <label class="control-label" for="ewActivityDetails">Details:</label>
+                    <h:inputTextarea id="ewActivityDetails"
+                                     class="form-control" 
+                                     value="#{extraWorkController.selectedUserItem.activityDetails}"
+                                     required="true"
+                                     requiredMessage="Details can't be empty"/>
+                    </div>             
+                    </div>             
+                </div>
+                </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="x_panel">
+                <div class="x_title">
+                    <h2>Attachments/Approval</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                     <div class="form-group">
+                        <label class="control-label" for="ewApproval">Approval Status:</label>
+                        <h:selectOneMenu id="ewApproval"
+                                         value="#{extraWorkController.selectedUserItem.approvalStatus}"
+                                                 styleClass="form-control"
+                                                 required="true"
+                                                 requiredMessage="Approval Status can't be empty">
+                                    <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                    <f:selectItems value="#{approvalStatusController.itemsAvailableSelectOne}" 
+                                                   var="approvalItem"
+                                                   itemValue="#{approvalItem.statusName}"
+                                                   itemLabel="#{approvalItem.statusName}"/>
+                        </h:selectOneMenu>
+                      </div>
+                      </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                     <div class="form-group">
+                        <label class="control-label" for="ewAttach">Attach Files:</label>
+                         <p:fileUpload id="ewAttach"
+                                       fileUploadListener="#{extraWorkController.addAttachmentEdit}" 
+                             mode="advanced" 
+                             dragDropSupport="false"
+                             update="extraWorkAttachments, :viewEditExtraWorkForm:growl" 
+                             sizeLimit="3145728" 
+                             fileLimit="10" 
+                             allowTypes="/(\.|\/)*/" 
+                             uploadLabel="Add"
+                             previewWidth="10"
+                             />
+
+                     </div>
+                     </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                      <p:dataTable    
+                            id="extraWorkAttachments"
+                            var="attachment" 
+                            value="#{extraWorkController.selectedUserItem.extraworkAttachmentsCollection}"
+                            rowKey="#{attachment.attachmentId}"
+                            selectionMode="single"
+                            selection="#{extraWorkController.selectedUserItemAttachment}">
+
+                        <p:column headerText="Name" style="font-size: 9px;">
+                            <h:outputText value="#{attachment.attachmentName}" />
+                        </p:column>
+                        <p:column headerText="Uploader" style="font-size: 9px;">
+                            <h:outputText value="#{attachment.uploadedBy.userName}" />
+                        </p:column>
+                        <p:column headerText="Date" style="font-size: 9px;">
+                            <h:outputText value="#{attachment.uploadedOn}">
+                                <f:convertDateTime pattern="yyy-MM-dd HH:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Remove" style="font-size: 9px;">
+                            <h:commandButton value="Remove"
+                                             actionListener="#{extraWorkController.deleteAttachment(attachment)}"
+                                             class="btn btn-small btn-danger"
+                                             disabled="#{extraWorkController.selectedUserItem.creator.userName != extraWorkController.selectedUserItem.assignmentGroup}">
+                                <p:ajax update=":editForm:extraWorkAttachments"/>
+                            </h:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                    </div> 
+                </div>
+                </div>
+                </div>
+                </div>
+
+                    
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <p:commandButton class="btn btn-block btn-success" actionListener="#{extraWorkController.updateEdit}" value="Save"
+                                             update=":viewEditExtraWorkForm:extraWorkDataList,:viewEditExtraWorkForm:growl, :viewEditExtraWorkForm:statusPanel, 
+                                                     :viewEditExtraWorkForm:detailsPanel,
+                                                     :viewEditExtraWorkForm:attachmentPanel" 
+                                             oncomplete="handleSubmit(args, 'editDlg');"/>
+                          
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                             <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="editDlg.hide()"/>
+                        </div>
+                    </div>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+     
+    </ui:composition>
+</html>
+

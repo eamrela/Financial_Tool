@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <title>FT</title>
+    <h:outputStylesheet name="assets/vendors/bootstrap/dist/css/bootstrap.min.css"/>
+    <h:outputStylesheet name="assets/vendors/font-awesome/css/font-awesome.min.css"/>
+    <h:outputStylesheet name="assets/vendors/nprogress/nprogress.css"/>
+    <h:outputStylesheet name="assets/vendors/animate.css/animate.min.css"/>
+    <h:outputStylesheet name="assets/build/css/custom.min.css"/>
+   
+    </h:head>
+    <h:body  class="login">
+        <font color="red">
+            <h:outputLabel value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>
+       </font>
+        <div class="login_wrapper">
+            <div class="animate form login_form">
+          <section class="login_content">
+            <h:form id="loginForm" prependId="false" >
+                <h:messages globalOnly="true"/>
+              <h1>Login Form</h1>
+              <div>
+                <h:inputText id="username" label="username" class="form-control" required="true"/>
+              </div>
+              <div>
+                <h:inputSecret id="password" class="form-control"  label="Password" required="true"/>
+              </div>
+              <div>
+               <h:commandButton type="submit" 
+                         id="login" 
+                         value="Login" 
+                         class="btn btn-primary btn-raised pull-right"
+                         action="#{loginController.doLogin}" />
+              </div>
+
+              <div class="clearfix"></div>
+
+              
+            </h:form>
+          </section>
+        </div>
+        </div>
+    </h:body>
+</html>
+
