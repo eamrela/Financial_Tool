@@ -6,6 +6,8 @@ import com.vodafone.financialtool.controllers.util.JsfUtil.PersistAction;
 import com.vodafone.financialtool.beans.CustomerServiceInvoiceFacade;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -18,6 +20,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
+import org.primefaces.event.RowEditEvent;
 
 @Named("customerServiceInvoiceController")
 @SessionScoped
@@ -27,6 +31,11 @@ public class CustomerServiceInvoiceController implements Serializable {
     private com.vodafone.financialtool.beans.CustomerServiceInvoiceFacade ejbFacade;
     private List<CustomerServiceInvoice> items = null;
     private CustomerServiceInvoice selected;
+    
+    @Inject
+    private UsersController usersController;
+    @Inject
+    private CustomerServicePoController servicePoController;
 
     public CustomerServiceInvoiceController() {
     }
@@ -52,14 +61,18 @@ public class CustomerServiceInvoiceController implements Serializable {
     public CustomerServiceInvoice prepareCreate() {
         selected = new CustomerServiceInvoice();
         initializeEmbeddableKey();
+        selected.setCreator(usersController.getLoggedInUser());
+        selected.setCreationDate(new Date());
+        selected.setPoNumer(servicePoController.getSelectedUserPo());
         return selected;
     }
 
-    public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("CustomerServiceInvoiceCreated"));
+    public CustomerServiceInvoice create() {
+        selected = persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("CustomerServiceInvoiceCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
+        return selected;
     }
 
     public void update() {
@@ -81,12 +94,12 @@ public class CustomerServiceInvoiceController implements Serializable {
         return items;
     }
 
-    private void persist(PersistAction persistAction, String successMessage) {
+    private CustomerServiceInvoice persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
             try {
                 if (persistAction != PersistAction.DELETE) {
-                    getFacade().edit(selected);
+                    selected = getFacade().merge(selected);
                 } else {
                     getFacade().remove(selected);
                 }
@@ -107,6 +120,7 @@ public class CustomerServiceInvoiceController implements Serializable {
                 JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             }
         }
+        return selected;
     }
 
     public CustomerServiceInvoice getCustomerServiceInvoice(java.lang.Long id) {
@@ -162,4 +176,39 @@ public class CustomerServiceInvoiceController implements Serializable {
 
     }
 
+    public boolean validateInvoiceValue(){
+        if(selected!=null){
+            if(selected.getPoNumer()!=null && selected.getInvoiceValue()!=null){
+                if((selected.getInvoiceValue()>selected.getPoNumer().getInvoiceDeserved())||selected.getInvoiceValue()==0.0){
+                    selected.setInvoiceValue(0.0);
+                    JsfUtil.addErrorMessage("Invoice Value can't exceed the Invoice Deserved");
+                    return false;
+                }else{
+                return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public void createInvoice(){
+        if(selected!=null){
+            if(validateInvoiceValue()){
+            selected = create();
+            if(servicePoController.getSelectedUserPo().getCustomerServiceInvoiceCollection()!=null){
+                servicePoController.getSelectedUserPo().getCustomerServiceInvoiceCollection().add(selected);
+            }else{
+                servicePoController.getSelectedUserPo().setCustomerServiceInvoiceCollection(Arrays.asList(selected));
+            }
+            servicePoController.updateEdit();
+            prepareCreate();
+        }
+        }
+    }
+    
+    public void onRowEdit(RowEditEvent event) {
+        
+        setSelected((CustomerServiceInvoice) event.getObject());
+        update();
+    }
 }

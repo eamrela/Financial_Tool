@@ -47,7 +47,7 @@
                 }
         </style>
     </h:head>
-    <h:body class="nav-md">
+    <h:body class="nav-sm">
         <div class="container body">
             <div class="main_container">
                 <div class="col-md-3 left_col">
@@ -155,6 +155,18 @@
                                           filterBy="#{servicePo.creator.userName}">
                                     <h:outputText value="#{servicePo.creator.userName}" />
                                 </p:column>
+                                <p:column headerText="Network" 
+                                          style="font-size: 9px;"
+                                          filterMatchMode="contains"
+                                          filterBy="#{servicePo.networkName}">
+                                    <h:outputText value="#{servicePo.networkName}" />
+                                </p:column>
+                                <p:column headerText="ES" 
+                                          style="font-size: 9px;"
+                                          filterMatchMode="contains"
+                                          filterBy="#{servicePo.earlyStart}">
+                                    <h:outputText value="#{servicePo.earlyStart}" />
+                                </p:column>
                                  <p:rowExpansion>
                                     <div class="col-xs-6 col-sm-6 col-md-6">
                                         <div class="form-group">
@@ -171,7 +183,10 @@
                                                  var="md" 
                                                  value="#{servicePo.customerServiceMdCollection}"
                                                  rows="5"
-                                                 editable="true">
+                                                 editable="true"
+                                                 rowKey="#{md.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
                                             <p:ajax event="rowEdit" listener="#{customerServiceMdController.onRowEdit}" 
                                                    update=":vfPoForm:tabView:datalistServicePo,
                                                             :vfPoForm:tabView:datalistServicePo:datalistServicePoMd,
@@ -216,7 +231,7 @@
                                                             symbol=" EGP" 
                                                             symbolPosition="s"
                                                             decimalSeparator="." thousandSeparator=","
-                                                            value="#{customerServiceMdController.selected.mdValue}"
+                                                            value="#{md.mdValue}"
                                                             required="true"
                                                             requiredMessage="Service Value can't be empty"/>
                                             </f:facet>
@@ -242,7 +257,10 @@
                                                  var="workDone" 
                                                  value="#{servicePo.customerServiceWorkDoneCollection}"
                                                  rows="5" 
-                                                 editable="true">
+                                                 editable="true"
+                                                 rowKey="#{workDone.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
                                             <p:ajax event="rowEdit" listener="#{customerServiceWorkDoneController.onRowEdit}" 
                                                     update=":vfPoForm:tabView:datalistServicePo,
                                                             :vfPoForm:tabView:datalistServicePo:datalistServiceWorkDone,
@@ -299,6 +317,82 @@
                                     </p:dataTable>
                                         </div>
                                     </div>
+                                     <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <div class="form-group">
+                                        <label class="control-label" for="datalistServicePoMdinvoice">Invoices:</label>
+                                        <br/>
+                                        <p>You can create Invoice with a value of 
+                                        <strong>
+                                            <h:outputText value="#{servicePo.invoiceDeserved}">
+                                            <f:convertNumber type="currency" currencyCode="EGP"/>
+                                        </h:outputText>
+                                        </strong>
+                                        </p>
+                                        <p:dataTable id="datalistServicePoMdinvoice"
+                                                 var="invoice" 
+                                                 value="#{servicePo.customerServiceInvoiceCollection}"
+                                                 rows="5"
+                                                 editable="true"
+                                                 rowKey="#{invoice.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
+                                            <p:ajax event="rowEdit" listener="#{customerServiceInvoiceController.onRowEdit}" 
+                                                   update=":vfPoForm:tabView:datalistServicePo,
+                                                            :vfPoForm:tabView:datalistServicePo:datalistServicePoMd,
+                                                            :vfPoForm:growl" />
+                                        <p:column headerText="Id" style="font-size: 9px;">
+                                            <p:cellEditor>
+                                            <f:facet name="output">
+                                            <h:outputText value="#{invoice.invoiceNumber}" />
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <h:inputText id="grnNumber" class="form-control"  
+                                                             value="#{invoice.invoiceNumber}"/>
+                                            </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column headerText="Date" style="font-size: 9px;">
+                                            <p:cellEditor>
+                                            <f:facet name="output">
+                                            <h:outputText value="#{invoice.invoiceDate}">
+                                                <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                            </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:calendar id="ewDate" 
+                                                                value="#{invoice.invoiceDate}"
+                                                                required="true"
+                                                                styleClass="form-control"
+                                                                requiredMessage="Date can't be empty">
+                                                    </p:calendar>
+                                            </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column headerText="Value" style="font-size: 9px;">
+                                            <p:cellEditor>
+                                            <f:facet name="output">
+                                            <h:outputText value="#{invoice.invoiceValue}">
+                                                <f:convertNumber type="currency" currencyCode="EGP"/>
+                                            </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:inputNumber id="workDoneValue" 
+                                                                class="form-control" 
+                                                                symbol=" EGP" 
+                                                                symbolPosition="s"
+                                                                decimalSeparator="." thousandSeparator=","
+                                                                value="#{invoice.invoiceValue}"
+                                                                required="true"
+                                                                requiredMessage="Service Value can't be empty"/>
+                                            </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column style="width:32px">
+                                            <p:rowEditor />
+                                        </p:column>
+                                        </p:dataTable>
+                                        </div>
+                                        </div>
                                 </p:rowExpansion>
                                 <f:facet name="footer">
                                     <p:commandButton id="deleteButton" 
@@ -326,6 +420,12 @@
                                         actionListener="#{customerServiceMdController.prepareCreate}"
                                         oncomplete="PF('addDlgVfServicePoMd').show();"
                                         update="datalistServicePo,:addVfServicePoMdForm" 
+                                        disabled="#{empty customerServicePoController.selectedUserPo}"/>
+                            <p:menuitem value="Add Invoice" 
+                                        icon="ui-icon-pencil" 
+                                        actionListener="#{customerServiceInvoiceController.prepareCreate}"
+                                        oncomplete="PF('addDlgVfServicePoInvoice').show();"
+                                        update="datalistServicePo,:addVfServicePoInvoiceForm" 
                                         disabled="#{empty customerServicePoController.selectedUserPo}"/>
                             </p:contextMenu>
                         </p:tab>
@@ -412,6 +512,18 @@
                                           filterBy="#{extraworkPo.creator.userName}">
                                     <h:outputText value="#{extraworkPo.creator.userName}" />
                                 </p:column>
+                                <p:column headerText="Network" 
+                                          style="font-size: 9px;"
+                                          filterMatchMode="contains"
+                                          filterBy="#{extraworkPo.networkName}">
+                                    <h:outputText value="#{extraworkPo.networkName}" />
+                                </p:column>
+                                <p:column headerText="ES" 
+                                          style="font-size: 9px;"
+                                          filterMatchMode="contains"
+                                          filterBy="#{extraworkPo.earlyStart}">
+                                    <h:outputText value="#{extraworkPo.earlyStart}" />
+                                </p:column>
                                 <p:rowExpansion>
                                     <div class="col-xs-6 col-sm-6 col-md-6">
                                         <div class="form-group">
@@ -428,7 +540,10 @@
                                                  var="md" 
                                                  value="#{extraworkPo.customerExtraworkMdCollection}"
                                                  rows="5" 
-                                                 editable="true">
+                                                 editable="true"
+                                                 rowKey="#{md.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
                                             <p:ajax event="rowEdit" listener="#{customerExtraworkMdController.onRowEdit}" 
                                                    update=":vfPoForm:tabView:datalistExtraworkPo,
                                                             :vfPoForm:tabView:datalistExtraworkPo:datalistExtraworkPoMd,
@@ -473,7 +588,7 @@
                                                             symbol=" EGP" 
                                                             symbolPosition="s"
                                                             decimalSeparator="." thousandSeparator=","
-                                                            value="#{customerServiceMdController.selected.mdValue}"
+                                                            value="#{md.mdValue}"
                                                             required="true"
                                                             requiredMessage="Service Value can't be empty"/>
                                             </f:facet>
@@ -499,7 +614,10 @@
                                                  var="workDone" 
                                                  value="#{extraworkPo.customerExtraworkWorkDoneCollection}"
                                                  rows="5"
-                                                 editable="true">
+                                                 editable="true"
+                                                 rowKey="#{workDone.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
                                             <p:ajax event="rowEdit" listener="#{customerExtraworkWorkDoneController.onRowEdit}" 
                                                      update=":vfPoForm:tabView:datalistExtraworkPo,
                                                             :vfPoForm:tabView:datalistExtraworkPo:datalistExtraworkWorkDone,   
@@ -556,6 +674,121 @@
                                     </p:dataTable>
                                         </div>
                                     </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-4">
+                                        <div class="form-group">
+                                        <label class="control-label" for="datalistServicePoMdinvoice">Invoices:</label>
+                                        <p>You can create Invoice with a value of 
+                                        <strong>
+                                            <h:outputText value="#{extraworkPo.invoiceDeserved}">
+                                            <f:convertNumber type="currency" currencyCode="EGP"/>
+                                        </h:outputText>
+                                        </strong>
+                                        </p>
+                                        <p:dataTable id="datalistServicePoMdinvoice"
+                                                 var="invoice" 
+                                                 value="#{extraworkPo.customerExtraworkInvoiceCollection}"
+                                                 rows="5"
+                                                 editable="true"
+                                                 rowKey="#{md.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
+                                            <p:ajax event="rowEdit" listener="#{customerExtraworkInvoiceController.onRowEdit}" 
+                                                   update=":vfPoForm:tabView:datalistExtraworkPo,
+                                                            :vfPoForm:tabView:datalistExtraworkPo:datalistExtraworkPoMd,
+                                                            :vfPoForm:growl" />
+                                        <p:column headerText="Id" style="font-size: 9px;">
+                                            <p:cellEditor>
+                                            <f:facet name="output">
+                                            <h:outputText value="#{invoice.invoiceNumber}" />
+                                            </f:facet>
+                                            <f:facet name="input">
+                                            <h:inputText id="grnNumber" class="form-control"  value="#{invoice.invoiceNumber}"/>
+                                            </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column headerText="Date" style="font-size: 9px;">
+                                            <p:cellEditor>
+                                            <f:facet name="output">
+                                            <h:outputText value="#{invoice.invoiceDate}">
+                                                <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                            </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:calendar id="ewDate" 
+                                                            value="#{invoice.invoiceDate}"
+                                                            required="true"
+                                                            styleClass="form-control"
+                                                            requiredMessage="Date can't be empty">
+                                                </p:calendar>
+                                            </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                        <p:column headerText="Value" style="font-size: 9px;">
+                                            <p:cellEditor>
+                                            <f:facet name="output">
+                                            <h:outputText value="#{invoice.invoiceValue}">
+                                                <f:convertNumber type="currency" currencyCode="EGP"/>
+                                            </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                             <p:inputNumber id="workDoneValue" 
+                                                            class="form-control" 
+                                                            symbol=" EGP" 
+                                                            symbolPosition="s"
+                                                            decimalSeparator="." thousandSeparator=","
+                                                            value="#{invoice.invoiceValue}"
+                                                            required="true"
+                                                            requiredMessage="Service Value can't be empty"/>
+                                            </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+                                         <p:column style="width:32px">
+                                            <p:rowEditor />
+                                        </p:column>
+                                        </p:dataTable>
+                                        </div>
+                                        </div>
+                                    <div class="col-xs-8 col-sm-8 col-md-8">
+                                        <div class="form-group">
+                                        <label class="control-label" for="datalistExtraworkPoAspPo">Associated ASP POs:</label>
+                                        <p>All associated ASP PO, that are reflected as work done</p>
+                                        <p:dataTable id="datalistExtraworkPoAspPo" 
+                                                    var="aspPo" 
+                                                     value="#{extraworkPo.aspExtaworkPoCollection}"
+                                                    rowKey="#{aspPo.poNumber}"
+                                                    paginatorPosition="bottom"
+                                                    paginator="true">
+
+                                            <p:column headerText="PO#" style="font-size: 9px;">
+                                               <h:outputText value="#{aspPo.poNumber}" />
+                                           </p:column>
+                                           <p:column headerText="ASP" style="font-size: 9px;">
+                                               <h:outputText value="#{aspPo.subcontractor}" />
+                                           </p:column>
+                                           <p:column headerText="Domain" style="font-size: 9px;">
+                                               <h:outputText value="#{aspPo.domainName}" />
+                                           </p:column>
+                                           <p:column headerText="Subdomain" style="font-size: 9px;">
+                                               <h:outputText value="#{aspPo.subDomain}" />
+                                           </p:column>
+                                           <p:column headerText="Date" style="font-size: 9px;">
+                                               <h:outputText value="#{aspPo.poDate}">
+                                                   <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                               </h:outputText>
+                                           </p:column>
+                                           <p:column headerText="PO Value" style="font-size: 9px;">
+                                               <h:outputText value="#{aspPo.poValue}">
+                                                   <f:convertNumber type="currency" currencyCode="EGP"/>
+                                               </h:outputText>
+                                           </p:column>
+                                           <p:column headerText="PO Margin" style="font-size: 9px;">
+                                               <h:outputText value="#{aspPo.margin}">
+                                                   <f:convertNumber type="percent"/>
+                                               </h:outputText>
+                                           </p:column>
+                                       </p:dataTable>
+                                        </div>
+                                    </div>
                                 </p:rowExpansion>
                                 <f:facet name="footer">
                                     <p:commandButton id="deleteButton" 
@@ -584,6 +817,17 @@
                                         oncomplete="PF('addDlgVfExtraworkPoMd').show();"
                                         update="datalistExtraworkPo,:addVfExtraworkPoMdForm" 
                                         disabled="#{empty customerExtraworkPoController.selectedUserPo}"/>
+                             <p:menuitem value="Correlate ASP PO" 
+                                        icon="ui-icon-arrowthick-2-e-w" 
+                                        oncomplete="PF('correlationDlg').show();"
+                                        update="datalistExtraworkPo,:correlationDlgForm" 
+                                        disabled="#{empty customerExtraworkPoController.selectedUserPo}"/>
+                             <p:menuitem value="Add Invoice" 
+                                                icon="ui-icon-pencil" 
+                                                actionListener="#{customerExtraworkInvoiceController.prepareCreate}"
+                                                oncomplete="PF('addDlgVfExtraworkPoInvoice').show();"
+                                                update="datalistExtraworkPo,:addVfExtraworkPoInvoiceForm" 
+                                                disabled="#{empty customerExtraworkPoController.selectedUserPo}"/>
                             </p:contextMenu>
                         </p:tab>
                 </p:tabView>
@@ -602,6 +846,9 @@
             <ui:include src="../modals/add_work_done_extra_work.xhtml"/>
             <ui:include src="../modals/add_md_extra_work.xhtml"/>
             <ui:include src="../modals/add_md_service.xhtml"/>
+            <ui:include src="../modals/add_invoice_service.xhtml"/>
+            <ui:include src="../modals/add_invoice_extra_work.xhtml"/>
+            <ui:include src="../modals/correlate.xhtml"/>
             <FT:Footer/>
             </div>
         </div>

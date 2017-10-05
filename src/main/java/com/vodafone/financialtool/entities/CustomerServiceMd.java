@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -62,6 +63,8 @@ public class CustomerServiceMd implements Serializable {
     @NotNull
     @Column(name = "md_value")
     private Double mdValue;
+    @Column(name = "remaining_from_md")
+    private Double remainingFromMd;
     @Basic(optional = false)
     @NotNull
     @Column(name = "creation_time")
@@ -73,8 +76,6 @@ public class CustomerServiceMd implements Serializable {
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
     private Users creator;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mdNumber")
-    private Collection<CustomerServiceInvoice> customerServiceInvoiceCollection;
 
     public CustomerServiceMd() {
     }
@@ -110,6 +111,15 @@ public class CustomerServiceMd implements Serializable {
         return mdDate;
     }
 
+    public Double getRemainingFromMd() {
+        return remainingFromMd;
+    }
+
+    public void setRemainingFromMd(Double remainingFromMd) {
+        this.remainingFromMd = remainingFromMd;
+    }
+
+    
     public void setMdDate(Date mdDate) {
         this.mdDate = mdDate;
     }
@@ -146,15 +156,6 @@ public class CustomerServiceMd implements Serializable {
         this.creator = creator;
     }
 
-    @XmlTransient
-    public Collection<CustomerServiceInvoice> getCustomerServiceInvoiceCollection() {
-        return customerServiceInvoiceCollection;
-    }
-
-    public void setCustomerServiceInvoiceCollection(Collection<CustomerServiceInvoice> customerServiceInvoiceCollection) {
-        this.customerServiceInvoiceCollection = customerServiceInvoiceCollection;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -179,5 +180,8 @@ public class CustomerServiceMd implements Serializable {
     public String toString() {
         return "com.vodafone.financialtool.entities.CustomerServiceMd[ id=" + id + " ]";
     }
+
+    
+    
     
 }

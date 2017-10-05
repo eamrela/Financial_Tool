@@ -18,6 +18,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
 
 @Named("subDomainController")
 @SessionScoped
@@ -27,6 +28,9 @@ public class SubDomainController implements Serializable {
     private com.vodafone.financialtool.beans.SubDomainFacade ejbFacade;
     private List<SubDomain> items = null;
     private SubDomain selected;
+    
+    @Inject
+    private UsersController usersController;
 
     public SubDomainController() {
     }
@@ -118,7 +122,11 @@ public class SubDomainController implements Serializable {
     }
 
     public List<SubDomain> getItemsAvailableSelectOne() {
+        if(usersController.getLoggedInUserRole().contains("SYS")){
         return getFacade().findAll();
+        }else{
+          return getFacade().findExtaWork();
+        }
     }
 
     @FacesConverter(forClass = SubDomain.class)

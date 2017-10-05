@@ -4,6 +4,7 @@ import com.vodafone.financialtool.entities.CustomerServiceMd;
 import com.vodafone.financialtool.controllers.util.JsfUtil;
 import com.vodafone.financialtool.controllers.util.JsfUtil.PersistAction;
 import com.vodafone.financialtool.beans.CustomerServiceMdFacade;
+import com.vodafone.financialtool.entities.CustomerServiceInvoice;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -31,6 +32,8 @@ public class CustomerServiceMdController implements Serializable {
     private com.vodafone.financialtool.beans.CustomerServiceMdFacade ejbFacade;
     private List<CustomerServiceMd> items = null;
     private CustomerServiceMd selected;
+    private CustomerServiceMd selectedUserMd;
+    
     @Inject
     private UsersController usersController;
     @Inject
@@ -43,6 +46,15 @@ public class CustomerServiceMdController implements Serializable {
         return selected;
     }
 
+    public CustomerServiceMd getSelectedUserMd() {
+        return selectedUserMd;
+    }
+
+    public void setSelectedUserMd(CustomerServiceMd selectedUserMd) {
+        this.selectedUserMd = selectedUserMd;
+    }
+
+    
     public void setSelected(CustomerServiceMd selected) {
         this.selected = selected;
     }
@@ -134,6 +146,8 @@ public class CustomerServiceMdController implements Serializable {
         return getFacade().findAll();
     }
 
+    
+
     @FacesConverter(forClass = CustomerServiceMd.class)
     public static class CustomerServiceMdControllerConverter implements Converter {
 
@@ -175,6 +189,19 @@ public class CustomerServiceMdController implements Serializable {
 
     }
 
+//    public void updateValuesEdit(){
+//       if(selectedUserMd!=null){
+//                if(selectedUserMd.getCustomerServiceInvoiceCollection()!=null){
+//                    Object[] invoiceCollection = selectedUserMd.getCustomerServiceInvoiceCollection().toArray();
+//                    Double invoiceValue = 0.0;
+//                    for (Object invoice : invoiceCollection) {
+//                        invoiceValue += ((CustomerServiceInvoice) invoice).getInvoiceValue();
+//                    }
+//                    selectedUserMd.setRemainingFromMd(selectedUserMd.getMdValue()-invoiceValue);
+//                }
+//        } 
+//    }
+    
     public boolean validateMdValue(){
         if(selected!=null){
             if(selected.getPoNumber()!=null && selected.getMdValue()!=null){
@@ -203,6 +230,12 @@ public class CustomerServiceMdController implements Serializable {
             prepareCreate();
         }
         }
+    }
+    
+    public void updateEdit() {
+//        updateValuesEdit();
+        getFacade().edit(selectedUserMd);
+        JsfUtil.addSuccessMessage("PO Updated");
     }
     
     public void onRowEdit(RowEditEvent event) {

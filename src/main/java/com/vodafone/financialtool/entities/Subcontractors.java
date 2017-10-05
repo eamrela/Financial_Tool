@@ -36,6 +36,12 @@ public class Subcontractors implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "subcontractor_name")
     private String subcontractorName;
+    @Column(name = "contact_person")
+    private String contactPerson;
+    @Column(name = "website")
+    private String website;
+    @Column(name = "address")
+    private String address;
 
     public Subcontractors() {
     }
@@ -76,5 +82,30 @@ public class Subcontractors implements Serializable {
     public String toString() {
         return "com.vodafone.financialtool.entities.Subcontractors[ subcontractorName=" + subcontractorName + " ]";
     }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
     
 }

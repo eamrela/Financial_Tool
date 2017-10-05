@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+       
+        <p:dialog id="editDlgServiceId" modal="true" widgetVar="editDlgAspServicePo" closeOnEscape="true" resizable="false" height="500" width="900" appendTo="@(body)" header="Edit (ASP - Service PO)">
+            <h:form id="editAspServicePoForm">
+
+                <h:panelGroup rendered="#{aspServicePoController.selectedUserPo!=null}">
+                <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="form-group">
+                <label class="control-label" for="ewAsp">ASP:</label>
+                <h:selectOneMenu id="ewAsp"
+                                 value="#{aspServicePoController.selectedUserPo.subcontractor}"
+                                         styleClass="form-control"
+                                         required="true"
+                                         requiredMessage="ASP can't be empty">
+                            <f:selectItem itemLabel="" itemValue="#{null}"/>
+                            <f:selectItems value="#{subcontractorsController.itemsAvailableSelectOne}" 
+                                           var="aspItem"
+                                           itemValue="#{aspItem.subcontractorName}"
+                                           itemLabel="#{aspItem.subcontractorName}"/>
+                </h:selectOneMenu>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="ewDomain">Domain:</label>
+                    <h:selectOneMenu id="ewDomain"
+                                     value="#{aspServicePoController.selectedUserPo.domainName}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="Domain can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{domainsController.itemsAvailableSelectOne}" 
+                                               var="domainItem"
+                                               itemValue="#{domainItem.domainName}"
+                                               itemLabel="#{domainItem.domainName}"/>
+                    </h:selectOneMenu>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="ewSubDomain">Sub_Domain:</label>
+                    <h:selectOneMenu id="ewSubDomain"
+                                     value="#{aspServicePoController.selectedUserPo.subDomain}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="SubDomain can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{subDomainController.itemsAvailableSelectOne}" 
+                                               var="subdomainItem"
+                                               itemValue="#{subdomainItem.subdomainName}"
+                                               itemLabel="#{subdomainItem.subdomainName}"/>
+                    </h:selectOneMenu>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="ewDate">Date:</label>
+                    <p:calendar id="ewDate" 
+                                value="#{aspServicePoController.selectedUserPo.poDate}"
+                                required="true"
+                                styleClass="form-control"
+                                requiredMessage="Extrawork Date can't be empty">
+                    </p:calendar>
+                </div>
+                
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                    <label class="control-label" for="factor">Factor:</label>
+                    <p:inputNumber id="factor" 
+                                   class="form-control" 
+                                   symbol=" Unit" 
+                                   symbolPosition="s"
+                                   decimalSeparator="." thousandSeparator=","
+                                   value="#{aspServicePoController.selectedUserPo.factor}"
+                                   required="true"
+                                   requiredMessage="Factor can't be empty">
+                        <p:ajax update="poValue" listener="#{aspServicePoController.updateValuesEdit()}" oncomplete=" removeClasses();"/>
+                    </p:inputNumber>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="serviceValue">Service Value:</label>
+                    <p:inputNumber id="serviceValue" 
+                                   class="form-control" 
+                                   symbol=" EGP" 
+                                   symbolPosition="s"
+                                   decimalSeparator="." thousandSeparator=","
+                                   value="#{aspServicePoController.selectedUserPo.serviceValue}"
+                                   required="true"
+                                   requiredMessage="Service Value can't be empty">
+                        <p:ajax update="poValue" listener="#{aspServicePoController.updateValuesEdit()}" oncomplete=" removeClasses();"/>
+                    </p:inputNumber>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <label class="control-label" for="poValue">PO Value:</label>
+                    <p:inputNumber id="poValue" 
+                                   class="form-control" 
+                                   symbol=" EGP" 
+                                   symbolPosition="s"
+                                   decimalSeparator="." thousandSeparator=","
+                                   value="#{aspServicePoController.selectedUserPo.poValue}"
+                                   required="true"
+                                   requiredMessage="PO Value can't be empty"
+                                   disabled="true"/>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="poOwner">Owner:</label>
+                    <h:selectOneMenu id="poOwner"
+                                     value="#{aspServicePoController.selectedUserPo.poOwner}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="owner can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{usersController.itemsAvailableSelectOne}" 
+                                               var="userItem"
+                                               itemValue="#{userItem.userName}"
+                                               itemLabel="#{userItem.userName}"/>
+                    </h:selectOneMenu>
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label class="control-label" for="ewCodeDescription">Description:</label>
+                    <h:inputTextarea id="ewCodeDescription" required="true" requiredMessage="Description can't be empty" 
+                                 class="form-control" value="#{aspServicePoController.selectedUserPo.poDescription}"
+                                 />
+                </div>
+                </div>
+                </div>    
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p:commandButton class="btn btn-block btn-success" actionListener="#{aspServicePoController.updateEdit}" value="Save"
+                                     update=":aspPoForm:tabView:datalistServicePo,:aspPoForm:growl" 
+                                     oncomplete="handleSubmit(args, 'editDlgAspServicePo');"/>
+
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                     <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="editDlgAspServicePo.hide()"/>
+                </div>
+            </div>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+     
+    </ui:composition>
+</html>
+

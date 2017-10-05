@@ -48,7 +48,7 @@
                 }
         </style>
     </h:head>
-    <h:body class="nav-md">
+    <h:body class="nav-sm">
         <div class="container body">
             <div class="main_container">
                 <div class="col-md-3 left_col">
@@ -138,6 +138,27 @@
                                                itemValue="#{userItem.chaserName}"
                                                itemLabel="#{userItem.chaserName}"/>
                     </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="poNetwork">Network:</label>
+                    <h:selectOneMenu id="poNetwork"
+                                     value="#{customerExtraworkPoController.selected.networkName}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="network can't be empty">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{poNetworkController.itemsAvailableSelectOne}" 
+                                               var="networkItem"
+                                               itemValue="#{networkItem.networkName}"
+                                               itemLabel="#{networkItem.networkName}"/>
+                    </h:selectOneMenu>
+                    </div>
+                    <div class="form-group">
+                    <label class="control-label" for="poES">Early Start:</label>
+                    <h:selectBooleanCheckbox id="poES" 
+                                            value="#{customerExtraworkPoController.selected.earlyStart}"
+                                             styleClass="form-control"/>
+                                             
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="form-group">

@@ -1,0 +1,596 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:FT="http://xmlns.jcp.org/jsf/composite/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Financial Tool</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+        <h:outputStylesheet name="assets/vendors/bootstrap/dist/css/bootstrap.css"/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+        <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+        <h:outputScript library="js" name="jsfcrud.js" target="head" />
+        <h:outputStylesheet name="css/jsfcrud.css"/>
+        <h:outputStylesheet name="assets/vendors/nprogress/nprogress.css"/>
+        <h:outputStylesheet name="assets/vendors/iCheck/skins/flat/green.css"/>
+        <h:outputStylesheet name="assets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css"/>
+        <h:outputStylesheet name="assets/vendors/jqvmap/dist/jqvmap.min.css"/>
+        <h:outputStylesheet name="assets/vendors/bootstrap-daterangepicker/daterangepicker.css"/>
+        <h:outputStylesheet name="assets/build/css/custom.min.css"/>
+         <f:metadata>
+             <f:viewAction action="#{aspLedgerController.clearValues}"/>
+        </f:metadata>
+    </h:head>
+    <h:body class="nav-sm">
+        <div class="container body">
+            <div class="main_container">
+                <div class="col-md-3 left_col">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title navbar-default" style="border: 0;">
+                            <a href="#" class="site_title"><i class="fa fa-certificate"></i> <span>Financial Tool</span></a>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <FT:ProfileInfo username="#{usersController.loggedInUser.userName}" 
+                                        domain="#{usersController.loggedInUserDomains}" 
+                                        region="#{usersController.loggedInUserRegions}"
+                                        company="#{usersController.loggedInUser.company}"/>
+                        
+                        <br></br>
+                        <FT:NavigationMenu/>
+                      </div>
+                </div>
+                <FT:Notifications/>
+            <h:form id="dashboardForm">
+                <div class="right_col" role="main">
+                <FT:PageName pageName="ASP Ledger"/>
+                   
+                
+                <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>ASP<small>Financial report</small></h2>
+                    <div class="nav navbar-right panel_toolbox">
+                    <h:selectOneMenu id="ewAsp"
+                                     value="#{aspLedgerController.asp}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="ASP can't be empty"
+                                             converter="SubcontractorsControllerConverter">
+                        <p:ajax update=":dashboardForm:aspData"/>
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{subcontractorsController.itemsAvailableSelectOne}" 
+                                               var="aspItem"
+                                               itemValue="#{aspItem.subcontractorName}"
+                                               itemLabel="#{aspItem.subcontractorName}"/>
+                    </h:selectOneMenu>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                     <h:panelGroup id="aspData">
+                    <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
+                        <h3>#{aspLedgerController.asp.subcontractorName}</h3>
+                        
+                      <ul class="list-unstyled user_data">
+                        <li>
+                            <i class="fa fa-briefcase user-profile-icon"></i> #{aspLedgerController.asp.contactPerson}
+                        </li>
+
+                        <li class="m-top-xs">
+                          <i class="fa fa-external-link user-profile-icon"></i>
+                          <a href="#" target="_blank">#{aspLedgerController.asp.website}</a>
+                        </li>
+                      </ul>
+                      <br />
+                      
+                      <div class="x_panel ui-ribbon-container">
+                          <div class="ui-ribbon-wrapper">
+                            <div class="ui-ribbon">
+                                <h:outputText id="ump" value="#{aspLedgerController.UMP}">
+                                    <f:convertNumber type="percent"/>
+                                </h:outputText> UM
+                            </div>
+                          </div>
+                          <div class="x_title">
+                            <h2>Summary</h2>
+                            <div class="clearfix"></div>
+                          </div>
+                          <div class="x_content">
+
+
+                              <h3 class="name_title">
+                                  <h:outputText value="#{aspLedgerController.overall}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </h3>
+                            <p>(EW+GRN) - (CN+PN)</p>
+
+                            <div class="divider"></div>
+                            
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">EW</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">Extra Work - No PO</a>
+                              <p>
+                                  <h:outputText value="#{aspLedgerController.extraWorkNoPO}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">PO</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">Remaining from POs</a>
+                              <p>
+                                  <h:outputText value="#{aspLedgerController.remainingFromPO}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">GR</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">GRNs Received</a>
+                              <p>
+                                  <h:outputText value="#{aspLedgerController.grnReceived}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">GR</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">GRNs Deserved</a>
+                              <p>
+                                  <h:outputText value="#{aspLedgerController.grndeserved}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">PO</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">POs Received</a>
+                              <p>
+                                  <h:outputText value="#{aspLedgerController.poReceived}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">CN</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">Credit Notes</a>
+                              <p>
+                                  <h:outputText value="#{aspLedgerController.creditNotes}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">PN</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">Penalities</a>
+                              <p>
+                                  <h:outputText value="#{aspLedgerController.penalty}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+
+                          </div>
+                        </div>
+                      
+                      
+                      
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                      <div class="profile_title">
+                        <div class="col-md-6">
+                          <h2>Financial Status for #{aspLedgerController.asp.subcontractorName}</h2>
+                          
+                          
+                          
+                        </div>
+                      </div>
+
+
+                      <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                          <li role="presentation" class="active"><a href="#ewNoPO" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">EW/Without PO</a>
+                          </li>
+                          <li role="presentation" class=""><a href="#RemainFromPO" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Remaining from POs</a>
+                          </li>
+                          <li role="presentation" class=""><a href="#grnRec" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">GRN Received</a>
+                          </li>
+                          <li role="presentation" class=""><a href="#grnDes" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">GRN Deserved</a>
+                          </li>
+                          <li role="presentation" class=""><a href="#CreditNotes" role="tab" id="profile-tab4" data-toggle="tab" aria-expanded="false">Credit Notes</a>
+                          </li>
+                          <li role="presentation" class=""><a href="#penalty" role="tab" id="profile-tab5" data-toggle="tab" aria-expanded="false">Penalty</a>
+                          </li>
+                          <li role="presentation" class=""><a href="#poRec" role="tab" id="profile-tab6" data-toggle="tab" aria-expanded="false">POs Received</a>
+                          </li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                          <div role="tabpanel" class="tab-pane fade active in" id="ewNoPO" aria-labelledby="home-tab">
+                              <p:dataTable var="extraWorkWithoutPO" value="#{aspLedgerController.extraWorkWithoutPo}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Extra Work with Domain Owner Approvals</f:facet>
+                                <p:column headerText="id#" style="font-size: 9px;">
+                                    <h:outputText value="#{extraWorkWithoutPO.id}" />
+                                </p:column>
+                                <p:column headerText="Region" style="font-size: 9px;">
+                                    <h:outputText value="#{extraWorkWithoutPO.region}" />
+                                </p:column>
+                                <p:column headerText="qty" style="font-size: 9px;">
+                                    <h:outputText value="#{extraWorkWithoutPO.qty}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{extraWorkWithoutPO.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{extraWorkWithoutPO.subDomain}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{extraWorkWithoutPO.activityDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="ASP Price" style="font-size: 9px;">
+                                    <h:outputText value="#{extraWorkWithoutPO.totalPriceAsp}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="VF Price" style="font-size: 9px;">
+                                    <h:outputText value="#{extraWorkWithoutPO.totalPriceVendor}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="RemainFromPO" aria-labelledby="profile-tab">
+                              <p:dataTable var="poWithRemaining" value="#{aspLedgerController.remainingFromPOService}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Service</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Remaining" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.remainingFromPo}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                              <p:dataTable var="poWithRemainingExtra" value="#{aspLedgerController.remainingFromPOExtrawork}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Extra Work</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Remaining" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.remainingFromPo}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="grnRec" aria-labelledby="profile-tab">
+                              <p:dataTable var="grnReceivedService" value="#{aspLedgerController.grnReceivedService}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Service GRNs</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.poNumber}" />
+                                </p:column>
+                                <p:column headerText="GRN#" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.grnNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.poNumber.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.poNumber.subDomain}" />
+                                </p:column>
+                                <p:column headerText="GRN Value" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.grnValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.poNumber.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.grnDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                              <p:dataTable var="grnReceivedService" value="#{aspLedgerController.grnReceivedExtrawork}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Extra Work GRNs</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.poNumber}" />
+                                </p:column>
+                                <p:column headerText="GRN#" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.grnNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.poNumber.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.poNumber.subDomain}" />
+                                </p:column>
+                                <p:column headerText="GRN Value" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.grnValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.poNumber.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{grnReceivedService.grnDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="grnDes" aria-labelledby="profile-tab">
+                              <p:dataTable var="grnDetailsService" value="#{aspLedgerController.grnDeservedService}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Service</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsService.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsService.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsService.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsService.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsService.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsService.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="GRN Deserved" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsService.grnDeserved}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                              <p:dataTable var="grnDetailsExtrawork" value="#{aspLedgerController.grnDeservedExtrawork}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Extra Work</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsExtrawork.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsExtrawork.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsExtrawork.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsExtrawork.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsExtrawork.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsExtrawork.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="GRN Deserved" style="font-size: 9px;">
+                                    <h:outputText value="#{grnDetailsExtrawork.grnDeserved}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="CreditNotes" aria-labelledby="profile-tab">
+                            <p:dataTable var="CN" value="#{aspLedgerController.creditNotesDetails}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Credit Notes</f:facet>
+                                <p:column headerText="CN#" style="font-size: 9px;">
+                                    <h:outputText value="#{CN.id}" />
+                                </p:column>
+                                <p:column headerText="CN Value" style="font-size: 9px;">
+                                    <h:outputText value="#{CN.cnValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{CN.cnDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{CN.cnDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="penalty" aria-labelledby="profile-tab">
+                              <p:dataTable var="PN" value="#{aspLedgerController.penaltyDetails}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Penalties</f:facet>
+                                <p:column headerText="PN#" style="font-size: 9px;">
+                                    <h:outputText value="#{PN.id}" />
+                                </p:column>
+                                <p:column headerText="PN Value" style="font-size: 9px;">
+                                    <h:outputText value="#{PN.pnValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{PN.pnDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{PN.pnDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="poRec" aria-labelledby="profile-tab">
+                              <p:dataTable var="poWithRemaining" value="#{aspLedgerController.poReceivedService}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Service</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemaining.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                              <p:dataTable var="poWithRemainingExtra" value="#{aspLedgerController.poReceivedExtrawork}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Extra Work</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{poWithRemainingExtra.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                     </h:panelGroup>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            </h:form>
+                
+            <FT:Footer/>
+            </div>
+        </div>
+        
+        
+    <script src="#{resource['assets/vendors/bootstrap/dist/js/bootstrap.min.js']}"></script>
+    <script src="#{resource['assets/vendors/fastclick/lib/fastclick.js']}"></script>
+    <script src="#{resource['assets/vendors/nprogress/nprogress.js']}"></script>
+    <script src="#{resource['assets/vendors/Chart.js/dist/Chart.min.js']}"></script>
+    <script src="#{resource['assets/vendors/gauge.js/dist/gauge.min.js']}"></script>
+    <script src="#{resource['assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js']}"></script>
+    <script src="#{resource['assets/vendors/iCheck/icheck.min.js']}"></script>
+    <script src="#{resource['assets/vendors/skycons/skycons.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.pie.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.time.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.stack.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.resize.js']}"></script>
+    <script src="#{resource['assets/vendors/flot.orderbars/js/jquery.flot.orderBars.js']}"></script>
+    <script src="#{resource['assets/vendors/flot-spline/js/jquery.flot.spline.min.js']}"></script>
+    <script src="#{resource['assets/vendors/flot.curvedlines/curvedLines.js']}"></script>
+    <script src="#{resource['assets/vendors/DateJS/build/date.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/dist/jquery.vmap.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/dist/maps/jquery.vmap.world.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js']}"></script>
+    <script src="#{resource['assets/vendors/moment/min/moment.min.js']}"></script>
+    <script src="#{resource['assets/vendors/bootstrap-daterangepicker/daterangepicker.js']}"></script>
+    <script src="#{resource['assets/build/js/custom.min.js']}"></script>   
+
+    </h:body>
+</html>
+

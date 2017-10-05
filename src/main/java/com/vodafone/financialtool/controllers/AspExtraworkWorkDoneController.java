@@ -185,11 +185,13 @@ public class AspExtraworkWorkDoneController implements Serializable {
            if(selected.getWorkDoneValue()!=null && workDoneValue){
                selected.setWorkDonePercentage((selected.getWorkDoneValue()/selected.getPoNumber().getPoValue())*100);
            }
+           validateWorkDone();
         }
     }
     
-     public void createWorkDone(){
-        if(selected!=null){
+   public void createWorkDone(){
+    if(selected!=null){
+        if(validateWorkDone()){
             updateValues(true);
             selected = create();
             if(extraWorkPoController.getSelectedUserPo().getAspExtraworkWorkDoneCollection()!=null){
@@ -200,13 +202,28 @@ public class AspExtraworkWorkDoneController implements Serializable {
             extraWorkPoController.updateEdit();
             prepareCreate();
         }
+    }
     }  
      
-     
-       public void onRowEdit(RowEditEvent event) {
+   public void onRowEdit(RowEditEvent event) {
         setSelected((AspExtraworkWorkDone) event.getObject());
+        if(validateWorkDone()){
         updateValues(true);
         update();
         extraWorkPoController.updateEdit();
+        }
     }
+   
+   public boolean validateWorkDone(){
+       if(selected!=null){
+           if(selected.getWorkDoneValue()>selected.getPoNumber().getRemainingFromPo()){
+               selected.setWorkDoneValue(0.0);
+               JsfUtil.addErrorMessage("Workdone value can't exceed remaining from PO");
+               return false;
+           }else{
+               return true;
+           }
+       }
+       return false;
+   }
 }

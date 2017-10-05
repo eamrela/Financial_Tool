@@ -90,36 +90,36 @@
                                                                deleteButton" />
                              
                             <p:column headerText="Id" style="font-size: 9px;" filterMatchMode="contains"
-                                      filterBy="#{extraWork.id}">
+                                      filterBy="#{extraWork.id}"  sortBy="#{extraWork.id}" >
                                 <h:outputText value="#{extraWork.id}" />
                             </p:column>
 
                             <p:column headerText="Site" style="font-size: 9px;" filterMatchMode="contains"
-                                      filterBy="#{extraWork.site}">
+                                      filterBy="#{extraWork.site}" sortBy="#{extraWork.site}">
                                 <h:outputText value="#{extraWork.site}" />
                             </p:column>
 
                             <p:column headerText="ASP" style="font-size: 9px;" filterMatchMode="contains"
-                                      filterBy="#{extraWork.asp}">
+                                      filterBy="#{extraWork.asp}" sortBy="#{extraWork.asp}">
                                 <h:outputText value="#{extraWork.asp}" />
                             </p:column>
 
                             <p:column headerText="Region" style="font-size: 9px;" filterMatchMode="contains"
-                                      filterBy="#{extraWork.region}">
+                                      filterBy="#{extraWork.region}" sortBy="#{extraWork.region}">
                                 <h:outputText value="#{extraWork.region}" />
                             </p:column>
 
                             <p:column headerText="Domain" style="font-size: 9px;" filterMatchMode="contains"
-                                      filterBy="#{extraWork.domainName}">
+                                      filterBy="#{extraWork.domainName}" sortBy="#{extraWork.domainName}">
                                 <h:outputText value="#{extraWork.domainName}" />
                             </p:column>
 
                             <p:column headerText="Sub-domain" style="font-size: 9px;" filterMatchMode="contains"
-                                      filterBy="#{extraWork.subDomain}">
+                                      filterBy="#{extraWork.subDomain}" sortBy="#{extraWork.subDomain}">
                                 <h:outputText value="#{extraWork.subDomain}" />
                             </p:column>
                             
-                            <p:column headerText="Date" style="font-size: 9px;">
+                            <p:column headerText="Date" style="font-size: 9px;" sortBy="#{extraWork.activityDate}">
                                 <h:outputText value="#{extraWork.activityDate}" >
                                     <f:convertDateTime pattern="yyyy/MM/dd"/>
                                 </h:outputText>
@@ -135,15 +135,19 @@
                                     <f:convertNumber currencyCode="EGP" type="currency"/>
                                 </h:outputText>
                             </p:column>
+                            <p:column headerText="Customer Owner" style="font-size: 9px;" filterMatchMode="contains"
+                                      filterBy="#{extraWork.customerOwner}" sortBy="#{extraWork.customerOwner}">
+                                <h:outputText value="#{extraWork.customerOwner}" />
+                            </p:column>
                             <p:column headerText="Creator" style="font-size: 9px;" filterMatchMode="contains"
-                                      filterBy="#{extraWork.creator.userName}">
+                                      filterBy="#{extraWork.creator.userName}" sortBy="#{extraWork.creator.userName}">
                                 <h:outputText value="#{extraWork.creator.userName}" />
                             </p:column>
                             <p:column headerText="Approval" style="font-size: 9px;">
                                 <h:outputText value="#{extraWork.approvalStatus}" />
                             </p:column>
                             <p:column headerText="Assignment" style="font-size: 9px;" filterMatchMode="contains"
-                                      filterBy="#{extraWork.assignmentGroup}">
+                                      filterBy="#{extraWork.assignmentGroup}" sortBy="#{extraWork.assignmentGroup}">
                                 <h:outputText value="#{extraWork.assignmentGroup}" />
                             </p:column>
                         <f:facet name="footer">

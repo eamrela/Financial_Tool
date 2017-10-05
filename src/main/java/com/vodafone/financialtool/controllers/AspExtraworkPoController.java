@@ -5,10 +5,12 @@ import com.vodafone.financialtool.controllers.util.JsfUtil;
 import com.vodafone.financialtool.controllers.util.JsfUtil.PersistAction;
 import com.vodafone.financialtool.beans.AspExtraworkPoFacade;
 import com.vodafone.financialtool.entities.AspExtraworkWorkDone;
-import com.vodafone.financialtool.entities.AspServicePo;
+import com.vodafone.financialtool.entities.CustomerExtraworkPo;
+import com.vodafone.financialtool.entities.ExtraWork;
 import java.io.IOException;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,8 +36,32 @@ public class AspExtraworkPoController implements Serializable {
     private AspExtraworkPo selected;
     private AspExtraworkPo selectedUserPo;
 
+    private List<ExtraWork> selectedUserPoMatchingExtraWork;
+    private List<ExtraWork> selectedUserPoSelectedCorrelation;
+    private Double totalSelectedExtraWorkAmount;
+    
     @Inject
     private UsersController usersController;
+    @Inject
+    private ExtraWorkController extraWorkController;
+    @Inject
+    private AspExtraworkWorkDoneController workDoneController;
+
+    public Double getTotalSelectedExtraWorkAmount() {
+        totalSelectedExtraWorkAmount = 0.0;
+        if(selectedUserPoSelectedCorrelation!=null){
+            for (ExtraWork selectedUserPoSelectedCorrelation1 : selectedUserPoSelectedCorrelation) {
+                totalSelectedExtraWorkAmount+= selectedUserPoSelectedCorrelation1.getTotalPriceAsp();
+            }
+        }
+        return totalSelectedExtraWorkAmount;
+    }
+
+    public void setTotalSelectedExtraWorkAmount(Double totalSelectedExtraWorkAmount) {
+        this.totalSelectedExtraWorkAmount = totalSelectedExtraWorkAmount;
+    }
+    
+    
     
     public AspExtraworkPoController() {
     }
@@ -46,6 +72,25 @@ public class AspExtraworkPoController implements Serializable {
 
     public void setSelectedUserPo(AspExtraworkPo selectedUserPo) {
         this.selectedUserPo = selectedUserPo;
+    }
+
+    public List<ExtraWork> getSelectedUserPoMatchingExtraWork() {
+        if(selectedUserPo!=null){
+        selectedUserPoMatchingExtraWork = extraWorkController.getItemsMatchingPo(selectedUserPo);
+        }
+        return selectedUserPoMatchingExtraWork;
+    }
+
+    public void setSelectedUserPoMatchingExtraWork(List<ExtraWork> selectedUserPoMatchingExtraWork) {
+        this.selectedUserPoMatchingExtraWork = selectedUserPoMatchingExtraWork;
+    }
+
+    public List<ExtraWork> getSelectedUserPoSelectedCorrelation() {
+        return selectedUserPoSelectedCorrelation;
+    }
+
+    public void setSelectedUserPoSelectedCorrelation(List<ExtraWork> selectedUserPoSelectedCorrelation) {
+        this.selectedUserPoSelectedCorrelation = selectedUserPoSelectedCorrelation;
     }
 
     
@@ -94,6 +139,8 @@ public class AspExtraworkPoController implements Serializable {
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
+            selectedUserPoMatchingExtraWork = null;
+            selectedUserPo = null;
         }
     }
 
@@ -142,6 +189,10 @@ public class AspExtraworkPoController implements Serializable {
 
     public List<AspExtraworkPo> getItemsAvailableSelectOne() {
         return getFacade().findAll();
+    }
+
+    public List<AspExtraworkPo> getItemsMatchingPo(CustomerExtraworkPo selectedUserPo) {
+        return getFacade().findMatchingPOs(selectedUserPo);
     }
 
     @FacesConverter(forClass = AspExtraworkPo.class)
@@ -216,7 +267,7 @@ public class AspExtraworkPoController implements Serializable {
             create();
             prepareCreate();
             try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/common/index.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/asp/view/view_asp_po.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(ExtraWorkController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -230,6 +281,8 @@ public class AspExtraworkPoController implements Serializable {
             selected = null; // Remove selection
             selectedUserPo = null;
             items = null;    // Invalidate list of items to trigger re-query.
+            selectedUserPoMatchingExtraWork = null;
+            selectedUserPo = null;
         }
     }
 
@@ -238,4 +291,39 @@ public class AspExtraworkPoController implements Serializable {
         getFacade().edit(selectedUserPo);
         JsfUtil.addSuccessMessage("PO Updated");
     }
+    
+     public void correlateExtraWork(){
+        if(selectedUserPoSelectedCorrelation!=null && selectedUserPo!=null){
+            for (ExtraWork extraWork : selectedUserPoSelectedCorrelation) {
+                // Add Extra Work Correlation
+                if(selectedUserPo.getExtraWorkCollection()!=null){
+                    selectedUserPo.getExtraWorkCollection().add(extraWork);
+                }else{
+                    selectedUserPo.setExtraWorkCollection(new ArrayList<ExtraWork>());
+                    selectedUserPo.getExtraWorkCollection().add(extraWork);
+                }
+                // Add Work done
+                workDoneController.prepareCreate();
+                workDoneController.getSelected().setPoNumber(selectedUserPo);
+                workDoneController.getSelected().setWorkDoneDate(extraWork.getActivityDate());
+                workDoneController.getSelected().setWorkDoneValue(extraWork.getTotalPriceAsp());
+                workDoneController.updateValues(false);
+                workDoneController.createWorkDone();
+                
+                extraWork.setCorrelated(Boolean.TRUE);
+                extraWorkController.setSelected(extraWork);
+                extraWorkController.update();
+                
+            }
+        }
+        selectedUserPoMatchingExtraWork = null;
+        workDoneController.setSelected(null);
+        extraWorkController.setSelected(null);
+    }
+     
+     public void updateVFPrice(){
+         if(selectedUserPo!=null){
+             
+         }
+     }
 }

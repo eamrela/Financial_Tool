@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -63,20 +64,20 @@ public class CustomerExtraworkMd implements Serializable {
     @NotNull
     @Column(name = "md_value")
     private Double mdValue;
-    
+    @Column(name = "remaining_from_md")
+    private Double remainingFromMd;
     @Basic(optional = false)
     @NotNull
     @Column(name = "creation_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mdNumber")
-    private Collection<CustomerExtraworkInvoice> customerExtraworkInvoiceCollection;
     @JoinColumn(name = "po_number", referencedColumnName = "po_number")
     @ManyToOne(optional = false)
     private CustomerExtraworkPo poNumber;
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
     private Users creator;
+
 
     public CustomerExtraworkMd() {
     }
@@ -93,6 +94,15 @@ public class CustomerExtraworkMd implements Serializable {
         this.creationTime = creationTime;
     }
 
+    public Double getRemainingFromMd() {
+        return remainingFromMd;
+    }
+
+    public void setRemainingFromMd(Double remainingFromMd) {
+        this.remainingFromMd = remainingFromMd;
+    }
+
+    
     public Long getId() {
         return id;
     }
@@ -136,14 +146,7 @@ public class CustomerExtraworkMd implements Serializable {
         this.creationTime = creationTime;
     }
 
-    @XmlTransient
-    public Collection<CustomerExtraworkInvoice> getCustomerExtraworkInvoiceCollection() {
-        return customerExtraworkInvoiceCollection;
-    }
-
-    public void setCustomerExtraworkInvoiceCollection(Collection<CustomerExtraworkInvoice> customerExtraworkInvoiceCollection) {
-        this.customerExtraworkInvoiceCollection = customerExtraworkInvoiceCollection;
-    }
+    
 
     public CustomerExtraworkPo getPoNumber() {
         return poNumber;
@@ -185,5 +188,8 @@ public class CustomerExtraworkMd implements Serializable {
     public String toString() {
         return "com.vodafone.financialtool.entities.CustomerExtraworkMd[ id=" + id + " ]";
     }
+
+    
+    
     
 }

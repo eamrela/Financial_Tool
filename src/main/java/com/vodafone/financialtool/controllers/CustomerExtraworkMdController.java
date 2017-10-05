@@ -4,7 +4,7 @@ import com.vodafone.financialtool.entities.CustomerExtraworkMd;
 import com.vodafone.financialtool.controllers.util.JsfUtil;
 import com.vodafone.financialtool.controllers.util.JsfUtil.PersistAction;
 import com.vodafone.financialtool.beans.CustomerExtraworkMdFacade;
-import com.vodafone.financialtool.entities.CustomerServiceMd;
+import com.vodafone.financialtool.entities.CustomerExtraworkInvoice;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -32,6 +32,8 @@ public class CustomerExtraworkMdController implements Serializable {
     private com.vodafone.financialtool.beans.CustomerExtraworkMdFacade ejbFacade;
     private List<CustomerExtraworkMd> items = null;
     private CustomerExtraworkMd selected;
+    private CustomerExtraworkMd selectedUserMd;
+    
     @Inject
     private UsersController usersController;
     @Inject
@@ -44,6 +46,15 @@ public class CustomerExtraworkMdController implements Serializable {
         return selected;
     }
 
+    public CustomerExtraworkMd getSelectedUserMd() {
+        return selectedUserMd;
+    }
+
+    public void setSelectedUserMd(CustomerExtraworkMd selectedUserMd) {
+        this.selectedUserMd = selectedUserMd;
+    }
+
+    
     public void setSelected(CustomerExtraworkMd selected) {
         this.selected = selected;
     }
@@ -135,6 +146,8 @@ public class CustomerExtraworkMdController implements Serializable {
         return getFacade().findAll();
     }
 
+    
+
     @FacesConverter(forClass = CustomerExtraworkMd.class)
     public static class CustomerExtraworkMdControllerConverter implements Converter {
 
@@ -176,7 +189,7 @@ public class CustomerExtraworkMdController implements Serializable {
 
     }
 
-      public boolean validateMdValue(){
+    public boolean validateMdValue(){
         if(selected!=null){
             if(selected.getPoNumber()!=null && selected.getMdValue()!=null){
                 if((selected.getMdValue()>selected.getPoNumber().getMdDeserved())||selected.getMdValue()==0.0){
@@ -189,6 +202,25 @@ public class CustomerExtraworkMdController implements Serializable {
             }
         }
         return false;
+    }
+    
+//    public void updateValuesEdit(){
+//       if(selectedUserMd!=null){
+//                if(selectedUserMd.getCustomerExtraworkInvoiceCollection()!=null){
+//                    Object[] invoiceCollection = selectedUserMd.getCustomerExtraworkInvoiceCollection().toArray();
+//                    Double invoiceValue = 0.0;
+//                    for (Object invoice : invoiceCollection) {
+//                        invoiceValue += ((CustomerExtraworkInvoice) invoice).getInvoiceValue();
+//                    }
+//                    selectedUserMd.setRemainingFromMd(selectedUserMd.getMdValue()-invoiceValue);
+//                }
+//        } 
+//    }
+    
+    public void updateEdit() {
+//        updateValuesEdit();
+        getFacade().edit(selectedUserMd);
+        JsfUtil.addSuccessMessage("PO Updated");
     }
     
     public void createMd(){

@@ -169,7 +169,7 @@ public class NetworkSitesController implements Serializable {
          
         for (int i = 0; i < allSites.size(); i++) {
             NetworkSites code = allSites.get(i);
-            if(code.getSiteId().toLowerCase().contains(query)) {
+            if(code.getSiteId().toLowerCase().startsWith(query)) {
                 filteredSites.add(code);
             }
         }

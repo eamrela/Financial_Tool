@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+  <ui:composition>
+       
+        <p:dialog id="correlationDlgId" modal="true" widgetVar="correlationDlg" 
+                  closeOnEscape="true" resizable="false" height="420" width="1200" appendTo="@(body)" header="Correlate Extra Work">
+            <h:form id="correlationDlgForm">
+
+                <h:panelGroup rendered="#{aspExtraworkPoController.selectedUserPo!=null}">
+                <div class="row">
+                    <p>Total Amount of selected Extra Work: 
+                    <strong>
+                        <h:outputText id="totalAmountSelected" value="#{aspExtraworkPoController.totalSelectedExtraWorkAmount}">
+                        <f:convertNumber type="currency" currencyCode="EGP"/>
+                    </h:outputText>
+                    </strong>
+                    </p>
+                    <p>Total Amount of Remaining from PO: 
+                    <strong>
+                        <h:outputText id="remainingFromPO" value="#{aspExtraworkPoController.selectedUserPo.remainingFromPo}">
+                        <f:convertNumber type="currency" currencyCode="EGP"/>
+                    </h:outputText>
+                    </strong>
+                    </p>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <p:dataTable var="extraWork" 
+                                     value="#{aspExtraworkPoController.selectedUserPoMatchingExtraWork}"
+                                     rowKey="#{extraWork.id}"
+                                     selectionMode="multiple"
+                                     selection="#{aspExtraworkPoController.selectedUserPoSelectedCorrelation}"
+                                     paginatorPosition="bottom"
+                                     paginator="true">
+                            
+                            <p:ajax event="rowSelect" update=":correlationDlgForm:correlationBtn,:correlationDlgForm:totalAmountSelected,:correlationDlgForm:remainingFromPO"/>
+                            <p:ajax event="rowUnselect" update=":correlationDlgForm:correlationBtn,:correlationDlgForm:totalAmountSelected,:correlationDlgForm:remainingFromPO"/>
+                            
+                            <p:column headerText="Id">
+                                <h:outputText value="#{extraWork.id}" />
+                            </p:column>
+                            <p:column headerText="Site">
+                                <h:outputText value="#{extraWork.site}" />
+                            </p:column>
+                            <p:column headerText="Domain">
+                                <h:outputText value="#{extraWork.domainName}" />
+                            </p:column>
+                            <p:column headerText="Subdomain">
+                                <h:outputText value="#{extraWork.subDomain}" />
+                            </p:column>
+                            <p:column headerText="Date">
+                                <h:outputText value="#{extraWork.activityDate}">
+                                    <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="ASP Price">
+                                <h:outputText value="#{extraWork.totalPriceAsp}">
+                                    <f:convertNumber type="currency" currencyCode="EGP"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="VF Price">
+                                <h:outputText value="#{extraWork.totalPriceVendor}">
+                                    <f:convertNumber type="currency" currencyCode="EGP"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </div>    
+                </div>    
+                <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p:commandButton id="correlationBtn"
+                                     class="btn btn-block btn-success" actionListener="#{aspExtraworkPoController.correlateExtraWork}" 
+                                     value="Correlate"
+                                     update=":aspPoForm:tabView:datalistExtraworkPo,
+                                             :aspPoForm:tabView:datalistExtraworkPo:datalistExtraworkWorkDone,
+                                             :aspPoForm:tabView:datalistExtraworkPo:datalistExtraworkCorrelated,
+                                             :aspPoForm:growl" 
+                                     oncomplete="handleSubmit(args, 'correlationDlg');"
+                                     disabled="#{empty aspExtraworkPoController.selectedUserPoSelectedCorrelation}"/>
+
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                     <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="correlationDlg.hide()"/>
+                </div>
+                </div>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+  </ui:composition> 
+</html>
+

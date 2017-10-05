@@ -5,6 +5,7 @@ import com.vodafone.financialtool.controllers.util.JsfUtil;
 import com.vodafone.financialtool.controllers.util.JsfUtil.PersistAction;
 import com.vodafone.financialtool.beans.ExtraWorkFacade;
 import com.vodafone.financialtool.entities.ActivityCode;
+import com.vodafone.financialtool.entities.AspExtraworkPo;
 import com.vodafone.financialtool.entities.Configurations;
 import com.vodafone.financialtool.entities.ConfigurationsPK;
 import com.vodafone.financialtool.entities.EmailNotification;
@@ -251,7 +252,22 @@ public class ExtraWorkController implements Serializable {
             
         prepareCreateASP();
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/common/index.xhtml");
+            if(usersController.getLoggedInUserRegions().contains("ASP")){
+                  FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/extrawork/asp/view_extrawork.xhtml");
+            }
+            else if(usersController.getLoggedInUserRegions().contains("BP")){
+                  FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/extrawork/bp/view_extrawork.xhtml");
+            }
+            else if(usersController.getLoggedInUserRegions().contains("DO")){
+                  FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/extrawork/do/view_extrawork.xhtml");
+            }
+            else if(usersController.getLoggedInUserRegions().contains("RO")){
+                  FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/extrawork/ro/view_extrawork.xhtml");
+            }
+            else {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/common/index.xhtml");
+            }
+          
         } catch (IOException ex) {
             Logger.getLogger(ExtraWorkController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -283,7 +299,8 @@ public class ExtraWorkController implements Serializable {
             userItems = getFacade().findUserItems(usersController.getLoggedInUserRole(),
                                                   usersController.getLoggedInUserRegions(),
                                                   usersController.getLoggedInUserDomains(),
-                                                  usersController.getLoggedInUser().getUserName());
+                                                  usersController.getLoggedInUser().getUserName(),
+                                                  usersController.getLoggedInUser().getCompany());
         }
         return userItems;
     }
@@ -337,7 +354,8 @@ public class ExtraWorkController implements Serializable {
                                                   usersController.getLoggedInUserDomains(),
                                                   usersController.getLoggedInUser().getUserName(),
                                                   start,
-                                                  end);
+                                                  end,
+                                                  usersController.getLoggedInUser().getCompany());
     }
 
     public void uploadExtrawork(List<ExtraWork> extras) {
@@ -345,6 +363,10 @@ public class ExtraWorkController implements Serializable {
             setSelected(extra);
             create();
         }
+    }
+
+    public List<ExtraWork> getItemsMatchingPo(AspExtraworkPo selectedUserPo) {
+        return getFacade().findItemsMatchingPo(selectedUserPo);
     }
 
     @FacesConverter(forClass = ExtraWork.class)
@@ -472,7 +494,7 @@ public class ExtraWorkController implements Serializable {
         }
         // UM
         if(selectedUserItem.getUnitPriceAsp()!=null && selectedUserItem.getUnitPriceVendor()!=null){
-            selectedUserItem.setUm(selectedUserItem.getUnitPriceVendor() - selectedUserItem.getUnitPriceAsp());
+            selectedUserItem.setUm(selectedUserItem.getTotalPriceVendor()- selectedUserItem.getTotalPriceAsp());
         }
         // UM%
         if(selectedUserItem.getUm()!=null && selectedUserItem.getTotalPriceVendor()!=null){

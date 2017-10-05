@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -73,6 +74,10 @@ public class CustomerExtraworkPo implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "sub_domain")
     private String subDomain;
+    @Column(name = "network_name")
+    private String networkName;
+    @Column(name = "early_start")
+    private Boolean earlyStart=false;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
@@ -107,19 +112,28 @@ public class CustomerExtraworkPo implements Serializable {
     @JoinTable(name = "customer_extrawork_po_j_extrawork", joinColumns = {
         @JoinColumn(name = "customer_extrawork_po_id", referencedColumnName = "po_number")}, inverseJoinColumns = {
         @JoinColumn(name = "extrawork_id", referencedColumnName = "id")})
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<ExtraWork> extraWorkCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber")
+    @JoinTable(name = "customer_extrawork_po_j_asp_extrawork_po", joinColumns = {
+        @JoinColumn(name = "customer_extrawork_po_id", referencedColumnName = "po_number")}, inverseJoinColumns = {
+        @JoinColumn(name = "asp_extrawork_po_id", referencedColumnName = "po_number")})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<AspExtraworkPo> aspExtaworkPoCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber" , fetch = FetchType.EAGER)
     private Collection<CustomerExtraworkMd> customerExtraworkMdCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumer" , fetch = FetchType.EAGER)
+    private Collection<CustomerExtraworkInvoice> customerExtraworkInvoiceCollection;
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
     private Users creator;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber" , fetch = FetchType.EAGER)
     private Collection<CustomerExtraworkWorkDone> customerExtraworkWorkDoneCollection;
     @Transient
     private Double mdDeserved;
     @Transient
     private Double totalWorkDone;
+    @Transient
+    private Double invoiceDeserved;
 
     public CustomerExtraworkPo() {
     }
@@ -245,7 +259,16 @@ public class CustomerExtraworkPo implements Serializable {
     public void setExtraWorkCollection(Collection<ExtraWork> extraWorkCollection) {
         this.extraWorkCollection = extraWorkCollection;
     }
+    @XmlTransient
+    public Collection<AspExtraworkPo> getAspExtaworkPoCollection() {
+        return aspExtaworkPoCollection;
+    }
 
+    public void setAspExtaworkPoCollection(Collection<AspExtraworkPo> aspExtaworkPoCollection) {
+        this.aspExtaworkPoCollection = aspExtaworkPoCollection;
+    }
+
+    
     @XmlTransient
     public Collection<CustomerExtraworkMd> getCustomerExtraworkMdCollection() {
         return customerExtraworkMdCollection;
@@ -271,7 +294,16 @@ public class CustomerExtraworkPo implements Serializable {
     public void setCustomerExtraworkWorkDoneCollection(Collection<CustomerExtraworkWorkDone> customerExtraworkWorkDoneCollection) {
         this.customerExtraworkWorkDoneCollection = customerExtraworkWorkDoneCollection;
     }
+    @XmlTransient
+    public Collection<CustomerExtraworkInvoice> getCustomerExtraworkInvoiceCollection() {
+        return customerExtraworkInvoiceCollection;
+    }
 
+    public void setCustomerExtraworkInvoiceCollection(Collection<CustomerExtraworkInvoice> customerExtraworkInvoiceCollection) {
+        this.customerExtraworkInvoiceCollection = customerExtraworkInvoiceCollection;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -296,7 +328,8 @@ public class CustomerExtraworkPo implements Serializable {
     public String toString() {
         return "com.vodafone.financialtool.entities.CustomerExtraworkPo[ poNumber=" + poNumber + " ]";
     }
-
+    
+    @Transient
     public Double getMdDeserved() {
         Double actualWorkDone = poValue-remainingFromPo;
         Double mdCreatedValue = 0.0;
@@ -310,6 +343,7 @@ public class CustomerExtraworkPo implements Serializable {
         return mdDeserved;
     }
 
+    @Transient
     public Double getTotalWorkDone() {
         totalWorkDone = 0.0;
         if(getCustomerExtraworkWorkDoneCollection()!=null){
@@ -319,6 +353,52 @@ public class CustomerExtraworkPo implements Serializable {
             }
         }
         return totalWorkDone;
+    }
+    
+    @Transient
+    public Double getInvoiceDeserved() {
+        Double invpiceCreatedValue = 0.0;
+        if(getCustomerExtraworkInvoiceCollection()!=null){
+            Object[] invoices = getCustomerExtraworkInvoiceCollection().toArray();
+            for (Object invoice : invoices) {
+                invpiceCreatedValue += ((CustomerExtraworkInvoice)invoice).getInvoiceValue();
+            }
+            invoiceDeserved = calculateTotalMdValue()-invpiceCreatedValue;
+        }
+        return invoiceDeserved;
+    }
+
+    public void setInvoiceDeserved(Double invoiceDeserved) {
+        this.invoiceDeserved = invoiceDeserved;
+    }
+    
+    
+    
+    public Double calculateTotalMdValue() {
+        Double mdCreatedValue = 0.0;
+        if(getCustomerExtraworkMdCollection()!=null){
+            Object[] mds = getCustomerExtraworkMdCollection().toArray();
+            for (Object md : mds) {
+                mdCreatedValue += ((CustomerExtraworkMd)md).getMdValue();
+            }
+        }
+        return mdCreatedValue;
+    }
+
+    public String getNetworkName() {
+        return networkName;
+    }
+
+    public void setNetworkName(String networkName) {
+        this.networkName = networkName;
+    }
+
+    public Boolean getEarlyStart() {
+        return earlyStart;
+    }
+
+    public void setEarlyStart(Boolean earlyStart) {
+        this.earlyStart = earlyStart;
     }
     
     

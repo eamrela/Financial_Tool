@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:FT="http://xmlns.jcp.org/jsf/composite/components"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Financial Tool</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+        <h:outputStylesheet name="assets/vendors/bootstrap/dist/css/bootstrap.css"/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+        <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+        <h:outputScript library="js" name="jsfcrud.js" target="head" />
+        <h:outputStylesheet name="css/jsfcrud.css"/>
+        <h:outputStylesheet name="assets/vendors/nprogress/nprogress.css"/>
+        <h:outputStylesheet name="assets/vendors/iCheck/skins/flat/green.css"/>
+        <h:outputStylesheet name="assets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css"/>
+        <h:outputStylesheet name="assets/vendors/jqvmap/dist/jqvmap.min.css"/>
+        <h:outputStylesheet name="assets/vendors/bootstrap-daterangepicker/daterangepicker.css"/>
+        <h:outputStylesheet name="assets/build/css/custom.min.css"/>
+        
+        <style>
+            .ui-growl{top: 100px;}
+            .ui-fileupload .start {
+            display: none;
+            }
+            .ui-fileupload .cancel {
+                display: none;
+            }
+            .ui-fileupload .progress {
+                display: none;
+            }
+            .ui-fileupload-progress {
+                display: none;
+            }
+              .ui-fileupload-content .ui-progressbar {
+                width: 0px;
+                height: 0px;
+                margin: 0
+                }
+        </style>
+    </h:head>
+    <h:body class="nav-sm">
+        <div class="container body">
+            <div class="main_container">
+                <div class="col-md-3 left_col">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title navbar-default" style="border: 0;">
+                            <a href="index.html" class="site_title"><i class="fa fa-certificate"></i> <span>Financial Tool</span></a>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <FT:ProfileInfo username="#{usersController.loggedInUser.userName}" 
+                                        domain="#{usersController.loggedInUserDomains}" 
+                                        region="#{usersController.loggedInUserRegions}"
+                                        company="#{usersController.loggedInUser.company}"/>
+                        
+                        <br></br>
+                        <FT:NavigationMenu/>
+                      </div>
+                </div>
+                <FT:Notifications/>
+            <h:form id="aspLedgerForm">
+            <p:growl id="growl"/>
+            <div class="right_col" role="main"> 
+                <FT:PageName pageName="Target Simulator"/>
+                <div class="row">
+                <div class="col-xs-3 col-md-3 col-sm-3">
+                <div class="form-group">
+                    <label class="control-label" for="ewDate">Start Date:</label>
+                    <p:calendar id="ewDate" 
+                                value="#{simulatorController.startDate}"/>
+                </div>
+                </div>
+                <div class="col-xs-3 col-md-3 col-sm-3">
+                <div class="form-group">
+                    <label class="control-label" for="endDate">End Date:</label>
+                    <p:calendar id="endDate" 
+                                value="#{simulatorController.endDate}"/>
+                </div>
+                </div>
+                <div class="col-xs-3 col-md-3 col-sm-3">
+                 <h:commandButton id="createBtn" 
+                                     value="Start Simulation"
+                                     class="btn btn-block btn-success"
+                                     action="#{simulatorController.refreshData}"
+                                     />
+                </div>
+                </div>
+                <div class="row top_tiles">
+              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                  <div class="icon"><i class="fa fa-money"></i></div>
+                  <div class="count">#{simulatorController.netSales}</div>
+                  <h3>Net Sales</h3>
+                </div>
+              </div>
+              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                  <div class="icon"><i class="fa fa-credit-card "></i></div>
+                  <div class="count">#{simulatorController.costOfSales}</div>
+                  <h3>Cost of Sales</h3>
+                </div>
+              </div>
+              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                  <div class="icon"><i class="fa fa-usd"></i></div>
+                  <div class="count">#{simulatorController.margin}</div>
+                  <h3>Margin</h3>
+                </div>
+              </div>
+              <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                  <div class="icon"><i class="fa fa-percent"></i></div>
+                  <div class="count">#{simulatorController.marginPercentage}</div>
+                  <h3>Margin %</h3>
+                </div>
+              </div>
+            </div>
+                <div class="row">
+                <h2 class="text-center">Service</h2>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <label class="control-label" for="customerServiceDataList">Customer POs</label>
+                    <p:dataTable id="customerServiceDataList"
+                                  var="customerService" 
+                                  value="#{simulatorController.customerService}">
+                        <p:column headerText="PO#" style="font-size: 9px;">
+                            <h:outputText value="#{customerService.poNumber}" />
+                        </p:column>
+                        <p:column headerText="Value" style="font-size: 9px;">
+                            <h:outputText value="#{customerService.poValue}" />
+                        </p:column>
+                        <p:column headerText="Date" style="font-size: 9px;">
+                            <h:outputText value="#{customerService.poDate}">
+                                <f:convertDateTime pattern="yyyy/MM/dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Description" style="font-size: 9px;">
+                            <h:outputText value="#{customerService.poDescription}" />
+                        </p:column>
+                    </p:dataTable>
+                </div> 
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <label class="control-label text-center" for="aspServiceDataList">ASP POs</label>
+                    <p:dataTable id="aspServiceDataList"
+                                  var="aspService" 
+                                  value="#{simulatorController.aspService}">
+                        <p:column headerText="PO#" style="font-size: 9px;">
+                            <h:outputText value="#{aspService.poNumber}" />
+                        </p:column>
+                        <p:column headerText="Value" style="font-size: 9px;">
+                            <h:outputText value="#{aspService.poValue}" />
+                        </p:column>
+                        <p:column headerText="Date" style="font-size: 9px;">
+                            <h:outputText value="#{aspService.poDate}">
+                                <f:convertDateTime pattern="yyyy/MM/dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="ASP" style="font-size: 9px;">
+                            <h:outputText value="#{aspService.subcontractor}" />
+                        </p:column>
+                        <p:column headerText="Description" style="font-size: 9px;">
+                            <h:outputText value="#{aspService.poDescription}" />
+                        </p:column>
+                    </p:dataTable>
+                    </div> 
+                </div>
+                <hr></hr>
+                <div class="row">
+                <h2 class="text-center">Extra Work</h2>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                   <p:pickList id="pickList" 
+                               value="#{pickListView.cities}" 
+                               var="cities" 
+                               itemLabel="#{cities}" 
+                               itemValue="#{cities}" /> 
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    
+                </div>
+                </div>
+            </div>
+            </h:form>
+                
+               
+            <FT:Footer/>
+            </div>
+        </div>
+        
+        
+    <script src="#{resource['assets/vendors/bootstrap/dist/js/bootstrap.min.js']}"></script>
+    <script src="#{resource['assets/vendors/fastclick/lib/fastclick.js']}"></script>
+    <script src="#{resource['assets/vendors/nprogress/nprogress.js']}"></script>
+    <script src="#{resource['assets/vendors/Chart.js/dist/Chart.min.js']}"></script>
+    <script src="#{resource['assets/vendors/gauge.js/dist/gauge.min.js']}"></script>
+    <script src="#{resource['assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js']}"></script>
+    <script src="#{resource['assets/vendors/iCheck/icheck.min.js']}"></script>
+    <script src="#{resource['assets/vendors/skycons/skycons.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.pie.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.time.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.stack.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.resize.js']}"></script>
+    <script src="#{resource['assets/vendors/flot.orderbars/js/jquery.flot.orderBars.js']}"></script>
+    <script src="#{resource['assets/vendors/flot-spline/js/jquery.flot.spline.min.js']}"></script>
+    <script src="#{resource['assets/vendors/flot.curvedlines/curvedLines.js']}"></script>
+    <script src="#{resource['assets/vendors/DateJS/build/date.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/dist/jquery.vmap.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/dist/maps/jquery.vmap.world.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js']}"></script>
+    <script src="#{resource['assets/vendors/moment/min/moment.min.js']}"></script>
+    <script src="#{resource['assets/vendors/bootstrap-daterangepicker/daterangepicker.js']}"></script>
+    <script src="#{resource['assets/build/js/custom.min.js']}"></script>   
+    <script type="text/javascript">
+        //<![CDATA[
+           removeClasses();
+        //]]>
+        function removeClasses(){
+             $('#createTrForm\\:ewDate')
+                    .removeClass();
+             $('#createTrForm\\:ewDate_input')
+                    .removeClass()
+                    .addClass( "form-control" );
+            
+          
+            $('#createTrForm\\:trValue')
+                    .removeClass();
+            $('#createTrForm\\:trValue_input') 
+                    .removeClass()
+                    .addClass( "form-control" );
+        }
+        </script>
+
+    
+    </h:body>
+</html>
+

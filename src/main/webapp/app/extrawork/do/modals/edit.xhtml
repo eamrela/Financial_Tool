@@ -10,7 +10,7 @@
         <p:dialog id="editDlgId" modal="true" widgetVar="editDlg" closeOnEscape="true" resizable="false" height="570" width="970" appendTo="@(body)" header="Edit (ASP)">
             <h:form id="editForm">
 
-                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (extraWorkController.selectedUserItem.creator.userName == 
+                 <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (usersController.loggedInUser.userName == 
                                                          extraWorkController.selectedUserItem.assignmentGroup)}">
                 <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-3">        
@@ -110,23 +110,23 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-<!--                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="form-group">
                     <label class="control-label" for="ewSearchCode">Search Price List:</label>
                     <p:autoComplete id="ewSearchCode"  
-                                value="{extraWorkController.selectedActivityCode}" 
-                                completeMethod="{activityCodeController.autoCompleteActivityCode}" 
+                                value="#{extraWorkController.selectedActivityCode}" 
+                                completeMethod="#{activityCodeController.autoCompleteActivityCode}" 
                                 var="activityCodeItem" 
-                                itemLabel="{activityCodeItem}" 
-                                itemValue="{activityCodeItem}" 
+                                itemLabel="#{activityCodeItem}" 
+                                itemValue="#{activityCodeItem}" 
                                 forceSelection="true"
                                 maxResults="10">
-                        <p:ajax event="itemSelect" listener="{extraWorkController.onItemSelectSetActivityCodeEdit}" 
+                        <p:ajax event="itemSelect" listener="#{extraWorkController.onItemSelectSetActivityCodeEdit}" 
                                 update=":viewEditExtraWorkForm:growl,
                                    ewCode, ewCodeASPPrice, ewCodeVendorPrice, ewUM, ewUMPercent, ewCodeDescription, ewTotalASPPrice, ewTotalVendorPrice" />
                     </p:autoComplete>
                     </div>
-                    </div>-->
+                    </div>
                     <hr></hr>
                     <div class="col-md-6 col-sm-6 col-xs-6">
                     <div class="form-group">
@@ -141,8 +141,7 @@
                                    decimalSeparator="." thousandSeparator=","
                                    value="#{extraWorkController.selectedUserItem.qty}"
                                    required="true"
-                                   requiredMessage="Quantity can't be empty"
-                                   disabled="true">
+                                   requiredMessage="Quantity can't be empty">
                         <p:ajax update="ewUM, ewUMPercent, ewTotalASPPrice, ewTotalVendorPrice" listener="#{extraWorkController.updateValuesEdit()}" />
                     </p:inputNumber>
                     </div>
@@ -156,8 +155,7 @@
                                    decimalSeparator="." thousandSeparator=","
                                    value="#{extraWorkController.selectedUserItem.unitPriceAsp}"
                                    required="true"
-                                   requiredMessage="Unit Price can't be empty"
-                                   disabled="true">
+                                   requiredMessage="Unit Price can't be empty">
                         <p:ajax update="ewUM, ewUMPercent, ewTotalASPPrice" listener="#{extraWorkController.updateValuesEdit()}" />
                     </p:inputNumber>
                     </div>

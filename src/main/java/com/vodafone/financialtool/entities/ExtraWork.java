@@ -13,6 +13,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -74,7 +75,6 @@ public class ExtraWork implements Serializable {
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
     @Column(name = "site")
     private String site;
     @Basic(optional = false)
@@ -127,7 +127,7 @@ public class ExtraWork implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "qty")
-    private Double qty;
+    private Double qty=1.0;
     @Basic(optional = false)
     @NotNull
     @Column(name = "unit_price_asp")

@@ -46,9 +46,9 @@ public class CustomerServiceInvoice implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @Size(max = 2147483647)
-    @Column(name = "po_numer")
-    private String poNumer;
+    @JoinColumn(name = "po_numer", referencedColumnName = "po_number")
+    @ManyToOne(optional = false)
+    private CustomerServicePo poNumer;
     @Size(max = 2147483647)
     @Column(name = "invoice_number")
     private String invoiceNumber;
@@ -59,12 +59,10 @@ public class CustomerServiceInvoice implements Serializable {
     @Column(name = "invoice_value")
     private Double invoiceValue;
    
-    @Size(max = 2147483647)
+    @Temporal(TemporalType.DATE)
     @Column(name = "creation_date")
-    private String creationDate;
-    @JoinColumn(name = "md_number", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private CustomerServiceMd mdNumber;
+    private Date creationDate;
+    
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne
     private Users creator;
@@ -84,14 +82,13 @@ public class CustomerServiceInvoice implements Serializable {
         this.id = id;
     }
 
-    public String getPoNumer() {
+     public CustomerServicePo getPoNumer() {
         return poNumer;
     }
 
-    public void setPoNumer(String poNumer) {
+    public void setPoNumer(CustomerServicePo poNumer) {
         this.poNumer = poNumer;
     }
-
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -116,20 +113,12 @@ public class CustomerServiceInvoice implements Serializable {
         this.invoiceValue = invoiceValue;
     }
 
-    public String getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public CustomerServiceMd getMdNumber() {
-        return mdNumber;
-    }
-
-    public void setMdNumber(CustomerServiceMd mdNumber) {
-        this.mdNumber = mdNumber;
     }
 
     public Users getCreator() {

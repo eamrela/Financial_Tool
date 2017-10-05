@@ -20,12 +20,14 @@
                                              value="#{extraWorkController.selectedUserItem.assignmentGroup}"
                                              styleClass="form-control"
                                              required="true"
-                                             requiredMessage="Assignee can't be empty">
+                                             requiredMessage="Assignee can't be empty"
+                                             >
                             <f:selectItem itemLabel="" itemValue="#{null}"/>
                             <f:selectItems value="#{usersController.getUsersByRegion(extraWorkController.selectedUserItem.region)}" 
                                         var="userItem"
                                         itemValue="#{userItem.userName}"
-                                        itemLabel="#{userItem.userName}"/>
+                                        itemLabel="#{userItem.userName}"
+                                        />
                             </h:selectOneMenu>
                     </div>
                         </div>

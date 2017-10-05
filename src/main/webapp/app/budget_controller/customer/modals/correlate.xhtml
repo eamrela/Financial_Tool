@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+  <ui:composition>
+       
+        <p:dialog id="correlationDlgId" modal="true" widgetVar="correlationDlg" 
+                  closeOnEscape="true" resizable="false" height="420" width="1200" appendTo="@(body)" header="Correlate ASP PO Extra work">
+            <h:form id="correlationDlgForm">
+
+                <h:panelGroup rendered="#{customerExtraworkPoController.selectedUserPo!=null}">
+                <div class="row">
+                    <p>Total Amount of selected POs: 
+                    <strong>
+                        <h:outputText id="totalAmountSelected" value="#{customerExtraworkPoController.totalSelectedAspPOs}">
+                        <f:convertNumber type="currency" currencyCode="EGP"/>
+                    </h:outputText>
+                    </strong>
+                    </p>
+                    <p>Total Amount of Remaining from PO: 
+                    <strong>
+                        <h:outputText id="remainingFromPO" value="#{customerExtraworkPoController.selectedUserPo.remainingFromPo}">
+                        <f:convertNumber type="currency" currencyCode="EGP"/>
+                    </h:outputText>
+                    </strong>
+                    </p>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <p:dataTable var="aspPo" 
+                                     value="#{customerExtraworkPoController.selectedUserPoMatchingAspPo}"
+                                     rowKey="#{aspPo.poNumber}"
+                                     selectionMode="multiple"
+                                     selection="#{customerExtraworkPoController.selectedUserPoSelectedCorrelation}"
+                                        paginatorPosition="bottom"
+                                        paginator="true">
+                            
+                            <p:ajax event="rowSelect" update=":correlationDlgForm:correlationBtn,:correlationDlgForm:totalAmountSelected,:correlationDlgForm:remainingFromPO"/>
+                            <p:ajax event="rowUnselect" update=":correlationDlgForm:correlationBtn,:correlationDlgForm:totalAmountSelected,:correlationDlgForm:remainingFromPO"/>
+                            
+                            <p:column headerText="PO#">
+                                <h:outputText value="#{aspPo.poNumber}" />
+                            </p:column>
+                            <p:column headerText="ASP">
+                                <h:outputText value="#{aspPo.subcontractor}" />
+                            </p:column>
+                            <p:column headerText="Domain">
+                                <h:outputText value="#{aspPo.domainName}" />
+                            </p:column>
+                            <p:column headerText="Subdomain">
+                                <h:outputText value="#{aspPo.subDomain}" />
+                            </p:column>
+                            <p:column headerText="Date">
+                                <h:outputText value="#{aspPo.poDate}">
+                                    <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="PO Value">
+                                <h:outputText value="#{aspPo.poValue}">
+                                    <f:convertNumber type="currency" currencyCode="EGP"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Margin">
+                                <h:outputText value="#{aspPo.margin}">
+                                    <f:convertNumber type="percent"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </div>    
+                </div>    
+                <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <p:commandButton id="correlationBtn"
+                                     class="btn btn-block btn-success" actionListener="#{customerExtraworkPoController.correlateAspPo}" 
+                                     value="Correlate"
+                                     update=":vfPoForm:tabView:datalistExtraworkPo,
+                                             :vfPoForm:tabView:datalistExtraworkPo:datalistExtraworkWorkDone,
+                                             :vfPoForm:tabView:datalistExtraworkPo:datalistExtraworkPoAspPo,
+                                             :vfPoForm:growl" 
+                                     oncomplete="handleSubmit(args, 'correlationDlg');"
+                                     disabled="#{empty customerExtraworkPoController.selectedUserPoSelectedCorrelation}"/>
+
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                     <p:commandButton class="btn btn-block btn-warning" value="Cancel" onclick="correlationDlg.hide()"/>
+                </div>
+                </div>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+  </ui:composition> 
+</html>
+

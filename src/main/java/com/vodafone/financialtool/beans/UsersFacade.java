@@ -31,7 +31,8 @@ public class UsersFacade extends AbstractFacade<Users> {
     }
 
     public List<Users> findUsersByRegion(String region) {
-        return em.createNativeQuery("select * from users where user_name in (select user_name from users_j_regions where region_name='"+region+"')", 
+        return em.createNativeQuery("select * from users where user_name in (select user_name from users_j_regions where region_name='"+region+"') "
+                + " order by user_name asc", 
                 Users.class).getResultList();
     }
     

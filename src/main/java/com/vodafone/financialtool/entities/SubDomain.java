@@ -36,6 +36,9 @@ public class SubDomain implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "subdomain_name")
     private String subdomainName;
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "applicable")
+    private String applicable;
 
     public SubDomain() {
     }
@@ -43,6 +46,16 @@ public class SubDomain implements Serializable {
     public SubDomain(String subdomainName) {
         this.subdomainName = subdomainName;
     }
+
+    public String getApplicable() {
+        return applicable;
+    }
+
+    public void setApplicable(String applicable) {
+        this.applicable = applicable;
+    }
+    
+    
 
     public String getSubdomainName() {
         return subdomainName;

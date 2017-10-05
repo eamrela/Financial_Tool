@@ -10,7 +10,7 @@
         <p:dialog id="editDlgId" modal="true" widgetVar="editDlg" closeOnEscape="true" resizable="false" height="500" width="900" appendTo="@(body)" header="Edit (ASP)">
             <h:form id="editForm">
 
-                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (extraWorkController.selectedUserItem.creator.userName == 
+                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (usersController.loggedInUser.userName == 
                                                          extraWorkController.selectedUserItem.assignmentGroup)}">
                 <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-3">        

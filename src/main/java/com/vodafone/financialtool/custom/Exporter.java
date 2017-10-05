@@ -6,6 +6,7 @@
 package com.vodafone.financialtool.custom;
 
 import com.vodafone.financialtool.controllers.ExtraWorkController;
+import com.vodafone.financialtool.controllers.UsersController;
 import com.vodafone.financialtool.controllers.util.JsfUtil;
 import com.vodafone.financialtool.entities.ExtraWork;
 import com.vodafone.financialtool.entities.ExtraworkAttachments;
@@ -78,27 +79,29 @@ public class Exporter implements Serializable{
     //<editor-fold defaultstate="collapsed" desc="Headers">
     
 
-     private final String[] activityHeadersFull_NoAttachment = {"Site","ASP","Region","VF Owner","Approval Status ","Domain",
+     private final String[] activityHeadersFull_NoAttachment = {"Id","Site","ASP","Region","VF Owner","Approval Status ","Domain",
                                 "SubDomain","Date","Activity Code","Activity Description ","Activity details","Qty","Unit Price to VF","Unit Price to ASP",
-                                "VF Total Price","ASP Total Price","UM","UM%","Business Approval","Region Approval","Domain Approval","Creator","Number of Attachments"};
-     private final String[] activityHeadersFull_Attachment = {"Site","ASP","Region","VF Owner","Approval Status ","Domain",
+                                "VF Total Price","ASP Total Price","UM","UM%","Business Approval","Region Approval","Domain Approval","Creator","Company","Number of Attachments","Assignment","Company","Last Assignment","Company"};
+     private final String[] activityHeadersFull_Attachment = {"Id","Site","ASP","Region","VF Owner","Approval Status ","Domain",
                                 "SubDomain","Date","Activity Code","Activity Description ","Activity details","Qty","Unit Price to VF","Unit Price to ASP",
-                                "VF Total Price","ASP Total Price","UM","UM%","Business Approval","Region Approval","Domain Approval","Creator","Attachment(s)"};
+                                "VF Total Price","ASP Total Price","UM","UM%","Business Approval","Region Approval","Domain Approval","Creator","Company","Assignment","Company","Last Assignment","Company","Attachment(s)"};
      private final String[] activityHeadersVF = {"Site","Region","VF Owner","Approval Status ","Domain",
                                 "SubDomain","Date","Activity Code","Activity Description ","Activity details","Qty","Unit Price",
-                                "Total Price","Number of Attachments"};
+                                "Total Price","Number of Attachments","Assignment","Company","Last Assignment","Company"};
      private final String[] activityHeadersVF_Attachments = {"Site","Region","VF Owner","Approval Status ","Domain",
                                 "SubDomain","Date","Activity Code","Activity Description ","Activity details","Qty","Unit Price",
                                 "Total Price","Attachment(s)"};
-     private final String[] activityHeadersASP = {"Site","ASP","Region","Approval Status ","Domain",
+     private final String[] activityHeadersASP = {"Id","Site","ASP","Region","Approval Status ","Domain",
                                 "SubDomain","Date","Activity Code","Activity Description ","Activity details","Qty","Unit Price"
-                                ,"ASP Total Price","Business Approval","Region Approval","Domain Approval","Creator","Number of Attachments"};
+                                ,"ASP Total Price","Business Approval","Region Approval","Domain Approval","Creator","Company","Number of Attachments","Assignment","Company","Last Assignment","Company"};
      //</editor-fold>
     static final String drawNS = "http://schemas.microsoft.com/office/drawing/2010/main";
     static final String relationshipsNS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
     
      @Inject
      private ExtraWorkController extraWorkController;
+     @Inject 
+     private UsersController usersController;
      
     public void exportActivity_BP_DO_FULL_NoATTACHMENT(){
         List<ExtraWork> activities = extraWorkController.getUserItemsByDate(fromDate,toDate);
@@ -112,6 +115,9 @@ public class Exporter implements Serializable{
         for (int i = 0; i < activities.size(); i++) {
             row = sheet.createRow(i+1);
             int j=0;
+            //Id
+            row.createCell(j).setCellValue(activities.get(i).getId());
+            j++;
             //Site
             row.createCell(j).setCellValue(activities.get(i).getSite()!=null?activities.get(i).getSite():"");
             j++;
@@ -169,8 +175,8 @@ public class Exporter implements Serializable{
             //BP Approval 
             row.createCell(j).setCellValue(activities.get(i).getBusinessProviderApproval()!=null?activities.get(i).getBusinessProviderApproval():false);
             j++;
-            //Domain Approval 
-            row.createCell(j).setCellValue(activities.get(i).getDomainOwnerApproval()!=null?activities.get(i).getDomainOwnerApproval():false);
+            //Region Approval 
+            row.createCell(j).setCellValue(activities.get(i).getRegionApproval()!=null?activities.get(i).getRegionApproval():false);
             j++;
             //Domain Approval 
             row.createCell(j).setCellValue(activities.get(i).getDomainOwnerApproval()!=null?activities.get(i).getDomainOwnerApproval():false);
@@ -178,8 +184,23 @@ public class Exporter implements Serializable{
             //Creator 
             row.createCell(j).setCellValue(activities.get(i).getCreator()!=null?activities.get(i).getCreator().getUserName():"");
             j++;
+            //Company 
+            row.createCell(j).setCellValue(activities.get(i).getCreator()!=null?activities.get(i).getCreator().getCompany():"");
+            j++;
             //Attachments Number
              row.createCell(j).setCellValue(activities.get(i).getExtraworkAttachmentsCollection()!=null?activities.get(i).getExtraworkAttachmentsCollection().size():0);
+            j++;
+            //Assignment
+             row.createCell(j).setCellValue(activities.get(i).getAssignmentGroup()!=null?activities.get(i).getAssignmentGroup():"");
+            j++;
+            //Company 
+            row.createCell(j).setCellValue(usersController.getUsers(activities.get(i).getAssignmentGroup())!=null?usersController.getUsers(activities.get(i).getAssignmentGroup()).getCompany():"");
+            j++;
+            //Last Assignment
+             row.createCell(j).setCellValue(activities.get(i).getLastAssignment()!=null?activities.get(i).getLastAssignment():"");
+            j++;
+            //Company 
+            row.createCell(j).setCellValue(usersController.getUsers(activities.get(i).getLastAssignment())!=null?usersController.getUsers(activities.get(i).getLastAssignment()).getCompany():"");
             j++;
         }
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -214,6 +235,9 @@ public class Exporter implements Serializable{
             for (int i = 0; i < activities.size(); i++) {
                 row = sheet.createRow(i+1);
                 int j=0;
+                 //Id
+                row.createCell(j).setCellValue(activities.get(i).getId());
+                j++;
                 //Site
                 row.createCell(j).setCellValue(activities.get(i).getSite()!=null?activities.get(i).getSite():"");
                 j++;
@@ -271,15 +295,30 @@ public class Exporter implements Serializable{
                 //BP Approval 
             row.createCell(j).setCellValue(activities.get(i).getBusinessProviderApproval()!=null?activities.get(i).getBusinessProviderApproval():false);
             j++;
-            //Domain Approval 
-            row.createCell(j).setCellValue(activities.get(i).getDomainOwnerApproval()!=null?activities.get(i).getDomainOwnerApproval():false);
+            //Region Approval 
+            row.createCell(j).setCellValue(activities.get(i).getRegionApproval()!=null?activities.get(i).getRegionApproval():false);
             j++;
             //Domain Approval 
             row.createCell(j).setCellValue(activities.get(i).getDomainOwnerApproval()!=null?activities.get(i).getDomainOwnerApproval():false);
             j++;
-                //Creator
-                row.createCell(j).setCellValue(activities.get(i).getCreator()!=null?activities.get(i).getCreator().getUserName():"");
-                j++;
+            //Creator
+            row.createCell(j).setCellValue(activities.get(i).getCreator()!=null?activities.get(i).getCreator().getUserName():"");
+            j++;
+            //Company 
+            row.createCell(j).setCellValue(activities.get(i).getCreator()!=null?activities.get(i).getCreator().getCompany():"");
+            j++;
+            //Assignment
+            row.createCell(j).setCellValue(activities.get(i).getAssignmentGroup()!=null?activities.get(i).getAssignmentGroup():"");
+            j++;
+            //Company 
+            row.createCell(j).setCellValue(usersController.getUsers(activities.get(i).getAssignmentGroup())!=null?usersController.getUsers(activities.get(i).getAssignmentGroup()).getCompany():"");
+            j++;
+            //Last Assignment
+            row.createCell(j).setCellValue(activities.get(i).getLastAssignment()!=null?activities.get(i).getLastAssignment():"");
+            j++;
+           //Company 
+            row.createCell(j).setCellValue(usersController.getUsers(activities.get(i).getLastAssignment())!=null?usersController.getUsers(activities.get(i).getLastAssignment()).getCompany():"");
+            j++;
                 //Attachments
                 if(activities.get(i).getExtraworkAttachmentsCollection()!=null){
                     if(activities.get(i).getExtraworkAttachmentsCollection().size()>0){
@@ -288,9 +327,10 @@ public class Exporter implements Serializable{
                             try {
                                 XSSFClientAnchor imgAnchor1 = new XSSFClientAnchor(0,0,0,0,(k+j),
                                         row.getRowNum(), (k +j+1), row.getRowNum() + 1);
-                                String oleRelId1 = addFile(sheet,((ExtraworkAttachments)attachments[j]).getAttachmentLocation(),(i+j+activities.get(i).getId().intValue()+Math.random()) );
+                                String oleRelId1 = addFile(sheet,((ExtraworkAttachments)attachments[k]).getAttachmentLocation(),(i+k+activities.get(i).getId().intValue()+Math.random()) );
                                 int shapeId1 = addImageToShape(sheet, imgAnchor1, imgPckId);
                                 addObjectToShape(sheet, imgAnchor1, shapeId1, oleRelId1, imgPckRelId, "Objekt-Manager-Shellobjekt");
+                            
                             } catch (IOException ex) {
                                 Logger.getLogger(Exporter.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (InvalidFormatException ex) {
@@ -406,6 +446,9 @@ public class Exporter implements Serializable{
         for (int i = 0; i < activities.size(); i++) {
             row = sheet.createRow(i+1);
             int j=0;
+             //Id
+            row.createCell(j).setCellValue(activities.get(i).getId());
+            j++;
             //Site
             row.createCell(j).setCellValue(activities.get(i).getSite()!=null?activities.get(i).getSite():"");
             j++;
@@ -448,8 +491,8 @@ public class Exporter implements Serializable{
             //BP Approval 
             row.createCell(j).setCellValue(activities.get(i).getBusinessProviderApproval()!=null?activities.get(i).getBusinessProviderApproval():false);
             j++;
-            //Domain Approval 
-            row.createCell(j).setCellValue(activities.get(i).getDomainOwnerApproval()!=null?activities.get(i).getDomainOwnerApproval():false);
+            //Region Approval 
+            row.createCell(j).setCellValue(activities.get(i).getRegionApproval()!=null?activities.get(i).getRegionApproval():false);
             j++;
             //Domain Approval 
             row.createCell(j).setCellValue(activities.get(i).getDomainOwnerApproval()!=null?activities.get(i).getDomainOwnerApproval():false);
@@ -457,8 +500,23 @@ public class Exporter implements Serializable{
             //Creator 
             row.createCell(j).setCellValue(activities.get(i).getCreator()!=null?activities.get(i).getCreator().getUserName():"");
             j++;
+            //Company 
+            row.createCell(j).setCellValue(activities.get(i).getCreator()!=null?activities.get(i).getCreator().getCompany():"");
+            j++;
             //Attachments Number
              row.createCell(j).setCellValue(activities.get(i).getExtraworkAttachmentsCollection()!=null?activities.get(i).getExtraworkAttachmentsCollection().size():0);
+            j++;
+            //Assignment
+             row.createCell(j).setCellValue(activities.get(i).getAssignmentGroup()!=null?activities.get(i).getAssignmentGroup():"");
+            j++;
+            //Company 
+            row.createCell(j).setCellValue(usersController.getUsers(activities.get(i).getAssignmentGroup())!=null?usersController.getUsers(activities.get(i).getAssignmentGroup()).getCompany():"");
+            j++;
+            //Last Assignment
+             row.createCell(j).setCellValue(activities.get(i).getLastAssignment()!=null?activities.get(i).getLastAssignment():"");
+            j++;
+            //Company 
+            row.createCell(j).setCellValue(usersController.getUsers(activities.get(i).getLastAssignment())!=null?usersController.getUsers(activities.get(i).getLastAssignment()).getCompany():"");
             j++;
         }
         FacesContext facesContext = FacesContext.getCurrentInstance();

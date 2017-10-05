@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="netSales" required="true"/>
+        <cc:attribute name="netSalesTrend" required="true"/>
+        <cc:attribute name="costOfSales" required="true"/>
+        <cc:attribute name="costOfSalesTrend" required="true"/>
+        <cc:attribute name="margin" required="true"/>
+        <cc:attribute name="marginTrend" required="true"/>
+        <cc:attribute name="marginPercent" required="true"/>
+        <cc:attribute name="marginPercentTrend" required="true"/>
+        
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div class="row tile_count">
+            <div class="col-md-3 col-sm-3 col-xs- tile_stats_count">
+                <span class="count_top"><i class="fa fa-usd"></i> Net Sales</span>
+                <div class="count">
+                    <h:outputText value="#{cc.attrs.netSales}">
+                        <f:convertNumber currencySymbol="EGP" type="currency"/>
+                    </h:outputText>
+                    
+                </div>
+                <span class="count_bottom"><i class="green">#{cc.attrs.netSalesTrend}% </i> From last Month</span>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 tile_stats_count">
+                <span class="count_top"><i class="fa fa-credit-card"></i> Cost Of Sales</span>
+                <div class="count">
+                <h:outputText value="#{cc.attrs.costOfSales}">
+                        <f:convertNumber currencySymbol="EGP" type="currency"/>
+                </h:outputText>
+                </div>
+                <span class="count_bottom"><i class="green">#{cc.attrs.costOfSalesTrend}% </i> From last Month</span>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 tile_stats_count">
+                <span class="count_top"><i class="fa fa-exchange"></i> Margin</span>
+                <div class="count">
+                <h:outputText value="#{cc.attrs.margin}">
+                        <f:convertNumber currencySymbol="EGP" type="currency"/>
+                </h:outputText>
+                </div>
+                <span class="count_bottom"><i class="green">#{cc.attrs.marginTrend}% </i> From last Month</span>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 tile_stats_count">
+                <span class="count_top">Margin <i class="fa fa-percent"></i></span>
+                <div class="count green">
+                    <h:outputText value="#{cc.attrs.marginPercent}">
+                        <f:convertNumber type="percent"/>
+                </h:outputText>
+                </div>
+                <span class="count_bottom"><i class="green">#{cc.attrs.marginPercentTrend}% </i> From last Month</span>
+            </div>
+        </div>
+    </cc:implementation>
+</html>

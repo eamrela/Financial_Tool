@@ -2,8 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:FT="http://xmlns.jcp.org/jsf/composite/components">
+      xmlns:FT="http://xmlns.jcp.org/jsf/composite/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Financial Tool</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
@@ -23,15 +24,18 @@
         <h:outputStylesheet name="assets/vendors/jqvmap/dist/jqvmap.min.css"/>
         <h:outputStylesheet name="assets/vendors/bootstrap-daterangepicker/daterangepicker.css"/>
         <h:outputStylesheet name="assets/build/css/custom.min.css"/>
-        
+         <f:metadata>
+             <f:viewAction action="#{dashboardController.initialize}"/>
+             <f:viewAction action="#{extraWorkdashboardController.initialize}"/>
+        </f:metadata>
     </h:head>
-    <h:body class="nav-md">
+    <h:body class="nav-sm">
         <div class="container body">
             <div class="main_container">
                 <div class="col-md-3 left_col">
                     <div class="left_col scroll-view">
                         <div class="navbar nav_title navbar-default" style="border: 0;">
-                            <a href="index.html" class="site_title"><i class="fa fa-certificate"></i> <span>Financial Tool</span></a>
+                            <a href="#" class="site_title"><i class="fa fa-certificate"></i> <span>Financial Tool</span></a>
                         </div>
                         <div class="clearfix"></div>
 
@@ -47,11 +51,288 @@
                 <FT:Notifications/>
             <h:form id="dashboardForm">
             <div class="right_col" role="main">
-       
-        
-          <br />
-          
-          
+            <h:panelGroup rendered="#{usersController.loggedInUserRole.contains('SYS')}"> 
+            <FT:DashboardTopFigures 
+                    netSales="#{dashboardController.netSales}"
+                    netSalesTrend="#{dashboardController.netSalesTrend}"
+                    costOfSales="#{dashboardController.costOfSales}"
+                    costOfSalesTrend="#{dashboardController.costOfSalesTrend}"
+                    margin="#{dashboardController.margin}"
+                    marginTrend="#{dashboardController.marginTrend}"
+                    marginPercent="#{dashboardController.marginPercent}"
+                    marginPercentTrend="#{dashboardController.marginPercentTrend}"/>
+                
+            
+            <FT:FinancialAnalysis/>
+            <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Net Sales Details</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <p:dataTable var="netSalesService" 
+                                 value="#{dashboardController.netSalesService}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Service
+                        </f:facet>
+                        <p:column headerText="PO#">
+                            <h:outputText value="#{netSalesService.poNumer.poNumber}" />
+                        </p:column>
+
+                        <p:column headerText="Invoice#">
+                            <h:outputText value="#{netSalesService.invoiceNumber}" />
+                        </p:column>
+
+                        <p:column headerText="Invoice Value">
+                            <h:outputText value="#{netSalesService.invoiceValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{netSalesService.poNumer.poDescription}" />
+                        </p:column>
+                    </p:dataTable>
+                    
+                    <p:dataTable var="netSalesExtra" 
+                                 value="#{dashboardController.netSalesExtra}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Extra Work
+                        </f:facet>
+                        <p:column headerText="PO#">
+                            <h:outputText value="#{netSalesExtra.poNumer.poNumber}" />
+                        </p:column>
+
+                        <p:column headerText="Invoice#">
+                            <h:outputText value="#{netSalesExtra.invoiceNumber}" />
+                        </p:column>
+
+                        <p:column headerText="Invoice Value">
+                            <h:outputText value="#{netSalesExtra.invoiceValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{netSalesExtra.poNumer.poDescription}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Cost of Sales Details</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <p:dataTable var="cosService" 
+                                 value="#{dashboardController.costOfSalesService}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Service
+                        </f:facet>
+                        <p:column headerText="PO#">
+                            <h:outputText value="#{cosService.poNumber.poNumber}" />
+                        </p:column>
+
+                        <p:column headerText="GRN#">
+                            <h:outputText value="#{cosService.grnNumber}" />
+                        </p:column>
+                        <p:column headerText="ASP">
+                            <h:outputText value="#{cosService.poNumber.subcontractor}" />
+                        </p:column>
+
+                        <p:column headerText="GRN Value">
+                            <h:outputText value="#{cosService.grnValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{cosService.poNumber.poDescription}" />
+                        </p:column>
+                    </p:dataTable>
+                    
+                    <p:dataTable var="cosExtra" 
+                                 value="#{dashboardController.costOfSalesExtra}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Extra Work
+                        </f:facet>
+                        <p:column headerText="PO#">
+                            <h:outputText value="#{cosExtra.poNumber.poNumber}" />
+                        </p:column>
+
+                        <p:column headerText="GRN#">
+                            <h:outputText value="#{cosExtra.grnNumber}" />
+                        </p:column>
+                        <p:column headerText="ASP">
+                            <h:outputText value="#{cosExtra.poNumber.subcontractor}" />
+                        </p:column>
+
+                        <p:column headerText="GRN Value">
+                            <h:outputText value="#{cosExtra.grnValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{cosExtra.poNumber.poDescription}" />
+                        </p:column>
+                    </p:dataTable>
+                    
+                     <p:dataTable var="cosJV" 
+                                  value="#{dashboardController.costOfSalesJV}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            JV
+                        </f:facet>
+                        <p:column headerText="JV Date">
+                            <h:outputText value="#{cosJV.jvDate}">
+                                <f:convertDateTime pattern="yyyy/MM/dd"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Team">
+                            <h:outputText value="#{cosJV.jvTeam}" />
+                        </p:column>
+                        <p:column headerText="Value">
+                            <h:outputText value="#{cosJV.jvValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{cosJV.jvDescription}" />
+                        </p:column>
+                    </p:dataTable>
+                    
+                    <p:dataTable var="cosTR" 
+                                 value="#{dashboardController.costOfSalesTR}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Time Reporting
+                        </f:facet>
+                        <p:column headerText="TR Date">
+                            <h:outputText value="#{cosTR.reportingDate}">
+                                <f:convertDateTime pattern="yyyy/MM/dd"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Team">
+                            <h:outputText value="#{cosTR.reportingTeam}" />
+                        </p:column>
+                        <p:column headerText="Value">
+                            <h:outputText value="#{cosTR.reportingValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{cosTR.reportingDescription}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                </div>
+            </div>
+            </div>
+                  
+             
+            <div class="row">    
+            
+            
+            <FT:CommittedCost/>  
+
+            </div>
+
+            </h:panelGroup>
+                
+                
+                
+             <h:panelGroup rendered="#{not usersController.loggedInUserRole.contains('ASP')}"> 
+            <div class="row">
+            <div class="col-md-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Extra work Summary <small>Monthly Analysis [#{usersController.loggedInUserDomains} / #{usersController.loggedInUserRegions}]</small></h2>
+                        <div class="filter"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+            <label>ASP</label>
+            <div class="row top_tiles" style="margin: 10px 0;">
+              <div class="col-md-3 col-sm-3 col-xs-6 tile">
+                <span>Total Created</span>
+                <h2>#{extraWorkdashboardController.totalCreatedASP}</h2>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-6 tile">
+                <span>Total Approved</span>
+                <h2>#{extraWorkdashboardController.totalApprovedASP}</h2>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-6 tile">
+                <span>Total Pending</span>
+                <h2>#{extraWorkdashboardController.totalRejectedASP}</h2>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-6 tile">
+                <span>Total Not Assigned</span>
+                <h2>#{extraWorkdashboardController.totalNotAssignedASP}</h2>
+              </div>
+            </div>
+            
+            <label>Ericsson</label>
+            <div class="row top_tiles" style="margin: 10px 0;">
+              <div class="col-md-3 col-sm-3 col-xs-6 tile">
+                  <span>Total Created</span>
+                <h2>#{extraWorkdashboardController.totalCreatedEricsson}</h2>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-6 tile">
+                <span>Total Pending on BP</span>
+                <h2>#{extraWorkdashboardController.totalPendingBP}</h2>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-6 tile">
+                <span>Total Pending on RO</span>
+                <h2>#{extraWorkdashboardController.totalPendingRO}</h2>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-6 tile">
+                <span>Total Pending on DO</span>
+                <h2>#{extraWorkdashboardController.totalPendingDO}</h2>
+              </div>
+            </div>
+                    
+                    
+            <!--<p:chart type="bar" model="{extraWorkdashboardController.horizontalBarModel}" style="height:900px"/>-->
+            <p:dataTable var="userPending" value="#{extraWorkdashboardController.usersPending}">
+                <p:column headerText="Username" filterBy="#{userPending[0]}" filterMatchMode="contains"
+                          style="font-size: 9px;">
+                    <h:outputText value="#{userPending[0]}" />
+                </p:column>
+
+                <p:column headerText="Pending Count" sortBy="#{userPending[1]}"
+                          style="font-size: 9px;">
+                    <h:outputText value="#{userPending[1]}" />
+                </p:column>
+            </p:dataTable>
+                    </div>
+                </div>
+            </div>
+            </div>
+             </h:panelGroup>
+            
+            
+            
             </div>
             </h:form>
                 
@@ -83,7 +364,43 @@
     <script src="#{resource['assets/vendors/moment/min/moment.min.js']}"></script>
     <script src="#{resource['assets/vendors/bootstrap-daterangepicker/daterangepicker.js']}"></script>
     <script src="#{resource['assets/build/js/custom.min.js']}"></script>   
-    
+    <script>
+        //<![CDATA[
+var ctx = document.getElementById("mainChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ["Jan", "Fed", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [{
+            label: 'NetSales',
+            data: [#{dashboardController.netSalesDataset}],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        },
+        {
+            label: 'CostOfSales',
+            data: [#{dashboardController.costOfSalesDataset}],
+            backgroundColor: 'rgba(255, 5, 0, 0.2)',
+            borderColor: 'rgba(255, 5, 0, 0.2)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+
+
+
+ //]]>
+</script>
 
     
     </h:body>

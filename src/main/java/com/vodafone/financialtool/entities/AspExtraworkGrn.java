@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -64,10 +65,10 @@ public class AspExtraworkGrn implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
     @JoinColumn(name = "po_number", referencedColumnName = "po_number")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false , fetch = FetchType.EAGER)
     private AspExtraworkPo poNumber;
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false , fetch = FetchType.EAGER)
     private Users creator;
 
     public AspExtraworkGrn() {

@@ -186,7 +186,7 @@ public class JvReportingController implements Serializable {
             create();
             prepareCreate();
             try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/common/index.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/jv/view/view_jv.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(ExtraWorkController.class.getName()).log(Level.SEVERE, null, ex);
             }

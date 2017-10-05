@@ -99,6 +99,24 @@
           </navigation-case>
         </navigation-rule>
         
+        <navigation-rule>
+            <from-view-id>/app/systemadmin/credit_note/create/create_cn.xhtml</from-view-id>
+            <navigation-case>
+            <from-action>#{creditNoteController.prepareCreate}</from-action>
+            <from-outcome>tt.CreditNote[ id=null ]</from-outcome>
+            <to-view-id>/app/systemadmin/credit_note/create/create_cn.xhtml</to-view-id>
+          </navigation-case>
+        </navigation-rule>
+        
+        <navigation-rule>
+            <from-view-id>/app/systemadmin/penalty/create/create_pn.xhtml</from-view-id>
+            <navigation-case>
+            <from-action>#{penaltyController.prepareCreate}</from-action>
+            <from-outcome>tt.Penalty[ id=null ]</from-outcome>
+            <to-view-id>/app/systemadmin/penalty/create/create_pn.xhtml</to-view-id>
+          </navigation-case>
+        </navigation-rule>
+        
         <resource-bundle>
             <base-name>/Bundle4</base-name>
             <var>bundle4</var>

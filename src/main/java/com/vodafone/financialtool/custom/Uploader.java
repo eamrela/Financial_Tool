@@ -154,8 +154,8 @@ public class Uploader implements Serializable{
             if(extra.getQty()==null || extra.getQty()==0){
                 error += "Row: "+row+" Qty can't be empty or zero!\n";
             }
-            if(extra.getUnitPriceAsp()==null || extra.getUnitPriceAsp()==0){
-                error += "Row: "+row+" unit price ASP can't be empty or zero!\n";
+            if(extra.getUnitPriceAsp()==null){
+                error += "Row: "+row+" unit price ASP can't be empty!\n";
             }
             if(extra.getUnitPriceVendor()==null || extra.getUnitPriceVendor()==0){
                 error += "Row: "+row+" unit price VF can't be empty or zero!\n";

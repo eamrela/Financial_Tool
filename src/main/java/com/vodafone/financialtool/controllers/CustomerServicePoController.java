@@ -212,7 +212,7 @@ public class CustomerServicePoController implements Serializable {
             create();
             prepareCreate();
             try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/common/index.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/customer/view/view_vf_po.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(ExtraWorkController.class.getName()).log(Level.SEVERE, null, ex);
             }

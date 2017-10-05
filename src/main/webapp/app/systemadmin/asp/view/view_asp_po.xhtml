@@ -47,7 +47,7 @@
                 }
         </style>
     </h:head>
-    <h:body class="nav-md">
+    <h:body class="nav-sm">
         <div class="container body">
             <div class="main_container">
                 <div class="col-md-3 left_col">
@@ -83,6 +83,7 @@
                                          paginatorPosition="bottom"
                                          selectionMode="single"
                                          selection="#{aspServicePoController.selectedUserPo}"
+                                        
                                          >
                         <p:ajax event="rowSelect"   update=":aspPoForm:tabView:menuItemsServicePo,
                                                            deleteButton"/>
@@ -154,6 +155,18 @@
                                           filterBy="#{servicePo.creator.userName}">
                                     <h:outputText value="#{servicePo.creator.userName}" />
                                 </p:column>
+                                <p:column headerText="Network" 
+                                          style="font-size: 9px;"
+                                          filterMatchMode="contains"
+                                          filterBy="#{servicePo.networkName}">
+                                    <h:outputText value="#{servicePo.networkName}" />
+                                </p:column>
+                                <p:column headerText="ES" 
+                                          style="font-size: 9px;"
+                                          filterMatchMode="contains"
+                                          filterBy="#{servicePo.earlyStart}">
+                                    <h:outputText value="#{servicePo.earlyStart}" />
+                                </p:column>
                                 <p:rowExpansion>
                                     <div class="col-xs-6 col-sm-6 col-md-6">
                                         <div class="form-group">
@@ -170,7 +183,10 @@
                                                  var="grn" 
                                                  value="#{servicePo.aspServiceGrnCollection}"
                                                  rows="5"
-                                                 editable="true">
+                                                 editable="true"
+                                                 rowKey="#{grn.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
                                             
                                             <p:ajax event="rowEdit" listener="#{aspServiceGrnController.onRowEdit}" 
                                                     update=":aspPoForm:tabView:datalistServicePo,
@@ -245,7 +261,10 @@
                                                  var="workDone" 
                                                  value="#{servicePo.aspServiceWorkDoneCollection}"
                                                  rows="5"
-                                                 editable="true">
+                                                 editable="true"
+                                                 rowKey="#{workDone.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
                                             <p:ajax event="rowEdit" listener="#{aspServiceWorkDoneController.onRowEdit}" 
                                                     update=":aspPoForm:tabView:datalistServicePo,
                                                             :aspPoForm:tabView:datalistServicePo:datalistServiceWorkDone,
@@ -416,6 +435,18 @@
                                           filterBy="#{extraworkPo.creator.userName}">
                                     <h:outputText value="#{extraworkPo.creator.userName}" />
                                 </p:column>
+                                <p:column headerText="Network" 
+                                          style="font-size: 9px;"
+                                          filterMatchMode="contains"
+                                          filterBy="#{extraworkPo.networkName}">
+                                    <h:outputText value="#{extraworkPo.networkName}" />
+                                </p:column>
+                                <p:column headerText="ES" 
+                                          style="font-size: 9px;"
+                                          filterMatchMode="contains"
+                                          filterBy="#{extraworkPo.earlyStart}">
+                                    <h:outputText value="#{extraworkPo.earlyStart}" />
+                                </p:column>
                                 <p:rowExpansion>
                                     <div class="col-xs-6 col-sm-6 col-md-6">
                                         <div class="form-group">
@@ -431,7 +462,11 @@
                                         <p:dataTable id="datalistExtraworkPoGrn"
                                                  var="grn" 
                                                  value="#{extraworkPo.aspExtraworkGrnCollection}"
-                                                 rows="5" editable="true">
+                                                 rows="5" editable="true"
+                                                 rowKey="#{grn.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true"
+                                                 >
                                             
                                             <p:ajax event="rowEdit" listener="#{aspExtraworkGrnController.onRowEdit}" 
                                                     update=":aspPoForm:tabView:datalistExtraworkPo,
@@ -506,7 +541,10 @@
                                                  var="workDone" 
                                                  value="#{extraworkPo.aspExtraworkWorkDoneCollection}"
                                                  rows="5"
-                                                 editable="true">
+                                                 editable="true"
+                                                 rowKey="#{workDone.id}"
+                                                 paginatorPosition="bottom"
+                                                 paginator="true">
                                             <p:ajax event="rowEdit" listener="#{aspExtraworkWorkDoneController.onRowEdit}" 
                                                     update=":aspPoForm:tabView:datalistExtraworkPo,
                                                             :aspPoForm:tabView:datalistExtraworkPo:datalistExtraworkWorkDone,
@@ -562,6 +600,46 @@
                                     </p:dataTable>
                                         </div>
                                     </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <div class="form-group">
+                                        <label class="control-label" for="datalistExtraworkCorrelated">Associated Extra work:</label>
+                                        <p:dataTable    id="datalistExtraworkCorrelated"
+                                                        var="associatedExtrawork" 
+                                                        value="#{extraworkPo.extraWorkCollection}"
+                                                        rowKey="#{associatedExtrawork.id}"
+                                                        paginatorPosition="bottom"
+                                                        paginator="true">
+
+                                               <p:column headerText="Id" style="font-size: 9px;">
+                                                   <h:outputText value="#{associatedExtrawork.id}" />
+                                               </p:column>
+                                               <p:column headerText="Site" style="font-size: 9px;">
+                                                   <h:outputText value="#{associatedExtrawork.site}" />
+                                               </p:column>
+                                               <p:column headerText="Domain" style="font-size: 9px;">
+                                                   <h:outputText value="#{associatedExtrawork.domainName}" />
+                                               </p:column>
+                                               <p:column headerText="Subdomain" style="font-size: 9px;">
+                                                   <h:outputText value="#{associatedExtrawork.subDomain}" />
+                                               </p:column>
+                                               <p:column headerText="Date" style="font-size: 9px;">
+                                                   <h:outputText value="#{associatedExtrawork.activityDate}">
+                                                       <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                                   </h:outputText>
+                                               </p:column>
+                                               <p:column headerText="ASP Price" style="font-size: 9px;">
+                                                   <h:outputText value="#{associatedExtrawork.totalPriceAsp}">
+                                                       <f:convertNumber type="currency" currencyCode="EGP"/>
+                                                   </h:outputText>
+                                               </p:column>
+                                            <p:column headerText="VF Price" style="font-size: 9px;">
+                                                   <h:outputText value="#{associatedExtrawork.totalPriceVendor}">
+                                                       <f:convertNumber type="currency" currencyCode="EGP"/>
+                                                   </h:outputText>
+                                               </p:column>
+                                           </p:dataTable>
+                                        </div>
+                                    </div>
                                 </p:rowExpansion>
                                 <f:facet name="footer">
                                     <p:commandButton id="deleteButton" 
@@ -590,6 +668,11 @@
                                         oncomplete="PF('editDlgAspExtraworkGrn').show();"
                                         update="datalistExtraworkPo,:addAspExtraworkGrnForm" 
                                         disabled="#{empty aspExtraworkPoController.selectedUserPo}"/>
+                            <p:menuitem value="Correlate Extrawork" 
+                                        icon="ui-icon-arrowthick-2-e-w" 
+                                        oncomplete="PF('correlationDlg').show();"
+                                        update="datalistExtraworkPo,:correlationDlgForm" 
+                                        disabled="#{empty aspExtraworkPoController.selectedUserPo}"/>
                             </p:contextMenu>
                         </p:tab>
                 </p:tabView>
@@ -610,6 +693,7 @@
             <ui:include src="../modals/add_work_done_extra_work.xhtml"/>  
             <ui:include src="../modals/add_grn_service.xhtml"/>  
             <ui:include src="../modals/add_grn_extra_work.xhtml"/>  
+            <ui:include src="../modals/correlate.xhtml"/>  
             <FT:Footer/>
             </div>
         </div>

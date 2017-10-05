@@ -10,7 +10,7 @@
         <p:dialog id="rejectDlgId" modal="true" widgetVar="rejectDlg" closeOnEscape="true" resizable="false" height="160" width="300" appendTo="@(body)" header="Rejection (BP)">
             <h:form id="rejectForm">
 
-                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (extraWorkController.selectedUserItem.creator.userName == 
+                <h:panelGroup rendered="#{extraWorkController.selectedUserItem!=null and (usersController.loggedInUser.userName == 
                                                          extraWorkController.selectedUserItem.assignmentGroup)}">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">

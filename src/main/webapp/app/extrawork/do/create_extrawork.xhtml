@@ -48,7 +48,7 @@
                 }
         </style>
     </h:head>
-    <h:body class="nav-md">
+    <h:body class="nav-sm">
         <div class="container body">
             <div class="main_container">
                 <div class="col-md-3 left_col">
@@ -157,9 +157,8 @@
                                 value="#{extraWorkController.selected.site}" 
                                 completeMethod="#{networkSitesController.autoCompleteSite}" 
                                 var="siteItem" 
-                                itemLabel="#{siteItem.siteId}" 
-                                itemValue="#{siteItem.siteId}" 
-                                forceSelection="true"
+                                itemLabel="#{siteItem}" 
+                                itemValue="#{siteItem.siteId}"
                                 required="true"
                                 requiredMessage="Site is required"
                                 styleClass="form-control"

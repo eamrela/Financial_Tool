@@ -6,6 +6,7 @@
 package com.vodafone.financialtool.beans;
 
 import com.vodafone.financialtool.entities.ActivityCode;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +28,15 @@ public class ActivityCodeFacade extends AbstractFacade<ActivityCode> {
 
     public ActivityCodeFacade() {
         super(ActivityCode.class);
+    }
+
+    public List<ActivityCode> findAllByUser(String company) {
+//        if(company.equals("Ericsson")){
+//        return em.createNativeQuery("select * from activity_code", ActivityCode.class).getResultList();
+//        }else{
+//        return em.createNativeQuery("select * from activity_code where asp='"+company+"' ", ActivityCode.class).getResultList();
+//        }
+        return em.createNativeQuery("select * from activity_code", ActivityCode.class).getResultList();
     }
     
 }

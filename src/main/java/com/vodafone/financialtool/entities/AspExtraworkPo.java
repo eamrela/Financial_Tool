@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -69,6 +70,10 @@ public class AspExtraworkPo implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "domain_name")
     private String domainName;
+    @Column(name = "network_name")
+    private String networkName;
+    @Column(name = "early_start")
+    private Boolean earlyStart=false;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
@@ -115,9 +120,11 @@ public class AspExtraworkPo implements Serializable {
         @JoinColumn(name = "extrawork_id", referencedColumnName = "id")})
     @ManyToMany
     private Collection<ExtraWork> extraWorkCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber")
+    @ManyToMany(mappedBy = "aspExtaworkPoCollection" , fetch = FetchType.EAGER)
+    private Collection<CustomerExtraworkPo> customerExtraworkPoCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber" , fetch = FetchType.EAGER)
     private Collection<AspExtraworkWorkDone> aspExtraworkWorkDoneCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber" , fetch = FetchType.EAGER)
     private Collection<AspExtraworkGrn> aspExtraworkGrnCollection;
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
@@ -126,6 +133,8 @@ public class AspExtraworkPo implements Serializable {
     private Double grnDeserved;
     @Transient
     private Double totalWorkDone;
+    @Transient
+    private Double margin;
 
     public AspExtraworkPo() {
     }
@@ -155,6 +164,22 @@ public class AspExtraworkPo implements Serializable {
         this.poNumber = poNumber;
     }
 
+    public Boolean getEarlyStart() {
+        return earlyStart;
+    }
+
+    public String getNetworkName() {
+        return networkName;
+    }
+
+    public void setEarlyStart(Boolean earlyStart) {
+        this.earlyStart = earlyStart;
+    }
+
+    public void setNetworkName(String networkName) {
+        this.networkName = networkName;
+    }
+    
     public Double getRemainingFromPo() {
         return remainingFromPo;
     }
@@ -269,7 +294,16 @@ public class AspExtraworkPo implements Serializable {
     public void setAspExtraworkWorkDoneCollection(Collection<AspExtraworkWorkDone> aspExtraworkWorkDoneCollection) {
         this.aspExtraworkWorkDoneCollection = aspExtraworkWorkDoneCollection;
     }
+    @XmlTransient
+    public Collection<CustomerExtraworkPo> getCustomerExtraworkPoCollection() {
+        return customerExtraworkPoCollection;
+    }
 
+    public void setCustomerExtraworkPoCollection(Collection<CustomerExtraworkPo> customerExtraworkPoCollection) {
+        this.customerExtraworkPoCollection = customerExtraworkPoCollection;
+    }
+
+    
     @XmlTransient
     public Collection<AspExtraworkGrn> getAspExtraworkGrnCollection() {
         return aspExtraworkGrnCollection;
@@ -300,6 +334,23 @@ public class AspExtraworkPo implements Serializable {
         }
         return totalWorkDone;
     }
+
+    public Double getMargin() {
+        Double vfPrice = 0.0;
+        Double aspPrice = 0.0;
+         if(getExtraWorkCollection()!=null){
+            Object[] extraWorks = getExtraWorkCollection().toArray();
+            for (Object extraWork : extraWorks) {
+                vfPrice += ((ExtraWork)extraWork).getTotalPriceVendor();
+                aspPrice += ((ExtraWork)extraWork).getTotalPriceAsp();
+            }
+            margin = ((vfPrice-aspPrice)/vfPrice);
+        }else{
+             margin = 0.0;
+         }
+        return margin;
+    }
+    
     
     
 

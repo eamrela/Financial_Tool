@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Committed Cost</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <table class="" style="width:100%">
+                    <tr>
+                      <th>
+                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                          <p class="">ASP</p>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                          <p class="">Amount</p>
+                        </div>
+                      </th>
+                    </tr>
+                    <tr>
+
+                      <td>
+                        <table class="tile_info">
+                            <ui:repeat var="committedCost" value="#{dashboardController.aspCommittedCost}">
+                            <tr>
+                            <td>
+                              <p><i class="fa fa-square blue"></i>#{committedCost[0]} </p>
+                            </td>
+                            <td>
+                                <h:outputText value="#{committedCost[1]}">
+                                    <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                </h:outputText>
+                            </td>
+                          </tr>
+                            </ui:repeat>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+    </cc:implementation>
+</html>

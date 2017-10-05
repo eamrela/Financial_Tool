@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Financial Summary <small>Monthly progress</small></h2>
+                        <div class="filter"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div class="col-md-9 col-sm-12 col-xs-12">
+                            <div class="demo-container" style="height:280px">
+                                <!--<div id="chart_plot_02" class="demo-placeholder"></div>-->
+                                <canvas id="mainChart" height="95"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <div>
+                                <div class="x_title">
+                                    <h2>Top Achievers</h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <ul class="list-unstyled top_profiles scroll-view">
+                                    <ui:repeat var="achiever" value="#{dashboardController.topNetSalesAchievers}">
+                                    <li class="media event">
+                                        <a class="pull-left border-aero profile_thumb">
+                                            <i class="fa fa-user aero"></i>
+                                        </a>
+                                        <div class="media-body">
+                                            <a class="title" href="#">Mr. #{achiever[0]}</a>
+                                            <p>
+                                            <strong>
+                                                <h:outputText value="#{achiever[1]}">
+                                                    <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                                </h:outputText>    
+                                            </strong> 
+                                            Net sales. </p>
+                                        </div>
+                                    </li>
+                                    </ui:repeat>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </cc:implementation>
+</html>

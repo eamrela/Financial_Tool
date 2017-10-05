@@ -185,7 +185,7 @@ public class TimeReportingController implements Serializable {
             create();
             prepareCreate();
             try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/common/index.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/time_reporting/view/view_time_reporting.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(ExtraWorkController.class.getName()).log(Level.SEVERE, null, ex);
             }

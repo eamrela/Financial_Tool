@@ -4,8 +4,11 @@ import com.vodafone.financialtool.entities.CustomerExtraworkInvoice;
 import com.vodafone.financialtool.controllers.util.JsfUtil;
 import com.vodafone.financialtool.controllers.util.JsfUtil.PersistAction;
 import com.vodafone.financialtool.beans.CustomerExtraworkInvoiceFacade;
+import com.vodafone.financialtool.entities.CustomerExtraworkPo;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -18,6 +21,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
+import org.primefaces.event.RowEditEvent;
 
 @Named("customerExtraworkInvoiceController")
 @SessionScoped
@@ -27,6 +32,11 @@ public class CustomerExtraworkInvoiceController implements Serializable {
     private com.vodafone.financialtool.beans.CustomerExtraworkInvoiceFacade ejbFacade;
     private List<CustomerExtraworkInvoice> items = null;
     private CustomerExtraworkInvoice selected;
+    
+    @Inject
+    private UsersController usersController;
+    @Inject
+    private CustomerExtraworkPoController extraWorkPoController;
 
     public CustomerExtraworkInvoiceController() {
     }
@@ -52,14 +62,18 @@ public class CustomerExtraworkInvoiceController implements Serializable {
     public CustomerExtraworkInvoice prepareCreate() {
         selected = new CustomerExtraworkInvoice();
         initializeEmbeddableKey();
+        selected.setCreator(usersController.getLoggedInUser());
+        selected.setCreationDate(new Date());
+        selected.setPoNumer(extraWorkPoController.getSelectedUserPo());
         return selected;
     }
 
-    public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("CustomerExtraworkInvoiceCreated"));
+    public CustomerExtraworkInvoice create() {
+        selected = persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("CustomerExtraworkInvoiceCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
+        return selected;
     }
 
     public void update() {
@@ -81,12 +95,12 @@ public class CustomerExtraworkInvoiceController implements Serializable {
         return items;
     }
 
-    private void persist(PersistAction persistAction, String successMessage) {
+    private CustomerExtraworkInvoice persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
             try {
                 if (persistAction != PersistAction.DELETE) {
-                    getFacade().edit(selected);
+                    selected = getFacade().merge(selected);
                 } else {
                     getFacade().remove(selected);
                 }
@@ -107,6 +121,7 @@ public class CustomerExtraworkInvoiceController implements Serializable {
                 JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             }
         }
+        return selected;
     }
 
     public CustomerExtraworkInvoice getCustomerExtraworkInvoice(java.lang.Long id) {
@@ -162,4 +177,39 @@ public class CustomerExtraworkInvoiceController implements Serializable {
 
     }
 
+   public boolean validateInvoiceValue(){
+        if(selected!=null){
+            if(selected.getPoNumer()!=null && selected.getInvoiceValue()!=null){
+                if((selected.getInvoiceValue()>selected.getPoNumer().getInvoiceDeserved())||selected.getInvoiceValue()==0.0){
+                    selected.setInvoiceValue(0.0);
+                    JsfUtil.addErrorMessage("Invoice Value can't exceed the Invoice Deserved");
+                    return false;
+                }else{
+                return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public void createInvoice(){
+        if(selected!=null){
+            if(validateInvoiceValue()){
+            selected = create();
+            if(extraWorkPoController.getSelectedUserPo().getCustomerExtraworkInvoiceCollection()!=null){
+                extraWorkPoController.getSelectedUserPo().getCustomerExtraworkInvoiceCollection().add(selected);
+            }else{
+                extraWorkPoController.getSelectedUserPo().setCustomerExtraworkInvoiceCollection(Arrays.asList(selected));
+            }
+            extraWorkPoController.updateEdit();
+            prepareCreate();
+        }
+        }
+    }
+    
+    public void onRowEdit(RowEditEvent event) {
+        
+        setSelected((CustomerExtraworkInvoice) event.getObject());
+        update();
+    }
 }

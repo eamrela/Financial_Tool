@@ -213,7 +213,7 @@ public class AspServicePoController implements Serializable {
             create();
             prepareCreate();
             try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/common/index.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/asp/view/view_asp_po.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(ExtraWorkController.class.getName()).log(Level.SEVERE, null, ex);
             }

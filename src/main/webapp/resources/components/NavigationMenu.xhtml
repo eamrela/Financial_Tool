@@ -13,17 +13,7 @@
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
                 <h3>General</h3>
-                <!--                <ul class="nav side-menu">
-                    <li><a><i class="fa fa-line-chart"></i>Summary<span class="fa fa-line-chart"></span></a>
-                        <ul class="nav child_menu">
-                            <li><a href="{request.contextPath}/app/summary/faulty_rate.xhtml">Faulty Rate Summary</a></li>
-                            <li><a href="{request.contextPath}/app/summary/site_summary.xhtml">Site Summary</a></li>
-                            <li><a href="{request.contextPath}/app/summary/transfer_rate.xhtml">Transfer Rate Summary </a></li>
-                            <li><a href="{request.contextPath}/app/summary/inventory_summary.xhtml">Inventory Summary </a></li>
-                        </ul>
-                    </li>
-
-                </ul>
+                <!--
                 <ul class="nav side-menu">
                     <li><a><i class="fa fa-cogs"></i>Settings<span class="fa fa-cogs"></span></a>
                         <ul class="nav child_menu">
@@ -37,8 +27,48 @@
 
                 </ul>
                 
--->             
+                -->             
+                <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_BUDGET_CONTROLLER'}">
+<!--                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-line-chart"></i>Summary<span class="fa fa-line-chart"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/common/index.xhtml">Dashboard</a></li>
+                            <li><a href="#{request.contextPath}/app/budget_controller/summary/grn_deserved.xhtml">GRN Deserved/Remaining</a></li>
+                            <li><a href="#{request.contextPath}/app/budget_controller/summary/md_deserved.xhtml">MD Deserved/Remaining</a></li>
+                            <li><a href="#{request.contextPath}/app/budget_controller/summary/extrawork_without_po.xhtml">Extra work without PO</a></li>
+                        </ul>
+                    </li>
+                </ul>-->
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-table"></i>ASP POs<span class="fa fa-table"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/budget_controller/asp/create/create_asp_po_extrawork.xhtml">Create PO (Extra Work)</a></li>
+                            <li><a href="#{request.contextPath}/app/budget_controller/asp/create/create_asp_po_service.xhtml">Create PO (Service)</a></li>
+                            <li><a href="#{request.contextPath}/app/budget_controller/asp/view/view_asp_po.xhtml">View/Edit POs</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-table"></i>Customer POs<span class="fa fa-table"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/budget_controller/customer/view/view_vf_po.xhtml">View/Edit POs</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                </h:panelGroup>
                 <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_SYSADMIN'}">
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-line-chart"></i>Summary<span class="fa fa-line-chart"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/common/index.xhtml">Dashboard</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/summary/grn_deserved.xhtml">GRN Deserved/Remaining</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/summary/md_deserved.xhtml">MD Deserved/Remaining</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/summary/extrawork_without_po.xhtml">Extra work without PO</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/summary/asp_ledger.xhtml">ASP Ledger</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
                 <ul class="nav side-menu">
                     <li><a><i class="fa fa-table"></i>ASP POs<span class="fa fa-table"></span></a>
                         <ul class="nav child_menu">
@@ -73,11 +103,36 @@
                         </ul>
                     </li>
                 </ul>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-cc-visa"></i>Credit Notes<span class="fa fa-cc-visa"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/systemadmin/credit_note/create/create_cn.xhtml">Create CN (NS/COS)</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/credit_note/view/view_cn.xhtml">View/Edit CN</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-warning"></i>Penalties<span class="fa fa-warning"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#{request.contextPath}/app/systemadmin/penalty/create/create_pn.xhtml">Create PN (NS/COS)</a></li>
+                            <li><a href="#{request.contextPath}/app/systemadmin/penalty/view/view_pn.xhtml">View/Edit PN</a></li>
+                        </ul>
+                    </li>
+                </ul>
+<!--                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-book"></i>Ledger<span class="fa fa-book"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{request.contextPath}/app/systemadmin/ledger/simulation/simulator.xhtml">Target Simulator</a></li>
+                            <li><a href="{request.contextPath}/app/systemadmin/ledger/asp/asp_ledger.xhtml">ASP Ledger</a></li>
+                            <li><a href="{request.contextPath}/app/systemadmin/ledger/customer/customer_ledger.xhtml">Customer Ledger</a></li>
+                        </ul>
+                    </li>
+                </ul>-->
                 </h:panelGroup>
                 <ul class="nav side-menu">
                     <li><a><i class="fa fa-archive"></i>Extra Work<span class="fa fa-archive"></span></a>
                         <ul class="nav child_menu">
-                            <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_ASP'}">
+                            <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_ASP' or usersController.loggedInUserRole=='ROLE_ASP_ADMIN'}">
                             <li><a href="#{request.contextPath}/app/extrawork/asp/create_extrawork.xhtml">Create Extra Work</a></li>
                             <li><a href="#{request.contextPath}/app/extrawork/asp/view_extrawork.xhtml">View/Edit Extra Work</a></li>
                             <li><a href="#{request.contextPath}/app/extrawork/asp/export.xhtml">Export</a></li>
@@ -97,7 +152,7 @@
                             <li><a href="#{request.contextPath}/app/extrawork/ro/upload.xhtml">Upload</a></li>
                             </h:panelGroup>
                             
-                            <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_DO' or usersController.loggedInUserRole=='ROLE_SYSADMIN'}">
+                            <h:panelGroup rendered="#{usersController.loggedInUserRole=='ROLE_DO' or usersController.loggedInUserRole=='ROLE_SYSADMIN' or usersController.loggedInUserRole=='ROLE_BUDGET_CONTROLLER'}">
                             <li><a href="#{request.contextPath}/app/extrawork/do/create_extrawork.xhtml">Create Extra Work</a></li>
                             <li><a href="#{request.contextPath}/app/extrawork/do/view_extrawork.xhtml">View/Edit Extra Work</a></li>
                             <li><a href="#{request.contextPath}/app/extrawork/do/export.xhtml">Export</a></li>

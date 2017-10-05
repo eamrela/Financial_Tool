@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -67,6 +68,10 @@ public class AspServicePo implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "domain_name")
     private String domainName;
+    @Column(name = "network_name")
+    private String networkName;
+    @Column(name = "early_start")
+    private Boolean earlyStart=false;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
@@ -108,12 +113,12 @@ public class AspServicePo implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "po_owner")
     private String poOwner;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber", fetch = FetchType.EAGER)
     private Collection<AspServiceGrn> aspServiceGrnCollection;
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
     private Users creator;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber" , fetch = FetchType.EAGER)
     private Collection<AspServiceWorkDone> aspServiceWorkDoneCollection;
     @Transient
     private Double grnDeserved;
@@ -140,6 +145,23 @@ public class AspServicePo implements Serializable {
         this.poOwner = poOwner;
     }
 
+    public Boolean getEarlyStart() {
+        return earlyStart;
+    }
+
+    public String getNetworkName() {
+        return networkName;
+    }
+
+    public void setEarlyStart(Boolean earlyStart) {
+        this.earlyStart = earlyStart;
+    }
+
+    public void setNetworkName(String networkName) {
+        this.networkName = networkName;
+    }
+
+    
     public String getPoNumber() {
         return poNumber;
     }

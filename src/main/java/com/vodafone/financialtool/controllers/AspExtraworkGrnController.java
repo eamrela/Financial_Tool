@@ -206,8 +206,10 @@ public class AspExtraworkGrnController implements Serializable {
         }
     }
     
-     public void onRowEdit(RowEditEvent event) {
+    public void onRowEdit(RowEditEvent event) {
         setSelected((AspExtraworkGrn) event.getObject());
         update();
     }
+    
+   
 }

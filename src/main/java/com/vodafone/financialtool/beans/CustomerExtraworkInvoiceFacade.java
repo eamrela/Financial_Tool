@@ -28,5 +28,9 @@ public class CustomerExtraworkInvoiceFacade extends AbstractFacade<CustomerExtra
     public CustomerExtraworkInvoiceFacade() {
         super(CustomerExtraworkInvoice.class);
     }
+
+    public CustomerExtraworkInvoice merge(CustomerExtraworkInvoice selected) {
+        return em.merge(selected);
+    }
     
 }

@@ -4,10 +4,13 @@ import com.vodafone.financialtool.entities.CustomerExtraworkPo;
 import com.vodafone.financialtool.controllers.util.JsfUtil;
 import com.vodafone.financialtool.controllers.util.JsfUtil.PersistAction;
 import com.vodafone.financialtool.beans.CustomerExtraworkPoFacade;
+import com.vodafone.financialtool.entities.AspExtraworkPo;
 import com.vodafone.financialtool.entities.CustomerExtraworkWorkDone;
+import com.vodafone.financialtool.entities.ExtraWork;
 import java.io.IOException;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -33,12 +36,37 @@ public class CustomerExtraworkPoController implements Serializable {
     private CustomerExtraworkPo selected;
     private CustomerExtraworkPo selectedUserPo;
     
+    private List<AspExtraworkPo> selectedUserPoMatchingAspPo;
+    private List<AspExtraworkPo> selectedUserPoSelectedCorrelation;
+    private Double totalSelectedAspPOs;
+    
     @Inject
     private UsersController usersController;
+    @Inject
+    private AspExtraworkPoController aspPoController;
+    @Inject
+    private CustomerExtraworkWorkDoneController workDoneController;
+    
 
     public CustomerExtraworkPoController() {
     }
 
+    public Double getTotalSelectedAspPOs() {
+         totalSelectedAspPOs = 0.0;
+        if(selectedUserPoSelectedCorrelation!=null){
+            for (AspExtraworkPo aspPo : selectedUserPoSelectedCorrelation) {
+                totalSelectedAspPOs+= (aspPo.getPoValue()+(aspPo.getPoValue()*(aspPo.getMargin())));
+            }
+        }
+        return totalSelectedAspPOs;
+    }
+
+    public void setTotalSelectedAspPOs(Double totalSelectedAspPOs) {
+        this.totalSelectedAspPOs = totalSelectedAspPOs;
+    }
+    
+    
+    
     public CustomerExtraworkPo getSelected() {
         return selected;
     }
@@ -181,6 +209,11 @@ public class CustomerExtraworkPoController implements Serializable {
 
     }
 
+    public void setSelectedUserPoSelectedCorrelation(List<AspExtraworkPo> selectedUserPoSelectedCorrelation) {
+        this.selectedUserPoSelectedCorrelation = selectedUserPoSelectedCorrelation;
+    }
+
+    
     public void updateValues(){
         if(selected!=null){
             if(selected.getFactor()!=null && selected.getServiceValue()!=null){
@@ -212,7 +245,7 @@ public class CustomerExtraworkPoController implements Serializable {
             create();
             prepareCreate();
             try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/common/index.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/customer/view/view_vf_po.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(ExtraWorkController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -234,4 +267,44 @@ public class CustomerExtraworkPoController implements Serializable {
         getFacade().edit(selectedUserPo);
         JsfUtil.addSuccessMessage("PO Updated");
     }
+
+    public List<AspExtraworkPo> getSelectedUserPoSelectedCorrelation() {
+        return selectedUserPoSelectedCorrelation;
+    }
+
+    
+    public List<AspExtraworkPo> getSelectedUserPoMatchingAspPo() {
+        if(selectedUserPo!=null){
+        selectedUserPoMatchingAspPo = aspPoController.getItemsMatchingPo(selectedUserPo);
+        }
+        return selectedUserPoMatchingAspPo;
+    }
+
+    public void correlateAspPo(){
+         
+        if(selectedUserPoSelectedCorrelation!=null && selectedUserPo!=null){
+            if(getTotalSelectedAspPOs()<=selectedUserPo.getRemainingFromPo()){
+            for (AspExtraworkPo aspPo : selectedUserPoSelectedCorrelation) {
+                // Add Extra Work Correlation
+                if(selectedUserPo.getAspExtaworkPoCollection()!=null){
+                    selectedUserPo.getAspExtaworkPoCollection().add(aspPo);
+                }else{
+                    selectedUserPo.setAspExtaworkPoCollection(new ArrayList<AspExtraworkPo>());
+                    selectedUserPo.getAspExtaworkPoCollection().add(aspPo);
+                }
+                // Add Work done
+                workDoneController.prepareCreate();
+                workDoneController.getSelected().setPoNumber(selectedUserPo);
+                workDoneController.getSelected().setWorkDoneDate(aspPo.getPoDate());
+                workDoneController.getSelected().setWorkDoneValue(getTotalSelectedAspPOs());
+                workDoneController.updateValues(false);
+                workDoneController.createWorkDone();
+                
+            }
+            }else{
+                JsfUtil.addErrorMessage("Value is more than the remaining from PO");
+            }
+    }
+   }
+    
 }

@@ -11,13 +11,14 @@
         <intercept-url pattern="/app/error/**" access="permitAll" />
         <intercept-url pattern="/javax.faces.resource/**" access="permitAll"/>
         <intercept-url pattern="/resources/**" access="permitAll"/>
-        <intercept-url pattern="/app/common/**" access="hasAnyRole('ROLE_SYSADMIN','ROLE_ASP','ROLE_BP','ROLE_DO','ROLE_RO')" />
-        <intercept-url pattern="/app/extrawork/asp/**" access="hasAnyRole('ROLE_ASP')"/> 
+        <intercept-url pattern="/app/common/**" access="hasAnyRole('ROLE_SYSADMIN','ROLE_ASP','ROLE_ASP_ADMIN','ROLE_BP','ROLE_DO','ROLE_RO','ROLE_BUDGET_CONTROLLER')" />
+        <intercept-url pattern="/app/extrawork/asp/**" access="hasAnyRole('ROLE_ASP','ROLE_ASP_ADMIN')"/> 
         <intercept-url pattern="/app/extrawork/bp/**" access="hasAnyRole('ROLE_BP')"/> 
-        <intercept-url pattern="/app/extrawork/do/**" access="hasAnyRole('ROLE_DO','ROLE_SYSADMIN')"/> 
-        <intercept-url pattern="/app/extrawork/ro/**" access="hasAnyRole('ROLE_RO','ROLE_SYSADMIN')"/> 
+        <intercept-url pattern="/app/extrawork/do/**" access="hasAnyRole('ROLE_DO','ROLE_SYSADMIN','ROLE_BUDGET_CONTROLLER')"/> 
+        <intercept-url pattern="/app/extrawork/ro/**" access="hasAnyRole('ROLE_RO')"/> 
         <intercept-url pattern="/app/financial/**" access="hasAnyRole('ROLE_SYSADMIN')" />
         <intercept-url pattern="/app/systemadmin/**" access="hasAnyRole('ROLE_SYSADMIN')" />
+        <intercept-url pattern="/app/budget_controller/**" access="hasAnyRole('ROLE_BUDGET_CONTROLLER')" />
 
         
 	

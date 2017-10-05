@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -80,6 +81,10 @@ public class CustomerServicePo implements Serializable {
     @NotNull
     @Column(name = "factor")
     private Double factor;
+    @Column(name = "network_name")
+    private String networkName;
+    @Column(name = "early_start")
+    private Boolean earlyStart=false;
     @Basic(optional = false)
     @NotNull
     @Column(name = "service_value")
@@ -102,17 +107,21 @@ public class CustomerServicePo implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "po_owner")
     private String poOwner;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber" , fetch = FetchType.EAGER)
     private Collection<CustomerServiceMd> customerServiceMdCollection;
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
     private Users creator;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber" , fetch = FetchType.EAGER)
     private Collection<CustomerServiceWorkDone> customerServiceWorkDoneCollection;
     @Transient
     private Double mdDeserved;
     @Transient
     private Double totalWorkDone;
+    @Transient
+    private Double invoiceDeserved;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumer" , fetch = FetchType.EAGER)
+    private Collection<CustomerServiceInvoice> customerServiceInvoiceCollection;
 
     public CustomerServicePo() {
     }
@@ -280,7 +289,7 @@ public class CustomerServicePo implements Serializable {
     public String toString() {
         return "com.vodafone.financialtool.entities.CustomerServicePo[ poNumber=" + poNumber + " ]";
     }
-
+    @Transient
     public Double getMdDeserved() {
          Double actualWorkDone = poValue-remainingFromPo;
         Double mdCreatedValue = 0.0;
@@ -293,7 +302,7 @@ public class CustomerServicePo implements Serializable {
         }
         return mdDeserved;
     }
-
+    @Transient
     public Double getTotalWorkDone() {
         totalWorkDone = 0.0;
         if(getCustomerServiceWorkDoneCollection()!=null){
@@ -304,6 +313,61 @@ public class CustomerServicePo implements Serializable {
         }
         return totalWorkDone;
     }
+
+    @XmlTransient
+    public Collection<CustomerServiceInvoice> getCustomerServiceInvoiceCollection() {
+        return customerServiceInvoiceCollection;
+    }
+
+    public void setCustomerServiceInvoiceCollection(Collection<CustomerServiceInvoice> customerExtraworkInvoiceCollection) {
+        this.customerServiceInvoiceCollection = customerExtraworkInvoiceCollection;
+    }
     
+    
+    @Transient
+    public Double getInvoiceDeserved() {
+        Double invpiceCreatedValue = 0.0;
+        if(getCustomerServiceInvoiceCollection()!=null){
+            Object[] invoices = getCustomerServiceInvoiceCollection().toArray();
+            for (Object invoice : invoices) {
+                invpiceCreatedValue += ((CustomerServiceInvoice)invoice).getInvoiceValue();
+            }
+            invoiceDeserved = calculateTotalMdValue()-invpiceCreatedValue;
+        }
+        return invoiceDeserved;
+    }
+
+    public void setInvoiceDeserved(Double invoiceDeserved) {
+        this.invoiceDeserved = invoiceDeserved;
+    }
+    
+    
+    
+    public Double calculateTotalMdValue() {
+        Double mdCreatedValue = 0.0;
+        if(getCustomerServiceMdCollection()!=null){
+            Object[] mds = getCustomerServiceMdCollection().toArray();
+            for (Object md : mds) {
+                mdCreatedValue += ((CustomerServiceMd)md).getMdValue();
+            }
+        }
+        return mdCreatedValue;
+    }
+    
+    public String getNetworkName() {
+        return networkName;
+    }
+
+    public void setNetworkName(String networkName) {
+        this.networkName = networkName;
+    }
+
+    public Boolean getEarlyStart() {
+        return earlyStart;
+    }
+
+    public void setEarlyStart(Boolean earlyStart) {
+        this.earlyStart = earlyStart;
+    }
     
 }
