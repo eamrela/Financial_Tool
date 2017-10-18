@@ -81,7 +81,7 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
-                                <p:dataTable var="extraWork" value="#{dashboardController.extraWorkDetails}"
+                                <p:dataTable id="extraWorkWithoutPoTbl" var="extraWork" value="#{dashboardController.extraWorkDetails}"
                                              paginator="true" paginatorPosition="bottom"
                                              rows="10">
                                 <p:column headerText="Id" filterBy="#{extraWork.id}" filterMatchMode="contains">
@@ -114,6 +114,12 @@
                                 <p:column headerText="Description">
                                     <h:outputText value="#{extraWork.activityDescription}" />
                                 </p:column>
+                                    <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="extraWorkWithoutPoTbl" fileName="extraWorkWithoutPo" />
+                                   </h:commandLink>
+                                </f:facet>
                                 </p:dataTable>
                             </div>
                         </div>

@@ -56,12 +56,14 @@ public class Penalty implements Serializable {
     private Boolean settled=false;
     @Size(max = 2147483647)
     @Column(name = "pn_owner")
-    private String pnOwner;
+    private String pnOwner="Vodafone";
     @Column(name = "pn_value")
     private Double pnValue;
     @Column(name = "creation_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
+    @Column(name = "settlement_po")
+    private String settlementPo;
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne
     private Users creator;
@@ -162,5 +164,14 @@ public class Penalty implements Serializable {
     public String toString() {
         return "tt.Penalty[ id=" + id + " ]";
     }
+
+    public String getSettlementPo() {
+        return settlementPo;
+    }
+
+    public void setSettlementPo(String settlementPo) {
+        this.settlementPo = settlementPo;
+    }
+    
     
 }

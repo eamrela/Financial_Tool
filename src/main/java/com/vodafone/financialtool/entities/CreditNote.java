@@ -54,7 +54,7 @@ public class CreditNote implements Serializable {
     private String cnDescription;
     @Size(max = 2147483647)
     @Column(name = "cn_owner")
-    private String cnOwner;
+    private String cnOwner ="Vodafone";
     @Column(name = "settled")
     private Boolean settled=false;
     @Column(name = "cn_value")
@@ -62,6 +62,8 @@ public class CreditNote implements Serializable {
     @Column(name = "creation_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
+    @Column(name = "settlement_po")
+    private String settlementPo;
     @JoinColumn(name = "creator", referencedColumnName = "user_name")
     @ManyToOne
     private Users creator;
@@ -107,6 +109,9 @@ public class CreditNote implements Serializable {
     }
 
     public String getCnOwner() {
+        if(cnOwner==null){
+            cnOwner="Vodafone";
+        }
         return cnOwner;
     }
 
@@ -162,5 +167,14 @@ public class CreditNote implements Serializable {
     public String toString() {
         return "tt.CreditNote[ id=" + id + " ]";
     }
+
+    public String getSettlementPo() {
+        return settlementPo;
+    }
+
+    public void setSettlementPo(String settlementPo) {
+        this.settlementPo = settlementPo;
+    }
+    
     
 }

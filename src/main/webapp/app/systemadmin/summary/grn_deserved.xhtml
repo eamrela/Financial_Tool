@@ -78,7 +78,7 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
-                            <p:dataTable var="grnDetailsService" value="#{dashboardController.grnDeservedDetailsService}"
+                            <p:dataTable id="grnDetailsService" var="grnDetailsService" value="#{dashboardController.grnDeservedDetailsService}"
                                          paginator="true" paginatorPosition="bottom" rows="7">
                                 <f:facet name="header">Service</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
@@ -111,8 +111,14 @@
                                         <f:convertNumber type="currency" currencySymbol="EGP"/>
                                     </h:outputText>
                                 </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="grnDetailsService" fileName="grn_Deserved_Service" />
+                                   </h:commandLink>
+                                </f:facet>
                             </p:dataTable>
-                            <p:dataTable var="grnDetailsExtrawork" value="#{dashboardController.grnDeservedDetailsExtrawork}"
+                            <p:dataTable id="grnDetailsExtra" var="grnDetailsExtrawork" value="#{dashboardController.grnDeservedDetailsExtrawork}"
                                          paginator="true" paginatorPosition="bottom" rows="7">
                                 <f:facet name="header">Extra Work</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
@@ -145,6 +151,12 @@
                                         <f:convertNumber type="currency" currencySymbol="EGP"/>
                                     </h:outputText>
                                 </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="grnDetailsExtra" fileName="grn_Deserved_Extrawork" />
+                                   </h:commandLink>
+                                </f:facet>
                             </p:dataTable>
                             </div>
                         </div>

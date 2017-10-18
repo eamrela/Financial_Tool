@@ -1,0 +1,830 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:FT="http://xmlns.jcp.org/jsf/composite/components"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Financial Tool</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+        <h:outputStylesheet name="assets/vendors/bootstrap/dist/css/bootstrap.css"/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+        <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+        <h:outputScript library="js" name="jsfcrud.js" target="head" />
+        <h:outputStylesheet name="css/jsfcrud.css"/>
+        <h:outputStylesheet name="assets/vendors/nprogress/nprogress.css"/>
+        <h:outputStylesheet name="assets/vendors/iCheck/skins/flat/green.css"/>
+        <h:outputStylesheet name="assets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css"/>
+        <h:outputStylesheet name="assets/vendors/jqvmap/dist/jqvmap.min.css"/>
+        <h:outputStylesheet name="assets/vendors/bootstrap-daterangepicker/daterangepicker.css"/>
+        <h:outputStylesheet name="assets/build/css/custom.min.css"/>
+        
+        <style>
+            .ui-growl{top: 100px;}
+            .ui-fileupload .start {
+            display: none;
+            }
+            .ui-fileupload .cancel {
+                display: none;
+            }
+            .ui-fileupload .progress {
+                display: none;
+            }
+            .ui-fileupload-progress {
+                display: none;
+            }
+              .ui-fileupload-content .ui-progressbar {
+                width: 0px;
+                height: 0px;
+                margin: 0
+                }
+        </style>
+        <f:metadata>
+            <f:viewAction action="#{simulationController.clearValuesASP}"/>
+        </f:metadata>
+    </h:head>
+    <h:body class="nav-sm">
+        <div class="container body">
+            <div class="main_container">
+                <div class="col-md-3 left_col">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title navbar-default" style="border: 0;">
+                            <a href="index.html" class="site_title"><i class="fa fa-certificate"></i> <span>Financial Tool</span></a>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <FT:ProfileInfo username="#{usersController.loggedInUser.userName}" 
+                                        domain="#{usersController.loggedInUserDomains}" 
+                                        region="#{usersController.loggedInUserRegions}"
+                                        company="#{usersController.loggedInUser.company}"/>
+                        
+                        <br></br>
+                        <FT:NavigationMenu/>
+                      </div>
+                </div>
+                <FT:Notifications/>
+            <h:form id="simulationForm">
+            <p:growl id="growl"/>
+            <div class="right_col" role="main">
+            <FT:PageName pageName="Monthly Simulation"/>   
+       
+             <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                <div class="x_title">
+                    <h2>Facts</h2>
+                    <div class="clearfix"></div>
+                    <h:selectOneMenu id="ewAsp"
+                                    value="#{simulationController.asp}"
+                                            styleClass="form-control"
+                                            required="true"
+                                            requiredMessage="ASP can't be empty"
+                                            converter="SubcontractorsControllerConverter">
+                                    <p:ajax  update=":simulationForm:aspName1,
+                                                     :simulationForm:aspValue1,
+                                                     :simulationForm:aspName2,
+                                                     :simulationForm:aspValue2,
+                                                     :simulationForm:remainingFromPoService,
+                                                     :simulationForm:remainingFromPoExtra,
+                                                     :simulationForm:grnDeservedService,
+                                                     :simulationForm:grnDeservedExtra"/>
+                               <f:selectItem itemLabel="" itemValue="#{null}"/>
+                               <f:selectItems value="#{subcontractorsController.itemsAvailableSelectOne}" 
+                                              var="aspItem"
+                                              itemValue="#{aspItem}"
+                                              itemLabel="#{aspItem.subcontractorName}"/>
+                   </h:selectOneMenu>
+                </div>
+                <div class="x_content">
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                    
+                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                    <li role="presentation" class=""><a href="#mdDes" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">MD Deserved [
+                      <h:outputText id="mdDeservedValue" value="#{simulationController.VFmdDeserved}">
+                          <f:convertNumber type="currency" currencySymbol="EGP"/>
+                      </h:outputText> ]</a>
+                    </li>
+                    <li role="presentation" class=""><a href="#inDes" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">Invoice Deserved [
+                        <h:outputText id="invoiceDeservedValue" value="#{simulationController.VFinvoiceDeserved}">
+                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                    </h:outputText> ]</a>
+                    </li>
+                    <li role="presentation" class=""><a href="#grnDes" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">
+                            <h:outputText id="aspName1" value="#{simulationController.asp.subcontractorName}"/>
+                                 - GRN Deserved [
+                            <h:outputText id="aspValue1" value="#{simulationController.aspgrndeserved}">
+                          <f:convertNumber type="currency" currencySymbol="EGP"/>
+                      </h:outputText> ]</a>
+                    </li>
+                    <li role="presentation" class=""><a href="#RemainFromPO" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">
+                            <h:outputText id="aspName2" value="#{simulationController.asp.subcontractorName}"/> 
+                            - Remaining from POs [
+                            <h:outputText id="aspValue2" value="#{simulationController.aspremainingFromPO}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText> ]</a>
+                    </li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade" id="inDes" aria-labelledby="profile-tab">
+                        <p:dataTable id="invoiceDeservedService" var="invoiceDetailsService" value="#{simulationController.VFinvoiceDeservedService}"
+                                     paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{invoiceDetailsService.poNumber}"
+                                       selectionMode="single" selection="#{simulationController.selectedCustomerPoService}" >
+                            <p:ajax event="rowDblselect" listener="#{simulationController.onRowDblClck_InvoiceDeserved_Service}" 
+                                                                 update=":simulationForm:invoiceDeservedValue,
+                                                                         :simulationForm:invoiceDeservedService,
+                                                                         :simulationForm:nsTable,
+                                                                         :simulationForm:totalNS,
+                                                                         simulationForm:um,
+                                                                         simulationForm:um_percent"/>
+                              <f:facet name="header">Service</f:facet>
+                              <p:column headerText="PO#" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsService.poNumber}" />
+                              </p:column>
+                              <p:column headerText="Domain" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsService.domainName}" />
+                              </p:column>
+                              <p:column headerText="Subdomain" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsService.subDomain}" />
+                              </p:column>
+                              <p:column headerText="PO Value" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsService.poValue}" >
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p:column>
+                              <p:column headerText="Description" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsService.poDescription}" />
+                              </p:column>
+                              <p:column headerText="Date" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsService.poDate}" >
+                                      <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                  </h:outputText>
+                              </p:column>
+                              <p:column headerText="Invoice Deserved" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsService.invoiceDeserved}" >
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p:column>
+                              <f:facet name="footer">
+                                  <h:commandLink>
+                                      <img src="csv.png"/>
+                                     <p:dataExporter type="csv" target="invoiceDeservedService" fileName="invoiceDeservedService" />
+                                 </h:commandLink>
+                              </f:facet>
+                          </p:dataTable>
+                        <p:dataTable id="invoiceDeservedExtra" var="invoiceDetailsExtrawork" value="#{simulationController.VFinvoiceDeservedExtrawork}"
+                                       paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{invoiceDetailsExtrawork.poNumber}"
+                                       selectionMode="single" selection="#{simulationController.selectedCustomerPoExtrawork}">
+                            <p:ajax event="rowDblselect" listener="#{simulationController.onRowDblClck_InvoiceDeserved_Extawork}" 
+                                                                 update=":simulationForm:invoiceDeservedValue,
+                                                                         :simulationForm:invoiceDeservedExtra,
+                                                                         :simulationForm:nsTable,
+                                                                         :simulationForm:totalNS,
+                                                                         simulationForm:um,
+                                                                         simulationForm:um_percent"/>
+                              <f:facet name="header">Extra Work</f:facet>
+                              <p:column headerText="PO#" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsExtrawork.poNumber}" />
+                              </p:column>
+                              <p:column headerText="Domain" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsExtrawork.domainName}" />
+                              </p:column>
+                              <p:column headerText="Subdomain" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsExtrawork.subDomain}" />
+                              </p:column>
+                              <p:column headerText="PO Value" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsExtrawork.poValue}" >
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p:column>
+                              <p:column headerText="Description" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsExtrawork.poDescription}" />
+                              </p:column>
+                              <p:column headerText="Date" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsExtrawork.poDate}" >
+                                      <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                  </h:outputText>
+                              </p:column>
+                              <p:column headerText="Invoice Deserved" style="font-size: 9px;">
+                                  <h:outputText value="#{invoiceDetailsExtrawork.invoiceDeserved}" >
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p:column>
+                              <f:facet name="footer">
+                                  <h:commandLink>
+                                      <img src="csv.png"/>
+                                     <p:dataExporter type="csv" target="invoiceDeservedExtra" fileName="invoiceDeservedExtra" />
+                                 </h:commandLink>
+                              </f:facet>
+                          </p:dataTable>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="mdDes" aria-labelledby="profile-tab">
+                        <p:dataTable id="mdDeservedServiceTbl" var="invoiceDetailsService" value="#{simulationController.VFmdDeservedService}"
+                                   paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{invoiceDetailsService.poNumber}"
+                                   selectionMode="single" selection="#{simulationController.selectedCustomerPoService}">
+                            <p:ajax event="rowDblselect" listener="#{simulationController.onRowDblClck_MdDeserved_Service}" 
+                                                                 update=":simulationForm:mdDeservedValue,
+                                                                         :simulationForm:mdDeservedServiceTbl,
+                                                                         :simulationForm:nsTable,
+                                                                         :simulationForm:totalNS,
+                                                                         simulationForm:um,
+                                                                         simulationForm:um_percent"/>
+                          <f:facet name="header">Service</f:facet>
+                          <p:column headerText="PO#" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.poNumber}" />
+                          </p:column>
+                          <p:column headerText="Domain" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.domainName}" />
+                          </p:column>
+                          <p:column headerText="Subdomain" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.subDomain}" />
+                          </p:column>
+                          <p:column headerText="PO Value" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.poValue}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Description" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.poDescription}" />
+                          </p:column>
+                          <p:column headerText="Date" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.poDate}" >
+                                  <f:convertDateTime pattern="yyyy/MM/dd"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Invoice Deserved" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.invoiceDeserved}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <f:facet name="footer">
+                              <h:commandLink>
+                                  <img src="csv.png"/>
+                                 <p:dataExporter type="csv" target="mdDeservedServiceTbl" fileName="mdDeservedService" />
+                             </h:commandLink>
+                          </f:facet>
+                      </p:dataTable>
+                        <p:dataTable id="mdDeservedExtraTbl" var="invoiceDetailsExtrawork" value="#{simulationController.VFmdDeservedExtrawork}"
+                                   paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{invoiceDetailsExtrawork.poNumber}"
+                                   selectionMode="single" selection="#{simulationController.selectedCustomerPoExtrawork}">
+                            <p:ajax event="rowDblselect" listener="#{simulationController.onRowDblClck_MdDeserved_Extawork}" 
+                                                                 update=":simulationForm:mdDeservedValue,
+                                                                         :simulationForm:mdDeservedExtraTbl,
+                                                                         :simulationForm:nsTable,
+                                                                         :simulationForm:totalNS,
+                                                                         simulationForm:um,
+                                                                         simulationForm:um_percent"/>
+                          <f:facet name="header">Extra Work</f:facet>
+                          <p:column headerText="PO#" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.poNumber}" />
+                          </p:column>
+                          <p:column headerText="Domain" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.domainName}" />
+                          </p:column>
+                          <p:column headerText="Subdomain" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.subDomain}" />
+                          </p:column>
+                          <p:column headerText="PO Value" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.poValue}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Description" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.poDescription}" />
+                          </p:column>
+                          <p:column headerText="Date" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.poDate}" >
+                                  <f:convertDateTime pattern="yyyy/MM/dd"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Invoice Deserved" style="font-size: 9px;">
+                              <h:outputText value="#{invoiceDetailsService.invoiceDeserved}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <f:facet name="footer">
+                              <h:commandLink>
+                                  <img src="csv.png"/>
+                                 <p:dataExporter type="csv" target="mdDeservedExtraTbl" fileName="mdDeservedExtra" />
+                             </h:commandLink>
+                          </f:facet>
+                      </p:dataTable>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="RemainFromPO" aria-labelledby="profile-tab">
+                        <p:dataTable id="remainingFromPoService" var="poWithRemaining" value="#{simulationController.aspremainingFromPOService}"
+                                   paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{poWithRemaining.poNumber}"
+                                   selectionMode="single" selection="#{simulationController.selectedAspServicePO}" >
+                            <p:ajax event="rowDblselect" listener="#{simulationController.onRowDblClck_RemainingFromPo_Service}" 
+                                                                 update=":simulationForm:aspValue2,
+                                                                         :simulationForm:remainingFromPoService,
+                                                                         :simulationForm:cosTable,
+                                                                         :simulationForm:totalCOS,
+                                                                         simulationForm:um,
+                                                                         simulationForm:um_percent"/>
+                          <f:facet name="header">Service</f:facet>
+                          <p:column headerText="PO#" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemaining.poNumber}" />
+                          </p:column>
+                          <p:column headerText="Domain" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemaining.domainName}" />
+                          </p:column>
+                          <p:column headerText="Subdomain" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemaining.subDomain}" />
+                          </p:column>
+                          <p:column headerText="PO Value" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemaining.poValue}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Description" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemaining.poDescription}" />
+                          </p:column>
+                          <p:column headerText="Date" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemaining.poDate}" >
+                                  <f:convertDateTime pattern="yyyy/MM/dd"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Remaining" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemaining.remainingFromPo}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <f:facet name="footer">
+                              <h:commandLink>
+                                  <img src="csv.png"/>
+                                 <p:dataExporter type="csv" target="remainingFromPoService" fileName="poWithRemaining_Service.csv" />
+                             </h:commandLink>
+                          </f:facet>
+                      </p:dataTable>
+                        <p:dataTable id="remainingFromPoExtra" var="poWithRemainingExtra" value="#{simulationController.aspremainingFromPOExtrawork}"
+                                   paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{poWithRemainingExtra.poNumber}"
+                                   selectionMode="single" selection="#{simulationController.selectedAspExtraworkPO}">
+                            <p:ajax event="rowDblselect" listener="#{simulationController.onRowDblClck_RemainingFromPo_Extawork}" 
+                                                                 update=":simulationForm:aspValue2,
+                                                                         :simulationForm:remainingFromPoExtra,
+                                                                         :simulationForm:cosTable,
+                                                                         :simulationForm:totalCOS,
+                                                                         simulationForm:um,
+                                                                         simulationForm:um_percent"/>
+                          <f:facet name="header">Extra Work</f:facet>
+                          <p:column headerText="PO#" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemainingExtra.poNumber}" />
+                          </p:column>
+                          <p:column headerText="Domain" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemainingExtra.domainName}" />
+                          </p:column>
+                          <p:column headerText="Subdomain" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemainingExtra.subDomain}" />
+                          </p:column>
+                          <p:column headerText="PO Value" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemainingExtra.poValue}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Description" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemainingExtra.poDescription}" />
+                          </p:column>
+                          <p:column headerText="Date" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemainingExtra.poDate}" >
+                                  <f:convertDateTime pattern="yyyy/MM/dd"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Remaining" style="font-size: 9px;">
+                              <h:outputText value="#{poWithRemainingExtra.remainingFromPo}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <f:facet name="footer">
+                              <h:commandLink>
+                                  <img src="csv.png"/>
+                                 <p:dataExporter type="csv" target="remainingFromPoExtra" fileName="poWithRemaining_Extrawork.csv" />
+                             </h:commandLink>
+                          </f:facet>
+                      </p:dataTable>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="grnDes" aria-labelledby="profile-tab">
+                        <p:dataTable id="grnDeservedService" var="grnDetailsService" value="#{simulationController.aspgrnDeservedService}"
+                                   paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{grnDetailsService.poNumber}"
+                                   selectionMode="single" selection="#{simulationController.selectedAspServicePO}">
+                            <p:ajax event="rowDblselect" listener="#{simulationController.onRowDblClck_GrnDeserved_Service}" 
+                                                                 update=":simulationForm:aspValue1,
+                                                                         :simulationForm:grnDeservedService,
+                                                                         :simulationForm:cosTable,
+                                                                         :simulationForm:totalCOS,
+                                                                         simulationForm:um,
+                                                                         simulationForm:um_percent"/>
+                          <f:facet name="header">Service</f:facet>
+                          <p:column headerText="PO#" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsService.poNumber}" />
+                          </p:column>
+                          <p:column headerText="Domain" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsService.domainName}" />
+                          </p:column>
+                          <p:column headerText="Subdomain" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsService.subDomain}" />
+                          </p:column>
+                          <p:column headerText="PO Value" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsService.poValue}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Description" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsService.poDescription}" />
+                          </p:column>
+                          <p:column headerText="Date" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsService.poDate}" >
+                                  <f:convertDateTime pattern="yyyy/MM/dd"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="GRN Deserved" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsService.grnDeserved}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <f:facet name="footer">
+                              <h:commandLink>
+                                  <img src="csv.png"/>
+                                 <p:dataExporter type="csv" target="grnDeservedService" fileName="grnDeserved_Service.csv" />
+                             </h:commandLink>
+                          </f:facet>
+                      </p:dataTable>
+                        <p:dataTable id="grnDeservedExtra" var="grnDetailsExtrawork" value="#{simulationController.aspgrnDeservedExtrawork}"
+                                   paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{grnDetailsExtrawork.poNumber}"
+                                   selectionMode="single" selection="#{simulationController.selectedAspExtraworkPO}">
+                            <p:ajax event="rowDblselect" listener="#{simulationController.onRowDblClck_GrnDeserved_Extawork}" 
+                                                                 update=":simulationForm:aspValue1,
+                                                                         :simulationForm:grnDeservedExtra,
+                                                                         :simulationForm:cosTable,
+                                                                         :simulationForm:totalCOS,
+                                                                         simulationForm:um,
+                                                                         simulationForm:um_percent"/>
+                          <f:facet name="header">Extra Work</f:facet>
+                          <p:column headerText="PO#" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsExtrawork.poNumber}" />
+                          </p:column>
+                          <p:column headerText="Domain" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsExtrawork.domainName}" />
+                          </p:column>
+                          <p:column headerText="Subdomain" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsExtrawork.subDomain}" />
+                          </p:column>
+                          <p:column headerText="PO Value" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsExtrawork.poValue}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="Description" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsExtrawork.poDescription}" />
+                          </p:column>
+                          <p:column headerText="Date" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsExtrawork.poDate}" >
+                                  <f:convertDateTime pattern="yyyy/MM/dd"/>
+                              </h:outputText>
+                          </p:column>
+                          <p:column headerText="GRN Deserved" style="font-size: 9px;">
+                              <h:outputText value="#{grnDetailsExtrawork.grnDeserved}" >
+                                  <f:convertNumber type="currency" currencySymbol="EGP"/>
+                              </h:outputText>
+                          </p:column>
+                          <f:facet name="footer">
+                              <h:commandLink>
+                                  <img src="csv.png"/>
+                                 <p:dataExporter type="csv" target="grnDeservedExtra" fileName="grnDeserved_Extrawork.csv" />
+                             </h:commandLink>
+                          </f:facet>
+                      </p:dataTable>
+                    </div>           
+                    </div>
+                       
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+             <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                <div class="x_title">
+
+                    <h3 class="alert alert-info">
+                    <strong>UM / UM%: </strong>
+                    <h:outputText id="um" value="#{simulationController.totalUM}">
+                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                    </h:outputText> / 
+                    <h:outputText id="um_percent" value="#{simulationController.totalUMPercent}">
+                        <f:convertNumber type="percent"/>
+                    </h:outputText>
+                    </h3>
+                    <div class="clearfix"></div>
+                </div>
+                    <div class="x_content">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="row">
+                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                    <h3 class="alert alert-success">
+                                    <strong>Net Sales: </strong>
+                                    <h:outputText id="totalNS" value="#{simulationController.totalNS}">
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                    </h3>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <h:commandButton id="addNS" 
+                                     value="Add NS"
+                                     class="btn btn-success btn-app">
+                                        <p:ajax listener="#{simulationController.addNS}" update=":simulationForm:nsTable,simulationForm:um,
+                                                                                                        simulationForm:um_percent"/>
+                                    </h:commandButton>
+                                </div>
+                            </div>
+                            
+                            <p:dataTable id="nsTable" var="ns" value="#{simulationController.NSRecord}" editable="true">
+                                
+                                <p:ajax event="rowEdit" listener="#{simulationController.onNsEdit}" update=":simulationForm:totalNS"/>
+                                
+                                <p:column style="font-size: 9px;" headerText="Id">
+                                        <h:outputText value="#{ns.id}" />
+                                </p:column>
+                                <p:column style="font-size: 9px;" headerText="Type">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{ns.typeOfNs}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{ns.typeOfNs}" style="width:150px">
+                                                <f:selectItem itemLabel="PO" itemValue="PO"/>
+                                                <f:selectItem itemLabel="CN" itemValue="CN"/>
+                                                <f:selectItem itemLabel="PN" itemValue="PN"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="SubType">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{ns.typeOfType}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{ns.typeOfType}" style="width:150px">
+                                                <f:selectItem itemLabel="Service" itemValue="Service"/>
+                                                <f:selectItem itemLabel="Extrawork" itemValue="Extrawork"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="PO#">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{ns.poNumber}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{ns.poNumber}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                    
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Invoice#">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{ns.typeNumber}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{ns.typeNumber}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Value">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{ns.invoiceValue}">
+                                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                            </h:outputText>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{ns.invoiceValue}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                    
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Editable">
+                                    <h:outputText value="#{ns.editable}" />
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Description">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                             <h:outputText value="#{ns.description}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{ns.description}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Comment">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{ns.nsComment}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{ns.nsComment}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <f:facet name="footer">
+                              <h:commandLink>
+                                  <img src="csv.png"/>
+                                 <p:dataExporter type="csv" target="nsTable" fileName="MonthlyNetSales" />
+                             </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="row">
+                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                    <h3 class="alert alert-warning">
+                                    <strong>Cost Of Sales: </strong>
+                                    <h:outputText id="totalCOS" value="#{simulationController.totalCOS}">
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                    </h3>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <h:commandButton id="addCOS" 
+                                     value="Add COS"
+                                     class="btn btn-warning btn-app">
+                                        <p:ajax listener="#{simulationController.addCOS}" update=":simulationForm:cosTable"/>
+                                    </h:commandButton>
+                                </div>
+                            </div>
+                            <p:dataTable id="cosTable" var="cos" value="#{simulationController.COSRecord}" editable="true">
+                                <p:ajax event="rowEdit" listener="#{simulationController.onCosEdit}" update=":simulationForm:totalCOS,simulationForm:um,
+                                                                                                        simulationForm:um_percent"/>
+                                <p:column style="font-size: 9px;" headerText="Id">
+                                        <h:outputText value="#{cos.id}" />
+                                </p:column>
+                                <p:column style="font-size: 9px;" headerText="Type">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{cos.typeOfNs}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{cos.typeOfNs}" style="width:150px">
+                                                <f:selectItem itemLabel="PO" itemValue="PO"/>
+                                                <f:selectItem itemLabel="CN" itemValue="CN"/>
+                                                <f:selectItem itemLabel="PN" itemValue="PN"/>
+                                                <f:selectItem itemLabel="JV" itemValue="JV"/>
+                                                <f:selectItem itemLabel="TR" itemValue="TR"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="SubType">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{cos.typeOfType}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                           <p:selectOneMenu value="#{cos.typeOfType}" style="width:150px">
+                                                <f:selectItem itemLabel="Service" itemValue="Service"/>
+                                                <f:selectItem itemLabel="Extrawork" itemValue="Extrawork"/>
+                                           </p:selectOneMenu> 
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="PO#">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{cos.poNumber}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{cos.poNumber}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="GRN#">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{cos.typeNumber}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{cos.typeNumber}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Value">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{cos.invoiceValue}">
+                                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                            </h:outputText>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{cos.invoiceValue}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="ASP">
+                                    <h:outputText value="#{cos.asp}" />
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Editable">
+                                    <h:outputText value="#{cos.editable}" />
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Description">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{cos.description}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{cos.description}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="font-size: 9px;"  headerText="Comment">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{cos.nsComment}" />
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:inputText value="#{cos.nsComment}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <f:facet name="footer">
+                              <h:commandLink>
+                                  <img src="csv.png"/>
+                                 <p:dataExporter type="csv" target="cosTable" fileName="MonthlyCostOfSales" />
+                             </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                        </div>
+                        
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            </h:form>
+                
+            <FT:Footer/>
+            </div>
+        </div>
+        
+        
+    <script src="#{resource['assets/vendors/bootstrap/dist/js/bootstrap.min.js']}"></script>
+    <script src="#{resource['assets/vendors/fastclick/lib/fastclick.js']}"></script>
+    <script src="#{resource['assets/vendors/nprogress/nprogress.js']}"></script>
+    <script src="#{resource['assets/vendors/Chart.js/dist/Chart.min.js']}"></script>
+    <script src="#{resource['assets/vendors/gauge.js/dist/gauge.min.js']}"></script>
+    <script src="#{resource['assets/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js']}"></script>
+    <script src="#{resource['assets/vendors/iCheck/icheck.min.js']}"></script>
+    <script src="#{resource['assets/vendors/skycons/skycons.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.pie.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.time.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.stack.js']}"></script>
+    <script src="#{resource['assets/vendors/Flot/jquery.flot.resize.js']}"></script>
+    <script src="#{resource['assets/vendors/flot.orderbars/js/jquery.flot.orderBars.js']}"></script>
+    <script src="#{resource['assets/vendors/flot-spline/js/jquery.flot.spline.min.js']}"></script>
+    <script src="#{resource['assets/vendors/flot.curvedlines/curvedLines.js']}"></script>
+    <script src="#{resource['assets/vendors/DateJS/build/date.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/dist/jquery.vmap.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/dist/maps/jquery.vmap.world.js']}"></script>
+    <script src="#{resource['assets/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js']}"></script>
+    <script src="#{resource['assets/vendors/moment/min/moment.min.js']}"></script>
+    <script src="#{resource['assets/vendors/bootstrap-daterangepicker/daterangepicker.js']}"></script>
+    <script src="#{resource['assets/build/js/custom.min.js']}"></script>   
+    <script type="text/javascript">
+        //<![CDATA[
+       
+           removeClasses();
+        //]]>
+        function removeClasses(){
+             $('#createJvForm\\:ewDate')
+                    .removeClass();
+             $('#createJvForm\\:ewDate_input')
+                    .removeClass()
+                    .addClass( "form-control" );
+            
+          
+            $('#createJvForm\\:jvValue')
+                    .removeClass();
+            $('#createJvForm\\:jvValue_input') 
+                    .removeClass()
+                    .addClass( "form-control" );
+        }
+        </script>
+
+    
+    </h:body>
+</html>
+

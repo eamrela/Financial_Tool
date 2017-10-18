@@ -329,6 +329,10 @@
                                                      actionListener="#{aspServicePoController.deletePo}" 
                                                      update=":aspPoForm:growl,datalistServicePo" 
                                                      disabled="#{empty aspServicePoController.selectedUserPo}"/>
+                                     <h:commandLink>
+                                         <img src="csv.png"/>
+                                        <p:dataExporter type="csv" target="datalistServicePo" fileName="asp_po_service.csv" />
+                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                             <p:contextMenu id="menuItemsServicePo" for="datalistServicePo">
@@ -648,6 +652,10 @@
                                                      actionListener="#{aspExtraworkPoController.deletePo}" 
                                                      update=":aspPoForm:growl,datalistExtraworkPo" 
                                                      disabled="#{empty aspExtraworkPoController.selectedUserPo}"/>
+                                    <h:commandLink>
+                                         <img src="csv.png"/>
+                                        <p:dataExporter type="csv" target="datalistExtraworkPo" fileName="asp_po_extrawork.csv" />
+                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                             <p:contextMenu id="menuItemsExtraworkPo" for="datalistExtraworkPo">

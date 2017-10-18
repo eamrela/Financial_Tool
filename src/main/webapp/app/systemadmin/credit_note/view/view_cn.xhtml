@@ -129,6 +129,12 @@
                               filterBy="#{cn.settled}">
                         <h:outputText value="#{cn.settled}" />
                     </p:column>
+                    <p:column headerText="Settlement PO" 
+                              style="font-size: 9px;"
+                              filterMatchMode="contains"
+                              filterBy="#{cn.settlementPo}">
+                        <h:outputText value="#{cn.settlementPo}" />
+                    </p:column>
                     <f:facet name="footer">
                         <p:commandButton id="deleteButton" 
                                          icon="ui-icon-trash"  
@@ -136,6 +142,10 @@
                                          actionListener="#{creditNoteController.deleteCN}" 
                                          update=":jvForm:growl,datalistJv" 
                                          disabled="#{empty creditNoteController.selectedUserCN}"/>
+                        <h:commandLink>
+                            <img src="csv.png"/>
+                           <p:dataExporter type="csv" target="datalistJv" fileName="credit_notes.csv" />
+                       </h:commandLink>
                     </f:facet>
                 </p:dataTable>
                 <p:contextMenu id="menuItemsJv" for="datalistJv">

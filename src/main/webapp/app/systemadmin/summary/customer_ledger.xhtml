@@ -25,7 +25,7 @@
         <h:outputStylesheet name="assets/vendors/bootstrap-daterangepicker/daterangepicker.css"/>
         <h:outputStylesheet name="assets/build/css/custom.min.css"/>
          <f:metadata>
-             <f:viewAction action="#{aspLedgerController.clearValues}"/>
+             <f:viewAction action="#{customerLedgerController.clearValues}"/>
         </f:metadata>
     </h:head>
     <h:body class="nav-sm">
@@ -50,56 +50,23 @@
                 <FT:Notifications/>
             <h:form id="dashboardForm">
                 <div class="right_col" role="main">
-                <FT:PageName pageName="ASP Ledger"/>
+                <FT:PageName pageName="Customer Ledger"/>
                    
                 
                 <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>ASP<small>Financial report</small></h2>
-                    <div class="nav navbar-right panel_toolbox">
-                    <h:selectOneMenu id="ewAsp"
-                                     value="#{aspLedgerController.asp}"
-                                             styleClass="form-control"
-                                             required="true"
-                                             requiredMessage="ASP can't be empty"
-                                             converter="SubcontractorsControllerConverter">
-                        <p:ajax update=":dashboardForm:aspData"/>
-                                <f:selectItem itemLabel="" itemValue="#{null}"/>
-                                <f:selectItems value="#{subcontractorsController.itemsAvailableSelectOne}" 
-                                               var="aspItem"
-                                               itemValue="#{aspItem}"
-                                               itemLabel="#{aspItem.subcontractorName}"/>
-                    </h:selectOneMenu>
-                    </div>
+                    <h2>Customer<small>Financial report</small></h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                     <h:panelGroup id="aspData">
                     <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
-                        <h3>#{aspLedgerController.asp.subcontractorName}</h3>
-                        
-                      <ul class="list-unstyled user_data">
-                        <li>
-                            <i class="fa fa-briefcase user-profile-icon"></i> #{aspLedgerController.asp.contactPerson}
-                        </li>
 
-                        <li class="m-top-xs">
-                          <i class="fa fa-external-link user-profile-icon"></i>
-                          <a href="#" target="_blank">#{aspLedgerController.asp.website}</a>
-                        </li>
-                      </ul>
                       <br />
                       
                       <div class="x_panel ui-ribbon-container">
-                          <div class="ui-ribbon-wrapper">
-                            <div class="ui-ribbon">
-                                <h:outputText id="ump" value="#{aspLedgerController.UMP}">
-                                    <f:convertNumber type="percent"/>
-                                </h:outputText> UM
-                            </div>
-                          </div>
+
                           <div class="x_title">
                             <h2>Summary</h2>
                             <div class="clearfix"></div>
@@ -108,11 +75,11 @@
 
 
                               <h3 class="name_title">
-                                  <h:outputText value="#{aspLedgerController.overall}">
+                                  <h:outputText value="#{customerLedgerController.overall}">
                                       <f:convertNumber type="currency" currencySymbol="EGP"/>
                                   </h:outputText>
                               </h3>
-                            <p>(EW+GRN) - (CN+PN)</p>
+                            <p>(EW+MD Deserved+Invoice) - (CN+PN)</p>
 
                             <div class="divider"></div>
                             
@@ -121,7 +88,7 @@
                             <div class="media-body">
                               <a class="title" href="#">Extra Work - No PO</a>
                               <p>
-                                  <h:outputText value="#{aspLedgerController.extraWorkNoPO}">
+                                  <h:outputText value="#{customerLedgerController.extraWorkNoPOVF}">
                                       <f:convertNumber type="currency" currencySymbol="EGP"/>
                                   </h:outputText>
                               </p>
@@ -132,29 +99,51 @@
                             <div class="media-body">
                               <a class="title" href="#">Remaining from POs</a>
                               <p>
-                                  <h:outputText value="#{aspLedgerController.remainingFromPO}">
+                                  <h:outputText value="#{customerLedgerController.remainingFromPO}">
                                       <f:convertNumber type="currency" currencySymbol="EGP"/>
                                   </h:outputText>
                               </p>
                             </div>
                             </article>
                             <article class="media event">
-                            <a class="pull-left date"><p class="day">GR</p></a>
+                            <a class="pull-left date"><p class="day">MD</p></a>
                             <div class="media-body">
-                              <a class="title" href="#">GRNs Received</a>
+                              <a class="title" href="#">MD Received</a>
                               <p>
-                                  <h:outputText value="#{aspLedgerController.grnReceived}">
+                                  <h:outputText value="#{customerLedgerController.mdReceived}">
                                       <f:convertNumber type="currency" currencySymbol="EGP"/>
                                   </h:outputText>
                               </p>
                             </div>
                             </article>
                             <article class="media event">
-                            <a class="pull-left date"><p class="day">GR</p></a>
+                            <a class="pull-left date"><p class="day">MD</p></a>
                             <div class="media-body">
-                              <a class="title" href="#">GRNs Deserved</a>
+                              <a class="title" href="#">MD Deserved</a>
                               <p>
-                                  <h:outputText value="#{aspLedgerController.grndeserved}">
+                                  <h:outputText value="#{customerLedgerController.mdDeserved}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">IN</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">Invoice Received</a>
+                              <p>
+                                  <h:outputText value="#{customerLedgerController.invoiceReceived}">
+                                      <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                  </h:outputText>
+                              </p>
+                            </div>
+                            </article>
+                            <article class="media event">
+                            <a class="pull-left date"><p class="day">IN</p></a>
+                            <div class="media-body">
+                              <a class="title" href="#">Invoice Deserved</a>
+                              <p>
+                                  <h:outputText value="#{customerLedgerController.invoiceDeserved}">
                                       <f:convertNumber type="currency" currencySymbol="EGP"/>
                                   </h:outputText>
                               </p>
@@ -165,7 +154,7 @@
                             <div class="media-body">
                               <a class="title" href="#">POs Received</a>
                               <p>
-                                  <h:outputText value="#{aspLedgerController.poReceived}">
+                                  <h:outputText value="#{customerLedgerController.poReceived}">
                                       <f:convertNumber type="currency" currencySymbol="EGP"/>
                                   </h:outputText>
                               </p>
@@ -176,7 +165,7 @@
                             <div class="media-body">
                               <a class="title" href="#">Credit Notes</a>
                               <p>
-                                  <h:outputText value="#{aspLedgerController.creditNotes}">
+                                  <h:outputText value="#{customerLedgerController.creditNotes}">
                                       <f:convertNumber type="currency" currencySymbol="EGP"/>
                                   </h:outputText>
                               </p>
@@ -187,7 +176,7 @@
                             <div class="media-body">
                               <a class="title" href="#">Penalities</a>
                               <p>
-                                  <h:outputText value="#{aspLedgerController.penalty}">
+                                  <h:outputText value="#{customerLedgerController.penalty}">
                                       <f:convertNumber type="currency" currencySymbol="EGP"/>
                                   </h:outputText>
                               </p>
@@ -203,10 +192,7 @@
                     <div class="col-md-9 col-sm-9 col-xs-12">
                       <div class="profile_title">
                         <div class="col-md-6">
-                          <h2>Financial Status for #{aspLedgerController.asp.subcontractorName}</h2>
-                          
-                          
-                          
+                          <h2>Financial Status</h2>
                         </div>
                       </div>
 
@@ -217,9 +203,13 @@
                           </li>
                           <li role="presentation" class=""><a href="#RemainFromPO" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Remaining from POs</a>
                           </li>
-                          <li role="presentation" class=""><a href="#grnRec" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">GRN Received</a>
+                          <li role="presentation" class=""><a href="#mdRec" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">MD Received</a>
                           </li>
-                          <li role="presentation" class=""><a href="#grnDes" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">GRN Deserved</a>
+                          <li role="presentation" class=""><a href="#mdDes" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">MD Deserved</a>
+                          </li>
+                          <li role="presentation" class=""><a href="#inRec" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Invoice Received</a>
+                          </li>
+                          <li role="presentation" class=""><a href="#inDes" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">Invoice Deserved</a>
                           </li>
                           <li role="presentation" class=""><a href="#CreditNotes" role="tab" id="profile-tab4" data-toggle="tab" aria-expanded="false">Credit Notes</a>
                           </li>
@@ -230,7 +220,7 @@
                         </ul>
                         <div id="myTabContent" class="tab-content">
                           <div role="tabpanel" class="tab-pane fade active in" id="ewNoPO" aria-labelledby="home-tab">
-                              <p:dataTable id="extraWorkWithoutPoTbl" var="extraWorkWithoutPO" value="#{aspLedgerController.extraWorkWithoutPo}"
+                              <p:dataTable id="extraWorkWithoutPoTbl" var="extraWorkWithoutPO" value="#{customerLedgerController.extraWorkWithoutPo}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Extra Work with Domain Owner Approvals</f:facet>
                                 <p:column headerText="id#" style="font-size: 9px;">
@@ -266,13 +256,13 @@
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="extraWorkWithoutPoTbl" fileName="extraWorkWithoutPo.csv" />
+                                       <p:dataExporter type="csv" target="extraWorkWithoutPoTbl" fileName="extraWorkWithoutPo" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                           </div>
                           <div role="tabpanel" class="tab-pane fade" id="RemainFromPO" aria-labelledby="profile-tab">
-                              <p:dataTable id="remainingFromPoService" var="poWithRemaining" value="#{aspLedgerController.remainingFromPOService}"
+                              <p:dataTable id="remainingFromPoService" var="poWithRemaining" value="#{customerLedgerController.remainingFromPOService}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Service</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
@@ -305,11 +295,11 @@
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="remainingFromPoService" fileName="poWithRemaining_Service.csv" />
+                                       <p:dataExporter type="csv" target="remainingFromPoService" fileName="remainingFromPoService" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
-                              <p:dataTable id="remainingFromPoExtra" var="poWithRemainingExtra" value="#{aspLedgerController.remainingFromPOExtrawork}"
+                              <p:dataTable id="remainingFromPoExtra" var="poWithRemainingExtra" value="#{customerLedgerController.remainingFromPOExtrawork}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Extra Work</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
@@ -342,161 +332,309 @@
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="remainingFromPoExtra" fileName="poWithRemaining_Extrawork.csv" />
+                                       <p:dataExporter type="csv" target="remainingFromPoExtra" fileName="remainingFromPoExtra" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                           </div>
-                          <div role="tabpanel" class="tab-pane fade" id="grnRec" aria-labelledby="profile-tab">
-                              <p:dataTable id="grnReceivedService" var="grnReceivedService" value="#{aspLedgerController.grnReceivedService}"
-                                         paginator="true" paginatorPosition="bottom" rows="10">
-                                <f:facet name="header">Service GRNs</f:facet>
-                                <p:column headerText="PO#" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.poNumber}" />
-                                </p:column>
-                                <p:column headerText="GRN#" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.grnNumber}" />
-                                </p:column>
-                                <p:column headerText="Domain" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.poNumber.domainName}" />
-                                </p:column>
-                                <p:column headerText="Subdomain" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.poNumber.subDomain}" />
-                                </p:column>
-                                <p:column headerText="GRN Value" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.grnValue}" >
-                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
-                                    </h:outputText>
-                                </p:column>
-                                <p:column headerText="Description" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.poNumber.poDescription}" />
-                                </p:column>
-                                <p:column headerText="Date" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.grnDate}" >
-                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
-                                    </h:outputText>
-                                </p:column>
-                                <f:facet name="footer">
-                                    <h:commandLink>
-                                        <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="grnReceivedService" fileName="grnReceived_Service.csv" />
-                                   </h:commandLink>
-                                </f:facet>
-                            </p:dataTable>
-                              <p:dataTable id="grnReceivedExtra" var="grnReceivedService" value="#{aspLedgerController.grnReceivedExtrawork}"
-                                         paginator="true" paginatorPosition="bottom" rows="10">
-                                <f:facet name="header">Extra Work GRNs</f:facet>
-                                <p:column headerText="PO#" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.poNumber}" />
-                                </p:column>
-                                <p:column headerText="GRN#" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.grnNumber}" />
-                                </p:column>
-                                <p:column headerText="Domain" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.poNumber.domainName}" />
-                                </p:column>
-                                <p:column headerText="Subdomain" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.poNumber.subDomain}" />
-                                </p:column>
-                                <p:column headerText="GRN Value" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.grnValue}" >
-                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
-                                    </h:outputText>
-                                </p:column>
-                                <p:column headerText="Description" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.poNumber.poDescription}" />
-                                </p:column>
-                                <p:column headerText="Date" style="font-size: 9px;">
-                                    <h:outputText value="#{grnReceivedService.grnDate}" >
-                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
-                                    </h:outputText>
-                                </p:column>
-                                <f:facet name="footer">
-                                    <h:commandLink>
-                                        <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="grnReceivedExtra" fileName="grnReceived_Extrawork.csv" />
-                                   </h:commandLink>
-                                </f:facet>
-                            </p:dataTable>
-                          </div>
-                          <div role="tabpanel" class="tab-pane fade" id="grnDes" aria-labelledby="profile-tab">
-                              <p:dataTable id="grnDeservedService" var="grnDetailsService" value="#{aspLedgerController.grnDeservedService}"
+                          <div role="tabpanel" class="tab-pane fade" id="mdRec" aria-labelledby="profile-tab">
+                              <p:dataTable id="mdReceivedServiceTbl" var="mdReceivedService" value="#{customerLedgerController.mdReceivedService}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Service</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsService.poNumber}" />
+                                    <h:outputText value="#{mdReceivedService.poNumber}" />
+                                </p:column>
+                                <p:column headerText="MD#" style="font-size: 9px;">
+                                    <h:outputText value="#{mdReceivedService.mdNumber}" />
                                 </p:column>
                                 <p:column headerText="Domain" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsService.domainName}" />
+                                    <h:outputText value="#{mdReceivedService.poNumber.domainName}" />
                                 </p:column>
                                 <p:column headerText="Subdomain" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsService.subDomain}" />
+                                    <h:outputText value="#{mdReceivedService.poNumber.subDomain}" />
                                 </p:column>
-                                <p:column headerText="PO Value" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsService.poValue}" >
+                                <p:column headerText="MD Value" style="font-size: 9px;">
+                                    <h:outputText value="#{mdReceivedService.mdValue}" >
                                         <f:convertNumber type="currency" currencySymbol="EGP"/>
                                     </h:outputText>
                                 </p:column>
                                 <p:column headerText="Description" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsService.poDescription}" />
+                                    <h:outputText value="#{mdReceivedService.poNumber.poDescription}" />
                                 </p:column>
                                 <p:column headerText="Date" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsService.poDate}" >
+                                    <h:outputText value="#{mdReceivedService.mdDate}" >
                                         <f:convertDateTime pattern="yyyy/MM/dd"/>
-                                    </h:outputText>
-                                </p:column>
-                                <p:column headerText="GRN Deserved" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsService.grnDeserved}" >
-                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
                                     </h:outputText>
                                 </p:column>
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="grnDeservedService" fileName="grnDeserved_Service.csv" />
+                                       <p:dataExporter type="csv" target="mdReceivedServiceTbl" fileName="mdReceivedService" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
-                              <p:dataTable id="grnDeservedExtra" var="grnDetailsExtrawork" value="#{aspLedgerController.grnDeservedExtrawork}"
+                              <p:dataTable id="mdReceivedExtraTbl" var="mdReceivedExtrawork" value="#{customerLedgerController.mdReceivedExtrawork}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Extra Work</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsExtrawork.poNumber}" />
+                                    <h:outputText value="#{mdReceivedExtrawork.poNumber}" />
+                                </p:column>
+                                <p:column headerText="MD#" style="font-size: 9px;">
+                                    <h:outputText value="#{mdReceivedExtrawork.mdNumber}" />
                                 </p:column>
                                 <p:column headerText="Domain" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsExtrawork.domainName}" />
+                                    <h:outputText value="#{mdReceivedExtrawork.poNumber.domainName}" />
                                 </p:column>
                                 <p:column headerText="Subdomain" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsExtrawork.subDomain}" />
+                                    <h:outputText value="#{mdReceivedExtrawork.poNumber.subDomain}" />
                                 </p:column>
-                                <p:column headerText="PO Value" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsExtrawork.poValue}" >
+                                <p:column headerText="MD Value" style="font-size: 9px;">
+                                    <h:outputText value="#{mdReceivedExtrawork.mdValue}" >
                                         <f:convertNumber type="currency" currencySymbol="EGP"/>
                                     </h:outputText>
                                 </p:column>
                                 <p:column headerText="Description" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsExtrawork.poDescription}" />
+                                    <h:outputText value="#{mdReceivedExtrawork.poNumber.poDescription}" />
                                 </p:column>
                                 <p:column headerText="Date" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsExtrawork.poDate}" >
+                                    <h:outputText value="#{mdReceivedExtrawork.mdDate}" >
                                         <f:convertDateTime pattern="yyyy/MM/dd"/>
                                     </h:outputText>
                                 </p:column>
-                                <p:column headerText="GRN Deserved" style="font-size: 9px;">
-                                    <h:outputText value="#{grnDetailsExtrawork.grnDeserved}" >
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="mdReceivedExtraTbl" fileName="mdReceivedExtra" />
+                                   </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="mdDes" aria-labelledby="profile-tab">
+                              <p:dataTable id="mdDeservedServiceTbl" var="invoiceDetailsService" value="#{customerLedgerController.mdDeservedService}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Service</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Invoice Deserved" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.invoiceDeserved}" >
                                         <f:convertNumber type="currency" currencySymbol="EGP"/>
                                     </h:outputText>
                                 </p:column>
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="grnDeservedExtra" fileName="grnDeserved_Extrawork.csv" />
+                                       <p:dataExporter type="csv" target="mdDeservedServiceTbl" fileName="mdDeservedService" />
+                                   </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                              <p:dataTable id="mdDeservedExtraTbl" var="invoiceDetailsExtrawork" value="#{customerLedgerController.mdDeservedExtrawork}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Extra Work</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Invoice Deserved" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.invoiceDeserved}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="mdDeservedExtraTbl" fileName="mdDeservedExtra" />
+                                   </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="inRec" aria-labelledby="profile-tab">
+                              <p:dataTable id="invoiceReceivedService" var="invoiceReceivedService" value="#{customerLedgerController.invoiceReceivedService}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Service</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedService.poNumer}" />
+                                </p:column>
+                                <p:column headerText="Invoice#" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedService.invoiceNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedService.poNumer.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedService.poNumer.subDomain}" />
+                                </p:column>
+                                <p:column headerText="Invoice Value" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedService.invoiceValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedService.poNumer.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedService.invoiceDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="invoiceReceivedService" fileName="invoiceReceivedService" />
+                                   </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                              <p:dataTable id="invoiceReceivedExtra" var="invoiceReceivedExtrawork" value="#{customerLedgerController.invoiceReceivedExtrawork}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Extra Work</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedExtrawork.poNumer}" />
+                                </p:column>
+                                <p:column headerText="Invoice#" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedExtrawork.invoiceNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedExtrawork.poNumer.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedExtrawork.poNumer.subDomain}" />
+                                </p:column>
+                                <p:column headerText="Invoice Value" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedExtrawork.invoiceValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedExtrawork.poNumer.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceReceivedExtrawork.invoiceDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="invoiceReceivedExtra" fileName="invoiceReceivedExtra" />
+                                   </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                          </div>
+                          <div role="tabpanel" class="tab-pane fade" id="inDes" aria-labelledby="profile-tab">
+                              <p:dataTable id="invoiceDeservedService" var="invoiceDetailsService" value="#{customerLedgerController.invoiceDeservedService}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Service</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Invoice Deserved" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsService.invoiceDeserved}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="invoiceDeservedService" fileName="invoiceDeservedService" />
+                                   </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                              <p:dataTable id="invoiceDeservedExtra" var="invoiceDetailsExtrawork" value="#{customerLedgerController.invoiceDeservedExtrawork}"
+                                         paginator="true" paginatorPosition="bottom" rows="10">
+                                <f:facet name="header">Extra Work</f:facet>
+                                <p:column headerText="PO#" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsExtrawork.poNumber}" />
+                                </p:column>
+                                <p:column headerText="Domain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsExtrawork.domainName}" />
+                                </p:column>
+                                <p:column headerText="Subdomain" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsExtrawork.subDomain}" />
+                                </p:column>
+                                <p:column headerText="PO Value" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsExtrawork.poValue}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Description" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsExtrawork.poDescription}" />
+                                </p:column>
+                                <p:column headerText="Date" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsExtrawork.poDate}" >
+                                        <f:convertDateTime pattern="yyyy/MM/dd"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Invoice Deserved" style="font-size: 9px;">
+                                    <h:outputText value="#{invoiceDetailsExtrawork.invoiceDeserved}" >
+                                        <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                    </h:outputText>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="invoiceDeservedExtra" fileName="invoiceDeservedExtra" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                           </div>
                           <div role="tabpanel" class="tab-pane fade" id="CreditNotes" aria-labelledby="profile-tab">
-                            <p:dataTable id="creditNotesTbl" var="CN" value="#{aspLedgerController.creditNotesDetails}"
+                            <p:dataTable id="creditNotesTbl" var="CN" value="#{customerLedgerController.creditNotesDetails}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Credit Notes</f:facet>
                                 <p:column headerText="CN#" style="font-size: 9px;">
@@ -518,13 +656,13 @@
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="creditNotesTbl" fileName="Credit_Notes.csv" />
+                                       <p:dataExporter type="csv" target="creditNotesTbl" fileName="creditNotes" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                           </div>
                           <div role="tabpanel" class="tab-pane fade" id="penalty" aria-labelledby="profile-tab">
-                              <p:dataTable id="penalties" var="PN" value="#{aspLedgerController.penaltyDetails}"
+                              <p:dataTable id="penaltiesTbl" var="PN" value="#{customerLedgerController.penaltyDetails}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Penalties</f:facet>
                                 <p:column headerText="PN#" style="font-size: 9px;">
@@ -546,13 +684,13 @@
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="penalties" fileName="Penalties.csv" />
+                                       <p:dataExporter type="csv" target="penaltiesTbl" fileName="penalties" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                           </div>
                           <div role="tabpanel" class="tab-pane fade" id="poRec" aria-labelledby="profile-tab">
-                              <p:dataTable id="poReceivedService" var="poWithRemaining" value="#{aspLedgerController.poReceivedService}"
+                              <p:dataTable id="poReceivedServiceTbl" var="poWithRemaining" value="#{customerLedgerController.poReceivedService}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Service</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
@@ -580,11 +718,11 @@
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="poReceivedService" fileName="POReceived_Service.csv" />
+                                       <p:dataExporter type="csv" target="poReceivedServiceTbl" fileName="poReceivedService" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
-                              <p:dataTable id="poReceivedExtrawork" var="poWithRemainingExtra" value="#{aspLedgerController.poReceivedExtrawork}"
+                              <p:dataTable id="poReceivedExtraworkTbl" var="poWithRemainingExtra" value="#{customerLedgerController.poReceivedExtrawork}"
                                          paginator="true" paginatorPosition="bottom" rows="10">
                                 <f:facet name="header">Extra Work</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
@@ -612,7 +750,7 @@
                                 <f:facet name="footer">
                                     <h:commandLink>
                                         <img src="csv.png"/>
-                                       <p:dataExporter type="csv" target="poReceivedExtrawork" fileName="POReceived_Extrawork.csv" />
+                                       <p:dataExporter type="csv" target="poReceivedExtraworkTbl" fileName="poReceivedExtrawork" />
                                    </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
@@ -620,7 +758,6 @@
                         </div>
                       </div>
                     </div>
-                     </h:panelGroup>
                   </div>
                 </div>
               </div>

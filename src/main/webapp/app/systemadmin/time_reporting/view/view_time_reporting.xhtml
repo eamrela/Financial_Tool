@@ -130,6 +130,10 @@
                                          actionListener="#{timeReportingController.deleteTr}" 
                                          update=":trForm:growl,datalistTr" 
                                          disabled="#{empty timeReportingController.selectedUserTr}"/>
+                        <h:commandLink>
+                            <img src="csv.png"/>
+                           <p:dataExporter type="csv" target="datalistTr" fileName="Time_Reporting.csv" />
+                       </h:commandLink>
                     </f:facet>
                 </p:dataTable>
                 <p:contextMenu id="menuItemsTr" for="datalistTr">

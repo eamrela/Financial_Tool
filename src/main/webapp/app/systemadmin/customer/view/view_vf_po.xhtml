@@ -401,6 +401,10 @@
                                                      actionListener="#{customerServicePoController.deletePo}" 
                                                      update=":vfPoForm:growl,datalistServicePo" 
                                                      disabled="#{empty customerServicePoController.selectedUserPo}"/>
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="datalistServicePo" fileName="customer_service_po.csv" />
+                                   </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                             <p:contextMenu id="menuItemsServicePo" for="datalistServicePo">
@@ -797,6 +801,10 @@
                                                      actionListener="#{customerExtraworkPoController.deletePo}" 
                                                      update=":vfPoForm:growl,datalistExtraworkPo" 
                                                      disabled="#{empty customerExtraworkPoController.selectedUserPo}"/>
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="datalistExtraworkPo" fileName="customer_extrawork_po.csv" />
+                                   </h:commandLink>
                                 </f:facet>
                             </p:dataTable>
                             <p:contextMenu id="menuItemsExtraworkPo" for="datalistExtraworkPo">

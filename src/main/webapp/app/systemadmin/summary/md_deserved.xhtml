@@ -77,7 +77,7 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-6">
                            
-                            <p:dataTable var="mdDeservedService" value="#{dashboardController.mdDeservedDetailsService}"
+                            <p:dataTable id="mdDeservedServiceTbl" var="mdDeservedService" value="#{dashboardController.mdDeservedDetailsService}"
                                          paginator="true" paginatorPosition="bottom" rows="7">
                                  <f:facet name="header">Service</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
@@ -114,11 +114,17 @@
                                         <f:convertNumber type="currency" currencySymbol="EGP"/>
                                     </h:outputText>
                                 </p:column>
+                                 <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="mdDeservedServiceTbl" fileName="mdDeservedService" />
+                                   </h:commandLink>
+                                </f:facet>
                             </p:dataTable>
                         </div>
                         
                         <div class="col-md-6 col-sm-6 col-xs-6">
-                            <p:dataTable var="mdDeservedExtra" value="#{dashboardController.mdDeservedDetailsExtrawork}"
+                            <p:dataTable id="mdDeservedExtraTbl" var="mdDeservedExtra" value="#{dashboardController.mdDeservedDetailsExtrawork}"
                                          paginator="true" paginatorPosition="bottom" rows="7">
                                 <f:facet name="header">Extra Work</f:facet>
                                 <p:column headerText="PO#" style="font-size: 9px;">
@@ -155,6 +161,12 @@
                                         <f:convertNumber type="currency" currencySymbol="EGP"/>
                                     </h:outputText>
                                 </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <img src="csv.png"/>
+                                       <p:dataExporter type="csv" target="mdDeservedExtraTbl" fileName="mdDeservedExtra" />
+                                   </h:commandLink>
+                                </f:facet>
                             </p:dataTable>
                         </div>
                     </div>

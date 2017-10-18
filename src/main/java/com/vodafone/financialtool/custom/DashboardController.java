@@ -9,12 +9,14 @@ import com.vodafone.financialtool.entities.AspExtraworkGrn;
 import com.vodafone.financialtool.entities.AspExtraworkPo;
 import com.vodafone.financialtool.entities.AspServiceGrn;
 import com.vodafone.financialtool.entities.AspServicePo;
+import com.vodafone.financialtool.entities.CreditNote;
 import com.vodafone.financialtool.entities.CustomerExtraworkInvoice;
 import com.vodafone.financialtool.entities.CustomerExtraworkPo;
 import com.vodafone.financialtool.entities.CustomerServiceInvoice;
 import com.vodafone.financialtool.entities.CustomerServicePo;
 import com.vodafone.financialtool.entities.ExtraWork;
 import com.vodafone.financialtool.entities.JvReporting;
+import com.vodafone.financialtool.entities.Penalty;
 import com.vodafone.financialtool.entities.TimeReporting;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -47,6 +49,7 @@ public class DashboardController implements Serializable {
     private List<CustomerServiceInvoice> netSalesService;
     private List<CustomerExtraworkInvoice> netSalesExtra;
     
+    
     private Double costOfSales;
     private List<AspServiceGrn> costOfSalesService;
     private List<AspExtraworkGrn> costOfSalesExtra;
@@ -59,6 +62,11 @@ public class DashboardController implements Serializable {
     private String costOfSalesTrend;
     private String marginTrend;
     private String marginPercentTrend;
+    
+    private List<CreditNote> creditNotesVF;
+    private List<CreditNote> creditNotesASP;
+    private List<Penalty> penalitiesVF;
+    private List<Penalty> penalitiesASP;
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Financial Analysis">
     private TreeMap<Integer,Double> netSalesAnalysis = new TreeMap<>();
@@ -92,9 +100,14 @@ public class DashboardController implements Serializable {
         calculateFinancialAnalysis();
         calculateTopAchievers();
         calculateCommittedCost();
+        calculateCNAndPN();
     }
 
    
+    
+    
+    
+   
 
     
     
@@ -106,7 +119,18 @@ public class DashboardController implements Serializable {
     
     
     
-   
+    public void calculateCNAndPN(){
+        creditNotesVF = em.createNativeQuery("select * from credit_note where cn_owner='Vodafone' "
+                + " and cn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settled is true ", CreditNote.class).getResultList();
+        creditNotesASP = em.createNativeQuery("select * from credit_note where cn_owner!='Vodafone' "
+                + " and cn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settlement_po is not null ", CreditNote.class).getResultList();
+        penalitiesVF = em.createNativeQuery("select * from penalty where pn_owner='Vodafone' and pn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settled is true ", Penalty.class).getResultList();
+        penalitiesASP = em.createNativeQuery("select * from penalty where pn_owner!='Vodafone' and pn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settlement_po is not null  ", Penalty.class).getResultList();
+    }
 
     public void getCosAndNS(){
         try{
@@ -125,6 +149,14 @@ public class DashboardController implements Serializable {
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' "
                                  + " and po_numer in (select po_number from customer_extrawork_po where "
                                                             + " network_name !='Support Network' and (early_start is null or early_start=false) ) "
+                                + " union "
+                                + "select COALESCE(sum(cn_value),0)*-1 ns from credit_note where cn_owner='Vodafone' "
+                + " and cn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settled is true "
+                          + " union "
+                                + "select COALESCE(sum(pn_value),0)*-1 ns from penalty where pn_owner='Vodafone' "
+                + " and pn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settled is true "
                                 + " ) a").getSingleResult()).doubleValue();
         }catch(Exception e){
             e.printStackTrace();
@@ -161,6 +193,14 @@ public class DashboardController implements Serializable {
                 + " '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"'"
                                 
+//                                + " union "
+//                                + "select COALESCE(sum(cn_value),0)*-1 ns from credit_note where cn_owner!='Vodafone' "
+//                + " and cn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+//                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settlement_po is not null  "
+//                                + " union "
+//                                + "select COALESCE(sum(pn_value),0)*-1 ns from penalty where pn_owner!='Vodafone' "
+//                + " and pn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+//                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settlement_po is not null  "
                                 + " ) a").getSingleResult()).doubleValue();
         }catch(Exception e){
             e.printStackTrace();
@@ -196,8 +236,21 @@ public class DashboardController implements Serializable {
                     " where invoice_date between '"+sdf.format(now.monthOfYear().withMinimumValue().dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.monthOfYear().withMaximumValue().dayOfMonth().withMaximumValue().toDate())+"'  " +
                      " and po_numer in (select po_number from customer_extrawork_po where "
-                                                            + " network_name !='Support Network' and (early_start is null or early_start=false) ) "+
-                    " group by month_no ) a " +
+                                                            + " network_name !='Support Network' and (early_start is null or early_start=false) ) "
+                                + " group by month_no "+
+                    " union "
+                    + "select extract(month from cn_date) month_no , COALESCE(sum(cn_value),0)*-1 ns "
+                    + " from credit_note where cn_owner='Vodafone' "
+                + " and cn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settled is true "
+                                            + " group by month_no "+
+                     " union "
+                    + "select extract(month from pn_date) month_no , COALESCE(sum(pn_value),0)*-1 ns "
+                    + " from penalty where pn_owner='Vodafone' "
+                + " and pn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settled is true "
+                                            + " group by month_no "
+                                + "  ) a " +
                     " group by month_no ").getResultList();
             
             List<Object[]> costOfSalesList = em.createNativeQuery(
@@ -229,8 +282,20 @@ public class DashboardController implements Serializable {
                     + " from time_reporting "
                     + "where reporting_date between '"+sdf.format(now.monthOfYear().withMinimumValue().dayOfMonth().withMinimumValue().toDate())+"' "
                     + " and '"+sdf.format(now.monthOfYear().withMaximumValue().dayOfMonth().withMaximumValue().toDate())+"'  " +
-                    " group by month_no "
-                                + ") a " +
+                    " group by month_no "+
+//                    " union "
+//                    + "select extract(month from cn_date) month_no , COALESCE(sum(cn_value),0)*-1 ns "
+//                    + " from credit_note where cn_owner!='Vodafone' "
+//                + " and cn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+//                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settled is true "
+//                                            + " group by month_no "+
+//                    " union "
+//                    + "select extract(month from pn_date) month_no , COALESCE(sum(pn_value),0)*-1 ns "
+//                    + " from penalty where pn_owner!='Vodafone' "
+//                + " and pn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
+//                                    + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' and settled is true "
+//                                            + " group by month_no "+
+                                 ") a " +
                     " group by month_no ").getResultList();
             
             for (Object[] netSalesList1 : netSalesList) {
@@ -511,6 +576,22 @@ public class DashboardController implements Serializable {
         this.startMonth = startMonth;
     }
     
+    public List<CreditNote> getCreditNotesVF() {
+        return creditNotesVF;
+    }
+
+    public List<CreditNote> getCreditNotesASP() {
+        return creditNotesASP;
+    }
+
+    public List<Penalty> getPenalitiesVF() {
+        return penalitiesVF;
+    }
+
+    public List<Penalty> getPenalitiesASP() {
+        return penalitiesASP;
+    }
+
     
 
     public EntityManager getEm() {

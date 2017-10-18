@@ -129,6 +129,12 @@
                               filterBy="#{pn.settled}">
                         <h:outputText value="#{pn.settled}" />
                     </p:column>
+                    <p:column headerText="Settlement PO" 
+                              style="font-size: 9px;"
+                              filterMatchMode="contains"
+                              filterBy="#{pn.settlementPo}">
+                        <h:outputText value="#{pn.settlementPo}" />
+                    </p:column>
                     <f:facet name="footer">
                         <p:commandButton id="deleteButton" 
                                          icon="ui-icon-trash"  
@@ -136,6 +142,10 @@
                                          actionListener="#{penaltyController.deletePN}" 
                                          update=":jvForm:growl,datalistJv" 
                                          disabled="#{empty penaltyController.selectedUserPN}"/>
+                        <h:commandLink>
+                            <img src="csv.png"/>
+                           <p:dataExporter type="csv" target="datalistJv" fileName="Penalties.csv" />
+                       </h:commandLink>
                     </f:facet>
                 </p:dataTable>
                 <p:contextMenu id="menuItemsJv" for="datalistJv">

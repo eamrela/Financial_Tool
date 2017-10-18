@@ -93,7 +93,7 @@
                     <h:selectOneMenu id="ewAsp"
                                      value="#{creditNoteController.selected.cnOwner}"
                                              styleClass="form-control">
-                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItem itemLabel="Vodafone" itemValue="Vodafone"/>
                                 <f:selectItems value="#{subcontractorsController.itemsAvailableSelectOne}" 
                                                var="aspItem"
                                                itemValue="#{aspItem.subcontractorName}"
@@ -143,6 +143,16 @@
                     <div class="form-group">
                         <label class="control-label" for="settled">Settled:</label>
                         <h:selectBooleanCheckbox id="settled" value="#{creditNoteController.selected.settled}" class="form-control"/>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                    <label class="control-label" for="ewCodeSettlementPo">Description:</label>
+                    <h:inputTextarea id="ewCodeSettlementPo" 
+                                     class="form-control" value="#{creditNoteController.selected.settlementPo}"
+                                 />
                     </div>
                     </div>
                     </div>

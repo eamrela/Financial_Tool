@@ -72,7 +72,8 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                    <p:dataTable var="netSalesService" 
+                    <p:dataTable id="netsalesService"
+                                    var="netSalesService" 
                                  value="#{dashboardController.netSalesService}"
                                  paginator="true"
                                  paginatorPosition="bottom">
@@ -96,9 +97,16 @@
                         <p:column headerText="Description">
                             <h:outputText value="#{netSalesService.poNumer.poDescription}" />
                         </p:column>
+                         <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="netsalesService" fileName="netsalesService" />
+                           </h:commandLink>
+                        </f:facet>
                     </p:dataTable>
                     
-                    <p:dataTable var="netSalesExtra" 
+                    <p:dataTable id="netSalesExtrawork"
+                                    var="netSalesExtra" 
                                  value="#{dashboardController.netSalesExtra}"
                                  paginator="true"
                                  paginatorPosition="bottom">
@@ -108,20 +116,81 @@
                         <p:column headerText="PO#">
                             <h:outputText value="#{netSalesExtra.poNumer.poNumber}" />
                         </p:column>
-
                         <p:column headerText="Invoice#">
                             <h:outputText value="#{netSalesExtra.invoiceNumber}" />
                         </p:column>
-
                         <p:column headerText="Invoice Value">
                             <h:outputText value="#{netSalesExtra.invoiceValue}">
                                 <f:convertNumber type="currency" currencySymbol="EGP"/>
                             </h:outputText>
                         </p:column>
-
                         <p:column headerText="Description">
                             <h:outputText value="#{netSalesExtra.poNumer.poDescription}" />
                         </p:column>
+                        <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="netSalesExtrawork" fileName="netSalesExtrawork" />
+                           </h:commandLink>
+                        </f:facet>
+                    </p:dataTable>
+                    
+                    <p:dataTable id="creditNotesVf"
+                                    var="creditNotesNS" 
+                                 value="#{dashboardController.creditNotesVF}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Credit Notes (-VE NS)
+                        </f:facet>
+                        <p:column headerText="Owner">
+                            <h:outputText value="#{creditNotesNS.cnOwner}" />
+                        </p:column>
+
+                        <p:column headerText="CN Value">
+                            <h:outputText value="#{creditNotesNS.cnValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{creditNotesNS.cnDescription}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="creditNotesVf" fileName="creditNotesVf" />
+                           </h:commandLink>
+                        </f:facet>
+                    </p:dataTable>
+                    
+                    <p:dataTable id="penaltiesVf"
+                                    var="penalityVF" 
+                                 value="#{dashboardController.penalitiesVF}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Penalty (-VE NS)
+                        </f:facet>
+                        <p:column headerText="Owner">
+                            <h:outputText value="#{penalityVF.pnOwner}" />
+                        </p:column>
+
+                        <p:column headerText="PN Value">
+                            <h:outputText value="#{penalityVF.pnValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{penalityVF.pnDescription}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="penaltiesVf" fileName="penaltiesVf" />
+                           </h:commandLink>
+                        </f:facet>
                     </p:dataTable>
                 </div>
                 </div>
@@ -134,7 +203,8 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                    <p:dataTable var="cosService" 
+                    <p:dataTable id="costOfSalesService"
+                                    var="cosService" 
                                  value="#{dashboardController.costOfSalesService}"
                                  paginator="true"
                                  paginatorPosition="bottom">
@@ -161,9 +231,16 @@
                         <p:column headerText="Description">
                             <h:outputText value="#{cosService.poNumber.poDescription}" />
                         </p:column>
+                        <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="costOfSalesService" fileName="costOfSalesService" />
+                           </h:commandLink>
+                        </f:facet>
                     </p:dataTable>
                     
-                    <p:dataTable var="cosExtra" 
+                    <p:dataTable id="costOfSalesExtrawork" 
+                                var="cosExtra" 
                                  value="#{dashboardController.costOfSalesExtra}"
                                  paginator="true"
                                  paginatorPosition="bottom">
@@ -190,9 +267,16 @@
                         <p:column headerText="Description">
                             <h:outputText value="#{cosExtra.poNumber.poDescription}" />
                         </p:column>
+                        <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="costOfSalesExtrawork" fileName="costOfSalesExtrawork" />
+                           </h:commandLink>
+                        </f:facet>
                     </p:dataTable>
                     
-                     <p:dataTable var="cosJV" 
+                    <p:dataTable id="costOfSalesJV"
+                                    var="cosJV" 
                                   value="#{dashboardController.costOfSalesJV}"
                                  paginator="true"
                                  paginatorPosition="bottom">
@@ -217,9 +301,16 @@
                         <p:column headerText="Description">
                             <h:outputText value="#{cosJV.jvDescription}" />
                         </p:column>
+                         <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="costOfSalesJV" fileName="costOfSalesJV" />
+                           </h:commandLink>
+                        </f:facet>
                     </p:dataTable>
                     
-                    <p:dataTable var="cosTR" 
+                    <p:dataTable id="costOfSalesTbl"
+                                    var="cosTR" 
                                  value="#{dashboardController.costOfSalesTR}"
                                  paginator="true"
                                  paginatorPosition="bottom">
@@ -244,6 +335,76 @@
                         <p:column headerText="Description">
                             <h:outputText value="#{cosTR.reportingDescription}" />
                         </p:column>
+                        <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="costOfSalesTbl" fileName="costOfSales" />
+                           </h:commandLink>
+                        </f:facet>
+                    </p:dataTable>
+                    
+                    <p:dataTable id="creditNotesAsp"
+                                 var="creditNotesCOS" 
+                                 value="#{dashboardController.creditNotesASP}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Credit Notes (Already Deducted)
+                        </f:facet>
+                        <p:column headerText="Owner">
+                            <h:outputText value="#{creditNotesCOS.cnOwner}" />
+                        </p:column>
+
+                        <p:column headerText="CN Value">
+                            <h:outputText value="#{creditNotesCOS.cnValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{creditNotesCOS.cnDescription}" />
+                        </p:column>
+                        <p:column headerText="Settlement PO">
+                            <h:outputText value="#{creditNotesCOS.settlementPo}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="creditNotesAsp" fileName="creditNotesAsp" />
+                           </h:commandLink>
+                        </f:facet>
+                    </p:dataTable>
+                    
+                    <p:dataTable id="penaltyAsp"
+                                 var="penalityASP" 
+                                 value="#{dashboardController.penalitiesASP}"
+                                 paginator="true"
+                                 paginatorPosition="bottom">
+                        <f:facet name="header">
+                            Penalty (Already Deducted)
+                        </f:facet>
+                        <p:column headerText="Owner">
+                            <h:outputText value="#{penalityASP.pnOwner}" />
+                        </p:column>
+
+                        <p:column headerText="PN Value">
+                            <h:outputText value="#{penalityASP.pnValue}">
+                                <f:convertNumber type="currency" currencySymbol="EGP"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Description">
+                            <h:outputText value="#{penalityASP.pnDescription}" />
+                        </p:column>
+                        <p:column headerText="Settlement PO">
+                            <h:outputText value="#{penalityASP.settlementPo}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <h:commandLink>
+                                <img src="csv.png"/>
+                               <p:dataExporter type="csv" target="penaltyAsp" fileName="penaltyAsp" />
+                           </h:commandLink>
+                        </f:facet>
                     </p:dataTable>
                 </div>
                 </div>
