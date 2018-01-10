@@ -171,8 +171,27 @@
                     <label class="control-label" for="poES">Early Start:</label>
                     <h:selectBooleanCheckbox id="poES" 
                                             value="#{aspServicePoController.selected.earlyStart}"
-                                             styleClass="form-control"/>
+                                             styleClass="form-control">
+                         <p:ajax update="earlyStartName"/>
+                    </h:selectBooleanCheckbox>
                                              
+                    </div>
+                    <div class="form-group">
+                    <h:panelGroup id="earlyStartName">
+                    <label class="control-label" for="poESName">Early Name:</label>
+                    <h:selectOneMenu id="poESName"
+                                     value="#{aspServicePoController.selected.earlyStartNumber}"
+                                             styleClass="form-control"
+                                             required="true"
+                                             requiredMessage="ES can't be empty"
+                                             rendered="#{aspServicePoController.selected.earlyStart}">
+                                <f:selectItem itemLabel="" itemValue="#{null}"/>
+                                <f:selectItems value="#{customerExtraworkPoController.availableEarlyStart}" 
+                                               var="earlyStart"
+                                               itemValue="#{earlyStart.poNumber}"
+                                               itemLabel="#{earlyStart.poNumber}"/>
+                    </h:selectOneMenu>
+                    </h:panelGroup>
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="form-group">

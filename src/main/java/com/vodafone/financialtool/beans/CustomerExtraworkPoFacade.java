@@ -6,6 +6,7 @@
 package com.vodafone.financialtool.beans;
 
 import com.vodafone.financialtool.entities.CustomerExtraworkPo;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +28,13 @@ public class CustomerExtraworkPoFacade extends AbstractFacade<CustomerExtraworkP
 
     public CustomerExtraworkPoFacade() {
         super(CustomerExtraworkPo.class);
+    }
+
+    public List<CustomerExtraworkPo> findAvailableEalyStart() {
+       return em.createNativeQuery(" select * " +
+                                   " from customer_extrawork_po " +
+                                   " where early_start is true " + 
+                                   " and remaining_from_po > 100 ", CustomerExtraworkPo.class).getResultList();
     }
     
 }

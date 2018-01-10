@@ -53,6 +53,8 @@ public class aspLedger implements Serializable{
     private Double creditNotes=0.0;
     private Double penalty=0.0;
     private Double overall=0.0;
+    
+    private List<String[]> networkBreakDown;
 
     public EntityManager getEm() {
         return em;
@@ -65,7 +67,7 @@ public class aspLedger implements Serializable{
     public List<ExtraWork> getExtraWorkWithoutPo() {
         if(asp!=null){
             extraWorkWithoutPo = em.createNativeQuery(" select * from extra_work where asp='"+asp.getSubcontractorName()+"' "
-                    + " and domain_owner_approval is true ", ExtraWork.class).getResultList();
+                    + " and activity_code like '%BULK%' ", ExtraWork.class).getResultList();
             for (ExtraWork x : extraWorkWithoutPo) {
                 extraWorkNoPO+=x.getTotalPriceAsp();
                 extraWorkNoPOVF+=x.getTotalPriceVendor();
@@ -335,6 +337,20 @@ public class aspLedger implements Serializable{
 
     public Double getOverall() {
         return overall;
+    }
+
+    public List<String[]> getNetworkBreakDown() {
+         networkBreakDown = em.createNativeQuery(" select network_name,sum(val) val " +
+                                                " from ( " +
+                                                " select network_name,sum(po_value) val " +
+                                                " from asp_service_po " +
+                                                " group by network_name " +
+                                                " union " +
+                                                " select network_name,sum(po_value) val " +
+                                                " from asp_extrawork_po " +
+                                                " group by network_name) a " +
+                                                " group by network_name ").getResultList();    
+        return networkBreakDown;
     }
     
     

@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:FT="http://xmlns.jcp.org/jsf/composite/components"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Financial Tool</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
@@ -62,7 +63,34 @@
                   </div>
                   <div class="x_content">
                     <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
-
+                        
+                        <ul class="list-unstyled user_data">
+                            <ui:repeat value="#{customerLedgerController.networkBreakDown}" var="networkBreakDown">
+                                <li>
+                                <i class="fa fa-dot-circle-o user-profile-icon"></i> 
+                                <strong>#{networkBreakDown[0]} : </strong>
+                                <h:outputText value="#{networkBreakDown[1]}">
+                                    <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                </h:outputText>
+                                </li>
+                            </ui:repeat>
+                        
+                        </ul>
+                        <ul class="list-unstyled user_data">
+                            <ui:repeat value="#{customerLedgerController.earlyStartBreakdown}" var="earlyStart">
+                                <li>
+                                <i class="fa fa-dot-circle-o user-profile-icon"></i> 
+                                <strong>#{earlyStart[0]} : </strong>
+                                <h:outputText value="#{earlyStart[1]}">
+                                    <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                </h:outputText>/
+                                <h:outputText value="#{earlyStart[2]}">
+                                    <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                </h:outputText>
+                                </li>
+                            </ui:repeat>
+                        
+                        </ul>
                       <br />
                       
                       <div class="x_panel ui-ribbon-container">

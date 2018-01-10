@@ -35,6 +35,8 @@ public class AspServicePoController implements Serializable {
     
     @Inject
     private UsersController usersController;
+    @Inject
+    private CustomerExtraworkPoController customerExtraWorkPoController;
 
     public AspServicePoController() {
     }
@@ -75,11 +77,12 @@ public class AspServicePoController implements Serializable {
         return selected;
     }
 
-    public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("AspServicePoCreated"));
+    public AspServicePo create() {
+        selected = persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("AspServicePoCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
+        return selected;
     }
 
     public void update() {
@@ -101,12 +104,13 @@ public class AspServicePoController implements Serializable {
         return items;
     }
 
-    private void persist(PersistAction persistAction, String successMessage) {
+    private AspServicePo persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
             try {
                 if (persistAction != PersistAction.DELETE) {
-                    getFacade().edit(selected);
+                    selected = getFacade().merge(selected);
+                    return selected;
                 } else {
                     getFacade().remove(selected);
                 }
@@ -127,6 +131,7 @@ public class AspServicePoController implements Serializable {
                 JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             }
         }
+        return null;
     }
 
     public AspServicePo getAspServicePo(java.lang.String id) {
@@ -210,7 +215,14 @@ public class AspServicePoController implements Serializable {
     public void createAspPo(){
         if(selected!=null){
             updateValues();
-            create();
+            selected = create();
+            
+            if(!selected.getEarlyStart()){
+                selected.setEarlyStartNumber(null);
+            }else if(selected.getEarlyStartNumber()!=null){
+                customerExtraWorkPoController.setSelected(customerExtraWorkPoController.getCustomerExtraworkPo(selected.getEarlyStartNumber()));
+                customerExtraWorkPoController.correlatePoService(selected);
+            }
             prepareCreate();
             try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/asp/view/view_asp_po.xhtml");

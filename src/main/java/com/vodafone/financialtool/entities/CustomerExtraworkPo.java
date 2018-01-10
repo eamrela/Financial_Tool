@@ -119,6 +119,11 @@ public class CustomerExtraworkPo implements Serializable {
         @JoinColumn(name = "asp_extrawork_po_id", referencedColumnName = "po_number")})
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<AspExtraworkPo> aspExtaworkPoCollection;
+    @JoinTable(name = "customer_extrawork_po_j_asp_service_po", joinColumns = {
+        @JoinColumn(name = "customer_extrawork_po_id", referencedColumnName = "po_number")}, inverseJoinColumns = {
+        @JoinColumn(name = "asp_service_po_id", referencedColumnName = "po_number")})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<AspServicePo> aspServicePoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumber" , fetch = FetchType.EAGER)
     private Collection<CustomerExtraworkMd> customerExtraworkMdCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "poNumer" , fetch = FetchType.EAGER)
@@ -267,7 +272,16 @@ public class CustomerExtraworkPo implements Serializable {
     public void setAspExtaworkPoCollection(Collection<AspExtraworkPo> aspExtaworkPoCollection) {
         this.aspExtaworkPoCollection = aspExtaworkPoCollection;
     }
+    @XmlTransient
+    public Collection<AspServicePo> getAspServicePoCollection() {
+        return aspServicePoCollection;
+    }
 
+    public void setAspServicePoCollection(Collection<AspServicePo> aspServicePoCollection) {
+        this.aspServicePoCollection = aspServicePoCollection;
+    }
+
+    
     
     @XmlTransient
     public Collection<CustomerExtraworkMd> getCustomerExtraworkMdCollection() {

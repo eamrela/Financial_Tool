@@ -58,6 +58,8 @@ public class AspServicePo implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "po_number")
     private String poNumber;
+    @Column(name = "early_start_number")
+    private String earlyStartNumber;
     @Basic(optional = false)
     @NotNull
     @Column(name = "po_date")
@@ -187,6 +189,15 @@ public class AspServicePo implements Serializable {
         this.poDate = poDate;
     }
 
+    public String getEarlyStartNumber() {
+        return earlyStartNumber;
+    }
+
+    public void setEarlyStartNumber(String earlyStartNumber) {
+        this.earlyStartNumber = earlyStartNumber;
+    }
+
+    
     public String getDomainName() {
         return domainName;
     }

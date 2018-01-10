@@ -24,6 +24,13 @@
         <h:outputStylesheet name="assets/vendors/jqvmap/dist/jqvmap.min.css"/>
         <h:outputStylesheet name="assets/vendors/bootstrap-daterangepicker/daterangepicker.css"/>
         <h:outputStylesheet name="assets/build/css/custom.min.css"/>
+        <style>
+            .tableView table,
+            .tableView a.ui-datepicker-prev,
+            .tableView a.ui-datepicker-next {
+                display: none;
+            }
+        </style>
          <f:metadata>
              <f:viewAction action="#{dashboardController.initialize}"/>
              <f:viewAction action="#{extraWorkdashboardController.initialize}"/>
@@ -51,8 +58,16 @@
                 <FT:Notifications/>
             <h:form id="dashboardForm">
             <div class="right_col" role="main">
-            <h:panelGroup rendered="#{usersController.loggedInUserRole.contains('SYS')}"> 
-            <FT:DashboardTopFigures 
+            
+                <p:calendar value="#{dashboardController.startMonth}"  
+                            valueChangeListener="#{dashboardController.initialize}">
+                    <p:ajax event="dateSelect" listener="#{dashboardController.initialize}" update=":dashboardForm:sysAdminPanelGroup" oncomplete="drawCharts();"/>
+            </p:calendar>
+                
+                <h:panelGroup id="sysAdminPanelGroup" rendered="#{usersController.loggedInUserRole.contains('SYS')}"> 
+                
+            
+                <FT:DashboardTopFigures 
                     netSales="#{dashboardController.netSales}"
                     netSalesTrend="#{dashboardController.netSalesTrend}"
                     costOfSales="#{dashboardController.costOfSales}"
@@ -412,18 +427,15 @@
             </div>
                   
              
-            <div class="row">    
-            
-            
-            <FT:CommittedCost/>  
-
-            </div>
+            <!--<div class="row">-->    
+            <!--<FT:CommittedCost/>-->  
+            <!--</div>-->
 
             </h:panelGroup>
                 
                 
                 
-             <h:panelGroup rendered="#{not usersController.loggedInUserRole.contains('ASP')}"> 
+                <h:panelGroup rendered="#{not usersController.loggedInUserRole.contains('ASP')}"> 
             <div class="row">
             <div class="col-md-12">
                 <div class="x_panel">
@@ -527,11 +539,12 @@
     <script src="#{resource['assets/build/js/custom.min.js']}"></script>   
     <script>
         //<![CDATA[
+        function drawCharts(){
 var ctx = document.getElementById("mainChart").getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ["Jan", "Fed", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        labels: ["Jan", "Feb", "Mar","Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         datasets: [{
             label: 'NetSales',
             data: [#{dashboardController.netSalesDataset}],
@@ -557,8 +570,8 @@ var myChart = new Chart(ctx, {
         }
     }
 });
-
-
+}
+drawCharts();
 
  //]]>
 </script>

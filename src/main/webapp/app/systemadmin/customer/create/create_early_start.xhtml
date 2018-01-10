@@ -71,7 +71,7 @@
             <h:form id="createVfPoExtraWorkForm">
             <p:growl id="growl"/>
             <div class="right_col" role="main">
-            <FT:PageName pageName="Create VF PO - Extra Work"/>   
+            <FT:PageName pageName="Create Early Start Project"/>   
             <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-3">
                 <div class="x_panel">
@@ -85,7 +85,7 @@
                     <h:outputText id="createdBy" class="form-control" value="#{customerExtraworkPoController.selected.creator.userName}"/>
                     </div>
                     <div class="form-group">
-                    <label class="control-label" for="poNumber">PO Number:</label>
+                    <label class="control-label" for="poNumber">Early Start Name:</label>
                     <h:inputText id="poNumber" class="form-control" value="#{customerExtraworkPoController.selected.poNumber}"/>
                     </div>
                     <div class="form-group">
@@ -220,7 +220,7 @@
                     </div>   
                     </div>
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                    <label class="control-label" for="poValue">PO Value:</label>
+                    <label class="control-label" for="poValue">Early Start Value:</label>
                     <p:inputNumber id="poValue" 
                                    class="form-control" 
                                    symbol=" EGP" 
@@ -228,7 +228,7 @@
                                    decimalSeparator="." thousandSeparator=","
                                    value="#{customerExtraworkPoController.selected.poValue}"
                                    required="true"
-                                   requiredMessage="PO Value can't be empty"
+                                   requiredMessage="ES Value can't be empty"
                                    disabled="true"/>
                     </div>
                 </div>
@@ -236,7 +236,7 @@
                  <h:commandButton id="createBtn" 
                                      value="Create"
                                      class="btn btn-block btn-success"
-                                     action="#{customerExtraworkPoController.createVFPo}"
+                                     action="#{customerExtraworkPoController.createEalyStart}"
                                      />
                 </div>
             </div>

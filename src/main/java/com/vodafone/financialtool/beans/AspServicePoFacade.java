@@ -28,5 +28,9 @@ public class AspServicePoFacade extends AbstractFacade<AspServicePo> {
     public AspServicePoFacade() {
         super(AspServicePo.class);
     }
+
+    public AspServicePo merge(AspServicePo selected) {
+        return em.merge(selected);
+    }
     
 }

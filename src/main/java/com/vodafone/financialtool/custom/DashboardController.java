@@ -89,6 +89,7 @@ public class DashboardController implements Serializable {
     private Double mdDeservedTotal; 
     private Double invoiceDeservedTotal; 
 //</editor-fold>
+    
     public void initialize(){
         if(startMonth==null){
         now = DateTime.now();
@@ -141,14 +142,14 @@ public class DashboardController implements Serializable {
                                                     "where invoice_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' " 
                                                 + " and po_numer in (select po_number from customer_service_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) "+
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) "+
                                                     "union " +
                                                     "select COALESCE(sum(invoice_value),0) ns " +
                                                     "from customer_extrawork_invoice " +
                                                     "where invoice_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' "
                                  + " and po_numer in (select po_number from customer_extrawork_po where "
-                                                            + " network_name !='Support Network' and (early_start is null or early_start=false) ) "
+                                                            + " network_name ='L1 Network' and (early_start is null or early_start=false) ) "
                                 + " union "
                                 + "select COALESCE(sum(cn_value),0)*-1 ns from credit_note where cn_owner='Vodafone' "
                 + " and cn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
@@ -171,7 +172,7 @@ public class DashboardController implements Serializable {
                                             " where grn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' " +
                                 " and po_number in (select po_number from asp_service_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) "+
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) "+
                                             " union " +
                                             " select COALESCE(sum(grn_value),0) cos " +
                                             " from asp_extrawork_grn " +
@@ -179,7 +180,7 @@ public class DashboardController implements Serializable {
                 + " '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"'"+
                                  " and po_number in (select po_number from asp_extrawork_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) "+
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) "+
                                             " union " +
                                             " select COALESCE(sum(jv_value),0) cos " +
                                             " from jv_reporting " +
@@ -228,7 +229,7 @@ public class DashboardController implements Serializable {
                     " where invoice_date between '"+sdf.format(now.monthOfYear().withMinimumValue().dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.monthOfYear().withMaximumValue().dayOfMonth().withMaximumValue().toDate())+"' " +
                     " and po_numer in (select po_number from customer_service_po where "
-                                                            + " network_name !='Support Network' and (early_start is null or early_start=false) ) "+
+                                                            + " network_name ='L1 Network' and (early_start is null or early_start=false) ) "+
                     " group by month_no " +
                     " union " +
                     " select extract(month from invoice_date) month_no,sum(invoice_value) ns " +
@@ -236,7 +237,7 @@ public class DashboardController implements Serializable {
                     " where invoice_date between '"+sdf.format(now.monthOfYear().withMinimumValue().dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.monthOfYear().withMaximumValue().dayOfMonth().withMaximumValue().toDate())+"'  " +
                      " and po_numer in (select po_number from customer_extrawork_po where "
-                                                            + " network_name !='Support Network' and (early_start is null or early_start=false) ) "
+                                                            + " network_name ='L1 Network' and (early_start is null or early_start=false) ) "
                                 + " group by month_no "+
                     " union "
                     + "select extract(month from cn_date) month_no , COALESCE(sum(cn_value),0)*-1 ns "
@@ -261,7 +262,7 @@ public class DashboardController implements Serializable {
                     " where grn_date between '"+sdf.format(now.monthOfYear().withMinimumValue().dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.monthOfYear().withMaximumValue().dayOfMonth().withMaximumValue().toDate())+"'  " +
                      " and po_number in (select po_number from asp_service_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) "+
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) "+
                     " group by month_no " +
                     " union " +
                     " select extract(month from grn_date) month_no,sum(grn_value) cos " +
@@ -269,7 +270,7 @@ public class DashboardController implements Serializable {
                     " where grn_date between '"+sdf.format(now.monthOfYear().withMinimumValue().dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.monthOfYear().withMaximumValue().dayOfMonth().withMaximumValue().toDate())+"'  " +
                      " and po_number in (select po_number from asp_extrawork_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) "+
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) "+
                     " group by month_no "
                     + " union "
                     + " select extract(month from jv_date) month_no,sum(jv_value)"
@@ -383,7 +384,7 @@ public class DashboardController implements Serializable {
                                                 "where invoice_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                                     + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' "
                  + " and po_numer in (select po_number from customer_service_po where "
-                    + " network_name !='Support Network' and (early_start is null or early_start=false) ) ", CustomerServiceInvoice.class).getResultList();
+                    + " network_name ='L1 Network' and (early_start is null or early_start=false) ) ", CustomerServiceInvoice.class).getResultList();
         return netSalesService;
     }
 
@@ -393,7 +394,7 @@ public class DashboardController implements Serializable {
                                                 "where invoice_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                                     + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' "
                                              + " and po_numer in (select po_number from customer_extrawork_po where "
-                            + " network_name !='Support Network' and (early_start is null or early_start=false) ) ", CustomerExtraworkInvoice.class).getResultList();
+                            + " network_name ='L1 Network' and (early_start is null or early_start=false) ) ", CustomerExtraworkInvoice.class).getResultList();
         return netSalesExtra;
     }
 
@@ -403,7 +404,7 @@ public class DashboardController implements Serializable {
                                             " where grn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' "
                                 +  " and po_number in (select po_number from asp_service_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) ", AspServiceGrn.class).getResultList();
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) ", AspServiceGrn.class).getResultList();
         return costOfSalesService;
     }
 
@@ -432,7 +433,7 @@ public class DashboardController implements Serializable {
                                             " where grn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"'  "
                                 +  " and po_number in (select po_number from asp_extrawork_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) ", AspExtraworkGrn.class).getResultList();
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) ", AspExtraworkGrn.class).getResultList();
         return costOfSalesExtra;
     }
 
@@ -440,8 +441,7 @@ public class DashboardController implements Serializable {
         
         extraWorkTotal = em.createNativeQuery(" select asp,domain_name,sum(total_price_asp) as total_cos " +
                                                 " from extra_work " +
-                                                " where domain_owner_approval is true " +
-                                                " and correlated is false  " +
+                                                " where activity_code  like '%BULK%' " +
                                                 " group by asp,domain_name ", ExtraWorkWithoutPo.class).getResultList();
         return extraWorkTotal;
     }
@@ -449,8 +449,7 @@ public class DashboardController implements Serializable {
     public List<ExtraWork> getExtraWorkDetails() {
           extraWorkDetails = em.createNativeQuery(" select * " +
                                                 " from extra_work " +
-                                                " where domain_owner_approval is true " +
-                                                " and correlated is false  ", ExtraWork.class).getResultList();
+                                                " where activity_code like '%BULK%' ", ExtraWork.class).getResultList();
         return extraWorkDetails;
     }
     
@@ -573,6 +572,7 @@ public class DashboardController implements Serializable {
     }
 
     public void setStartMonth(Date startMonth) {
+        System.out.println("Setting Start Month");
         this.startMonth = startMonth;
     }
     

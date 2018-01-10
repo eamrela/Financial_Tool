@@ -5,6 +5,7 @@ import com.vodafone.financialtool.controllers.util.JsfUtil;
 import com.vodafone.financialtool.controllers.util.JsfUtil.PersistAction;
 import com.vodafone.financialtool.beans.CustomerExtraworkPoFacade;
 import com.vodafone.financialtool.entities.AspExtraworkPo;
+import com.vodafone.financialtool.entities.AspServicePo;
 import com.vodafone.financialtool.entities.CustomerExtraworkWorkDone;
 import com.vodafone.financialtool.entities.ExtraWork;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class CustomerExtraworkPoController implements Serializable {
     @EJB
     private com.vodafone.financialtool.beans.CustomerExtraworkPoFacade ejbFacade;
     private List<CustomerExtraworkPo> items = null;
+    private List<CustomerExtraworkPo> availableEarlyStart = null;
     private CustomerExtraworkPo selected;
     private CustomerExtraworkPo selectedUserPo;
     
@@ -63,6 +65,11 @@ public class CustomerExtraworkPoController implements Serializable {
 
     public void setTotalSelectedAspPOs(Double totalSelectedAspPOs) {
         this.totalSelectedAspPOs = totalSelectedAspPOs;
+    }
+
+    public List<CustomerExtraworkPo> getAvailableEarlyStart() {
+        availableEarlyStart = getFacade().findAvailableEalyStart();
+        return availableEarlyStart;
     }
     
     
@@ -252,6 +259,20 @@ public class CustomerExtraworkPoController implements Serializable {
         }
     }
     
+    public void createEalyStart(){
+        if(selected!=null){
+            selected.setEarlyStart(true);
+            updateValues();
+            create();
+            prepareCreate();
+            try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/customer/view/view_vf_po.xhtml");
+            } catch (IOException ex) {
+                Logger.getLogger(ExtraWorkController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     public void deletePo() {
         selected = selectedUserPo;
         persist(PersistAction.DELETE, "VF PO deleted");
@@ -280,6 +301,47 @@ public class CustomerExtraworkPoController implements Serializable {
         return selectedUserPoMatchingAspPo;
     }
 
+    public void correlatePoService(AspServicePo aspPo){
+        if(selected!=null && aspPo!=null){
+            if(aspPo.getPoValue()<=selected.getRemainingFromPo()){
+                if(selected.getAspServicePoCollection()!=null){
+                    selected.getAspServicePoCollection().add(aspPo);
+                }else{
+                    selected.setAspServicePoCollection(new ArrayList<AspServicePo>());
+                    selected.getAspServicePoCollection().add(aspPo);
+                }
+                // Add Work done
+                workDoneController.prepareCreate();
+                workDoneController.getSelected().setPoNumber(selected);
+                workDoneController.getSelected().setWorkDoneDate(aspPo.getPoDate());
+                workDoneController.getSelected().setWorkDoneValue(aspPo.getPoValue());
+                workDoneController.updateValues(false);
+                selectedUserPo = selected;
+                workDoneController.createWorkDone();
+            }
+        }
+    }
+    public void correlatePoExtrawork(AspExtraworkPo aspPo){
+        if(selected!=null && aspPo!=null){
+            if(aspPo.getPoValue()<=selected.getRemainingFromPo()){
+                if(selected.getAspExtaworkPoCollection()!=null){
+                    selected.getAspExtaworkPoCollection().add(aspPo);
+                }else{
+                    selected.setAspExtaworkPoCollection(new ArrayList<AspExtraworkPo>());
+                    selected.getAspExtaworkPoCollection().add(aspPo);
+                }
+                
+                // Add Work done
+                workDoneController.prepareCreate();
+                workDoneController.getSelected().setPoNumber(selected);
+                workDoneController.getSelected().setWorkDoneDate(aspPo.getPoDate());
+                workDoneController.getSelected().setWorkDoneValue(aspPo.getPoValue());
+                workDoneController.updateValues(false);
+                selectedUserPo = selected;
+                workDoneController.createWorkDone();
+            }
+        }
+    }
     public void correlateAspPo(){
          
         if(selectedUserPoSelectedCorrelation!=null && selectedUserPo!=null){

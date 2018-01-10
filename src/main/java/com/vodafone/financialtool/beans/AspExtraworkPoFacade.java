@@ -44,5 +44,9 @@ public class AspExtraworkPoFacade extends AbstractFacade<AspExtraworkPo> {
                                     +selectedUserPo.getRemainingFromPo()
                                     , AspExtraworkPo.class).getResultList();
     }
+
+    public AspExtraworkPo merge(AspExtraworkPo selected) {
+        return em.merge(selected);
+    }
     
 }

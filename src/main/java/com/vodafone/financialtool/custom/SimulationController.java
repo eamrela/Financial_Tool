@@ -436,7 +436,7 @@ public class SimulationController implements Serializable{
                                         "where invoice_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                                     + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' "
                                     + " and po_numer in (select po_number from customer_service_po where "
-                    + " network_name !='Support Network' and (early_start is null or early_start=false) ) ", CustomerServiceInvoice.class).getResultList();
+                    + " network_name ='L1 Network' and (early_start is null or early_start=false) ) ", CustomerServiceInvoice.class).getResultList();
         // Net Sales Service
         for (CustomerServiceInvoice netSale : netSalesService) {
             counterNs++;
@@ -457,7 +457,7 @@ public class SimulationController implements Serializable{
                                                 "where invoice_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                                     + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' "
                                              + " and po_numer in (select po_number from customer_extrawork_po where "
-                            + " network_name !='Support Network' and (early_start is null or early_start=false) ) ", CustomerExtraworkInvoice.class).getResultList();
+                            + " network_name ='L1 Network' and (early_start is null or early_start=false) ) ", CustomerExtraworkInvoice.class).getResultList();
         // Net Sales Extra Work
         for (CustomerExtraworkInvoice netSale : netSalesExtra) {
             counterNs++;
@@ -521,7 +521,7 @@ public class SimulationController implements Serializable{
                                             " where grn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"' "
                                 +  " and po_number in (select po_number from asp_service_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) ", AspServiceGrn.class).getResultList();
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) ", AspServiceGrn.class).getResultList();
         // COS Sales Service
         for (AspServiceGrn costSale : costSalesService) {
             counterCos++;
@@ -543,7 +543,7 @@ public class SimulationController implements Serializable{
                                             " where grn_date between '"+sdf.format(now.dayOfMonth().withMinimumValue().toDate())+"' "
                         + " and '"+sdf.format(now.dayOfMonth().withMaximumValue().toDate())+"'  "
                                 +  " and po_number in (select po_number from asp_extrawork_po where "
-                        + " network_name !='Support Network' and (early_start is null or early_start=false) ) ", AspExtraworkGrn.class).getResultList();
+                        + " network_name ='L1 Network' and (early_start is null or early_start=false) ) ", AspExtraworkGrn.class).getResultList();
         // COS Sales Extra Work
         for (AspExtraworkGrn costSale : costSalesExtra) {
             counterCos++;

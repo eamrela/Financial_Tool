@@ -117,6 +117,15 @@
           </navigation-case>
         </navigation-rule>
         
+        <navigation-rule>
+            <from-view-id>/app/systemadmin/customer/create/create_early_start.xhtml</from-view-id>
+            <navigation-case>
+            <from-action>#{customerExtraworkPoController.prepareCreate}</from-action>
+            <from-outcome>com.vodafone.financialtool.entities.CustomerExtraworkPo[ poNumber=null ]</from-outcome>
+            <to-view-id>/app/systemadmin/customer/create/create_early_start.xhtml</to-view-id>
+          </navigation-case>
+        </navigation-rule>
+        
         <resource-bundle>
             <base-name>/Bundle4</base-name>
             <var>bundle4</var>

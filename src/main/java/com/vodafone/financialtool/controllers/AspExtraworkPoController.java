@@ -46,6 +46,8 @@ public class AspExtraworkPoController implements Serializable {
     private ExtraWorkController extraWorkController;
     @Inject
     private AspExtraworkWorkDoneController workDoneController;
+    @Inject
+    private CustomerExtraworkPoController customerExtraWorkPoController;
 
     public Double getTotalSelectedExtraWorkAmount() {
         totalSelectedExtraWorkAmount = 0.0;
@@ -123,11 +125,12 @@ public class AspExtraworkPoController implements Serializable {
         return selected;
     }
 
-    public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("AspExtraworkPoCreated"));
+    public AspExtraworkPo create() {
+        selected = persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("AspExtraworkPoCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
+        return selected;
     }
 
     public void update() {
@@ -151,12 +154,13 @@ public class AspExtraworkPoController implements Serializable {
         return items;
     }
 
-    private void persist(PersistAction persistAction, String successMessage) {
+    private AspExtraworkPo persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
             try {
                 if (persistAction != PersistAction.DELETE) {
-                    getFacade().edit(selected);
+                    selected = getFacade().merge(selected);
+                    return selected;
                 } else {
                     getFacade().remove(selected);
                 }
@@ -177,6 +181,7 @@ public class AspExtraworkPoController implements Serializable {
                 JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             }
         }
+        return null;
     }
 
     public AspExtraworkPo getAspExtraworkPo(java.lang.String id) {
@@ -264,7 +269,14 @@ public class AspExtraworkPoController implements Serializable {
     public void createAspPo(){
         if(selected!=null){
             updateValues();
-            create();
+            selected = create();
+            
+            if(!selected.getEarlyStart()){
+                selected.setEarlyStartNumber(null);
+            }else if(selected.getEarlyStartNumber()!=null){
+                customerExtraWorkPoController.setSelected(customerExtraWorkPoController.getCustomerExtraworkPo(selected.getEarlyStartNumber()));
+                customerExtraWorkPoController.correlatePoExtrawork(selected);
+            }
             prepareCreate();
             try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("/FinancialTool/app/systemadmin/asp/view/view_asp_po.xhtml");

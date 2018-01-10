@@ -54,6 +54,9 @@ public class customerLedger implements Serializable {
     
     private List<CreditNote> creditNotesDetails;
     private List<Penalty> penaltyDetails;
+    
+    private List<String[]> networkBreakDown;
+    private List<String[]> earlyStartBreakdown;
 
     private Double extraWorkNoPOASP=0.0;
     private Double extraWorkNoPOVF=0.0;
@@ -79,7 +82,7 @@ public class customerLedger implements Serializable {
 
     public List<ExtraWork> getExtraWorkWithoutPo() {
         extraWorkWithoutPo = em.createNativeQuery(" select * from extra_work where  "
-                    + "  domain_owner_approval is true ", ExtraWork.class).getResultList();
+                    + "  activity_code  like '%BULK%' ", ExtraWork.class).getResultList();
             for (ExtraWork x : extraWorkWithoutPo) {
                 extraWorkNoPOASP+=x.getTotalPriceAsp();
                 extraWorkNoPOVF+=x.getTotalPriceVendor();
@@ -172,8 +175,29 @@ public class customerLedger implements Serializable {
         this.invoiceReceivedExtrawork = invoiceReceivedExtrawork;
     }
 
-   
+    public List<String[]> getNetworkBreakDown() {
+        networkBreakDown = em.createNativeQuery(" select network_name,sum(val) val " +
+                                                " from ( " +
+                                                " select network_name,sum(po_value) val " +
+                                                " from customer_service_po " +
+                                                " group by network_name " +
+                                                " union " +
+                                                " select network_name,sum(po_value) val " +
+                                                " from customer_extrawork_po " +
+                                                " group by network_name) a " +
+                                                " group by network_name ").getResultList();    
+        return networkBreakDown;
+    }
 
+    public List<String[]> getEarlyStartBreakdown() {
+        earlyStartBreakdown = em.createNativeQuery("select po_number,remaining_from_po,po_value\n" +
+                                                    "from customer_extrawork_po\n" +
+                                                    "where early_start is true\n").getResultList(); 
+        return earlyStartBreakdown;
+    }
+
+   
+    
     
 
     public List<CustomerServicePo> getPoReceivedService() {

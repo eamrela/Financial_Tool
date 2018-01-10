@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:FT="http://xmlns.jcp.org/jsf/composite/components"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Financial Tool</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
@@ -51,13 +52,25 @@
             <h:form id="dashboardForm">
                 <div class="right_col" role="main">
                 <FT:PageName pageName="ASP Ledger"/>
-                   
-                
+                <ul class="list-unstyled list-inline">
+                            <ui:repeat value="#{aspLedgerController.networkBreakDown}" var="networkBreakDown">
+                                <li>
+                                <i class="fa fa-dot-circle-o user-profile-icon"></i> 
+                                #{networkBreakDown[0]}:
+                                <h:outputText value="#{networkBreakDown[1]}">
+                                    <f:convertNumber type="currency" currencySymbol="EGP"/>
+                                </h:outputText>
+                                </li>
+                            </ui:repeat>
+                        
+                </ul>
                 <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>ASP<small>Financial report</small></h2>
+                    <h2>ASP
+                    <small>Financial report</small>
+                    </h2>
                     <div class="nav navbar-right panel_toolbox">
                     <h:selectOneMenu id="ewAsp"
                                      value="#{aspLedgerController.asp}"
@@ -77,7 +90,9 @@
                   </div>
                   <div class="x_content">
                      <h:panelGroup id="aspData">
+                         
                     <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
+                        
                         <h3>#{aspLedgerController.asp.subcontractorName}</h3>
                         
                       <ul class="list-unstyled user_data">

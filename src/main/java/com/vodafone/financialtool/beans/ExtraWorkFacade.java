@@ -40,29 +40,29 @@ public class ExtraWorkFacade extends AbstractFacade<ExtraWork> {
 
     public List<ExtraWork> findUserItems(String loggedInUserRole, String loggedInUserRegions, String loggedInUserDomains,String userName,String company) {
         if(loggedInUserRole.contains("ASP") && !loggedInUserRole.contains("ADMIN")){
-            return em.createNativeQuery("select * from extra_work where creator='"+userName+"' or assignment_group = '"+userName+"'", ExtraWork.class).getResultList();
+            return em.createNativeQuery("select * from extra_work where (creator='"+userName+"' or assignment_group = '"+userName+"') and activity_code not like '%BULK%' ", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("ASP_ADMIN")){
             return em.createNativeQuery("select * from extra_work where "
-                    + " (creator in (select user_name from users where company='"+company+"')) "
-                            + "or (assignment_group in (select user_name from users where company='"+company+"'))", ExtraWork.class).getResultList();
+                    + " ((creator in (select user_name from users where company='"+company+"')) "
+                            + "or (assignment_group in (select user_name from users where company='"+company+"'))) and activity_code not like '%BULK%'", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("SYSADMIN")){
-            return em.createNativeQuery("select * from extra_work ", ExtraWork.class).getResultList();
+            return em.createNativeQuery("select * from extra_work where  activity_code like '%BULK%'", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("BUDGET_CONTROLLER")){
-            return em.createNativeQuery("select * from extra_work ", ExtraWork.class).getResultList();
+            return em.createNativeQuery("select * from extra_work where  activity_code  like '%BULK%'", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("BP")){
-            return em.createNativeQuery("select * from extra_work where (creator='"+userName+"' or assignment_group = '"+userName+"') ", ExtraWork.class).getResultList();
+            return em.createNativeQuery("select * from extra_work where (creator='"+userName+"' or assignment_group = '"+userName+"') and activity_code not like '%BULK%'  ", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("RO")){
-            return em.createNativeQuery("select * from extra_work where (creator='"+userName+"' or assignment_group = '"+userName+"') "
-                    + "or (region in ("+loggedInUserRegions+") )", ExtraWork.class).getResultList();
+            return em.createNativeQuery("select * from extra_work where ((creator='"+userName+"' or assignment_group = '"+userName+"') "
+                    + "or (region in ("+loggedInUserRegions+") )) and activity_code not like '%BULK%'", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("DO")){
-          return em.createNativeQuery("select * from extra_work where (creator='"+userName+"' or assignment_group = '"+userName+"') "
-                    + "or (domain_name in ("+loggedInUserDomains+") )", ExtraWork.class).getResultList();
+          return em.createNativeQuery("select * from extra_work where ((creator='"+userName+"' or assignment_group = '"+userName+"') "
+                    + "or (domain_name in ("+loggedInUserDomains+") )) and activity_code not like '%BULK%'", ExtraWork.class).getResultList();
         }
         return null;
     }
@@ -71,33 +71,33 @@ public class ExtraWorkFacade extends AbstractFacade<ExtraWork> {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if(loggedInUserRole.contains("ASP") && !loggedInUserRole.contains("ADMIN")){
             return em.createNativeQuery("select * from extra_work where (creator='"+userName+"' or assignment_group = '"+userName+"') "
-                    + " and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) ", ExtraWork.class).getResultList();
+                    + " and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) and activity_code not like '%BULK%' ", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("ASP_ADMIN")){
             return em.createNativeQuery("select * from extra_work where "
                     + " ((creator in (select user_name from users where company='"+company+"')) "
                             + "or (assignment_group in (select user_name from users where company='"+company+"'))) "
-                                    + "  and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) ", ExtraWork.class).getResultList();
+                                    + "  and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) and activity_code not like '%BULK%'  ", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("SYSADMIN")){
-            return em.createNativeQuery("select * from extra_work  where (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' )", ExtraWork.class).getResultList();
+            return em.createNativeQuery("select * from extra_work  where (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) and activity_code like '%BULK%' ", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("BUDGET_CONTROLLER")){
-            return em.createNativeQuery("select * from extra_work where  (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' )", ExtraWork.class).getResultList();
+            return em.createNativeQuery("select * from extra_work where  (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) and activity_code not like '%BULK%' ", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("BP")){
             return em.createNativeQuery("select * from extra_work where (creator='"+userName+"' or assignment_group = '"+userName+"') "
-                    + "  and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) ", ExtraWork.class).getResultList();
+                    + "  and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) and activity_code not like '%BULK%'  ", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("RO")){
             return em.createNativeQuery("select * from extra_work where ((creator='"+userName+"' or assignment_group = '"+userName+"') "
                     + "or (region in ("+loggedInUserRegions+") )) "
-                            + "  and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) ", ExtraWork.class).getResultList();
+                            + "  and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) and activity_code not like '%BULK%' ", ExtraWork.class).getResultList();
         }
         if(loggedInUserRole.contains("DO")){
           return em.createNativeQuery("select * from extra_work where ((creator='"+userName+"' or assignment_group = '"+userName+"') "
                     + "or (domain_name in ("+loggedInUserDomains+") )) "
-                            + "  and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) ", ExtraWork.class).getResultList();
+                            + "  and (activity_date between '"+sdf.format(start)+"' and '"+sdf.format(end)+"' ) and activity_code not like '%BULK%' ", ExtraWork.class).getResultList();
         }
         return null;    
     }
